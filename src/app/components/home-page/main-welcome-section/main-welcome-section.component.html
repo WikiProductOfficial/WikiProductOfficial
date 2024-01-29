@@ -1,0 +1,28 @@
+<!--The Whole Card-->
+<p-card>
+  <!--Title and Subtitle-->
+  <div class="p-card-title">
+    <span class="wiki">Wiki</span><span class="product">Product</span>
+  </div>
+  <p class="m-0">
+    Journey Through the World of Products - Discover, Learn, and Explore!
+  </p>
+
+  <!--Search Bar-->
+  <form action="https://www.google.com/search" method="GET" target="_blank">
+    <input type="hidden" name="tbm" value="shop" />
+    <div class="search-bar-container">
+      <input type="text" name="q" placeholder="Search for products" />
+      <button type="submit">Search</button>
+    </div>
+  </form>
+
+  <!--Bot Button-->
+  <div class="bot">
+    <h4>Or Chat with ProductBot</h4>
+    <button class="bot-button" (click)="openBotPopUp()">
+      Ask ProductBot
+      <i class="pi pi-android"></i>
+    </button>
+  </div>
+</p-card>

@@ -1,0 +1,142 @@
+// The Whole Welcome Card
+::ng-deep .p-card {
+  width: 70%;
+  border-radius: 25px;
+  @media (max-width: 1000px) {
+    width: 90%;
+  }
+  text-align: center;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
+  // WikiProduct Title
+  .p-card-title {
+    font-size: 5vw;
+    @media (max-width: 767px) {
+      font-size: 6.2vw;
+    }
+    .wiki {
+      color: #172755;
+    }
+    .product {
+      color: #4063ca;
+    }
+  }
+  // Subtitle text
+  .m-0 {
+    font-size: 1.2vw;
+    font-weight: 600;
+    color: black;
+    @media (max-width: 1400px) {
+      font-size: 1.4vw;
+    }
+    @media (max-width: 1200px) {
+      font-size: 1.6vw;
+    }
+    @media (max-width: 1000px) {
+      font-size: 1.9vw;
+    }
+    @media (max-width: 800px) {
+      font-size: 2.1vw;
+    }
+  }
+
+  // search bar
+  .search-bar-container {
+    display: flex;
+    margin: auto;
+    margin-top: 2vw;
+    width: 70%;
+    border-radius: 20px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+
+    @media (max-width: 800px) {
+      width: 80%;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      border: none;
+      padding: 1vw 1vw;
+      font-size: 1.2vw;
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+
+      @media (max-width: 1000px) {
+        font-size: 2vw;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button {
+      background-color: #172755;
+      color: white;
+      border: none;
+      padding: 1vw 2vw;
+      cursor: pointer;
+      font-size: 1.2vw;
+      font-weight: 700;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+
+      @media (max-width: 1000px) {
+        font-size: 2vw;
+      }
+
+      &:hover {
+        background-color: darken(#4063ca, 10%);
+      }
+    }
+  }
+
+  // ProductBot Section
+  .bot {
+    margin-top: 5vw;
+    h4 {
+      color: black;
+      font-size: 1.1vw;
+      font-weight: 600;
+      color: black;
+      @media (max-width: 1400px) {
+        font-size: 1.3vw;
+      }
+      @media (max-width: 1200px) {
+        font-size: 1.5vw;
+      }
+      @media (max-width: 1000px) {
+        font-size: 1.8vw;
+      }
+      @media (max-width: 800px) {
+        font-size: 2vw;
+      }
+    }
+    // Bot Button design
+    .bot-button {
+      background-color: #172755;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 1.1vw 1.1vw;
+      font-size: 1.1vw;
+      font-weight: 500;
+      @media (max-width: 1000px) {
+        font-size: 2vw;
+      }
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1vw;
+
+      &:hover {
+        transform: translateY(-2px);
+        background-color: adjust-color(#4063ca, $lightness: -10%);
+      }
+    }
+  }
+}
