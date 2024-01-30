@@ -17,10 +17,10 @@
       font-size: 6.2vw;
     }
     .wiki {
-      color: var(--primary-900);
+      color: var(--secondary-color);
     }
     .product {
-      color: var(--primary-600);
+      color: var(--primary-color);
     }
   }
   // Subtitle text
@@ -74,7 +74,7 @@
     }
 
     button {
-      background-color: var(--primary-900);
+      background-color: var(--secondary-color);
       color: white;
       border: none;
       padding: 1vw 2vw;
@@ -89,7 +89,7 @@
       }
 
       &:hover {
-        background-color: darken(var(--primary-600), 10%);
+        background-color: var(--primary-color);
       }
     }
   }
@@ -117,7 +117,7 @@
     }
     // Bot Button design
     .bot-button {
-      background-color: var(--primary-900);
+      background-color: var(--secondary-color);
       color: white;
       border: none;
       border-radius: 25px;
@@ -135,7 +135,7 @@
 
       &:hover {
         transform: translateY(-2px);
-        background-color: adjust-color(var(--primary-600), $lightness: -10%);
+        background-color: var(--primary-color);
       }
     }
   }
