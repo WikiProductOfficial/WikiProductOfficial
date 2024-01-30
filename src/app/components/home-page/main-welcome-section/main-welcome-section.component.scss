@@ -17,10 +17,10 @@
       font-size: 6.2vw;
     }
     .wiki {
-      color: #172755;
+      color: var(--primary-900);
     }
     .product {
-      color: #4063ca;
+      color: var(--primary-600);
     }
   }
   // Subtitle text
@@ -74,7 +74,7 @@
     }
 
     button {
-      background-color: #172755;
+      background-color: var(--primary-900);
       color: white;
       border: none;
       padding: 1vw 2vw;
@@ -89,7 +89,7 @@
       }
 
       &:hover {
-        background-color: darken(#4063ca, 10%);
+        background-color: darken(var(--primary-600), 10%);
       }
     }
   }
@@ -117,7 +117,7 @@
     }
     // Bot Button design
     .bot-button {
-      background-color: #172755;
+      background-color: var(--primary-900);
       color: white;
       border: none;
       border-radius: 25px;
@@ -135,7 +135,7 @@
 
       &:hover {
         transform: translateY(-2px);
-        background-color: adjust-color(#4063ca, $lightness: -10%);
+        background-color: adjust-color(var(--primary-600), $lightness: -10%);
       }
     }
   }
