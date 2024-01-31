@@ -2,3 +2,9 @@
 @import "custom-light-theme.scss";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+
+body {
+  width: 100%;
+  margin: 0;
+  padding-top: 100px;
+}

@@ -1,1 +1,34 @@
-<p>navbar works!</p>
+<nav
+  [ngClass]="{
+    'navbar-blur': navbarScrolled,
+  }"
+  class="navbar flex justify-content-between align-items-center p-2"
+>
+  <div class="logo-container flex flex-row align-items-center gap-2">
+    <i (click)="sidebarVisible = true" class="lg:hidden pi pi-bars"></i>
+    <img
+      src="../../../assets/icons/logo-placeholder.png"
+      alt="logo"
+      height="50"
+    />
+  </div>
+  <div class="search-bar-container hidden lg:block">
+    <input type="text" />
+  </div>
+  <div class="">
+    <a class="font" href="#home">Intro</a>
+    <a href="#about">Skills</a>
+    <a href="#portfolio">Projects</a>
+    <a href="#contact">Contact</a>
+    <p-button label="hello"></p-button>
+  </div>
+</nav>
+<p-sidebar [(visible)]="sidebarVisible">
+  <h3>Top Categories</h3>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. m
+  </p>
+</p-sidebar>
