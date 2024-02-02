@@ -9,18 +9,28 @@ button {
   $buttonPadding: 0rem 0rem;
 }
 
-.navbar-blur {
-  border-bottom: 1px solid var(--surface-border);
-  background-color: var(--topbar-sticky-bg);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: calc(100% - var(--scrollbar-width, 0px));
   z-index: 1100;
-  transition: background-color 0.5s, border-color 0.5s;
   border-bottom: 1px solid transparent;
+  transition: background-color 0.5s, border-color 0.5s ease;
+}
+.navbar-blur {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.p-button {
+  background: var(--surface-a);
+  border: 1px solid var(--surface-border);
+}
+.moon-icon {
+  color: #6b7280;
+}
+.sun-icon {
+  color: #ffffff99;
 }

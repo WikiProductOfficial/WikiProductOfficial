@@ -16,11 +16,23 @@
     <input type="text" />
   </div>
   <div class="">
-    <a class="font" href="#home">Intro</a>
-    <a href="#about">Skills</a>
-    <a href="#portfolio">Projects</a>
-    <a href="#contact">Contact</a>
-    <p-button label="hello"></p-button>
+    <button
+      [ngClass]="{ 'my-class': isDarkTheme(), 'other-class': !isDarkTheme() }"
+      pripple=""
+      (click)="this.isDarkTheme.set(!this.isDarkTheme())"
+      class="p-ripple p-element p-button p-component p-button-icon-only"
+      ng-reflect-ng-class="[object Object]"
+      type="button"
+    >
+      <span
+        [ngClass]="{
+          ' pi-sun sun-icon ': isDarkTheme(),
+          ' pi-moon moon-icon': !isDarkTheme()
+        }"
+        data-pc-section="icon"
+        class="pi p-button-icon"
+      ></span>
+    </button>
   </div>
 </nav>
 <p-sidebar [(visible)]="sidebarVisible">
