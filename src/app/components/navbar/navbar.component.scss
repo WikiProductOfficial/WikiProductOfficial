@@ -25,12 +25,24 @@ button {
 }
 
 .p-button {
-  background: var(--surface-a);
+  background: var(--transparent);
   border: 1px solid var(--surface-border);
+}
+
+.p-inputtext {
+  background: var(--transparent);
 }
 .moon-icon {
   color: #6b7280;
 }
 .sun-icon {
   color: #ffffff99;
+}
+.wiki {
+  color: var(--secondary-color);
+  font-weight: bolder;
+}
+.product {
+  color: var(--primary-color);
+  font-weight: bolder;
 }
