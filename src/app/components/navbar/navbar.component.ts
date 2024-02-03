@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +20,7 @@ import { CategoriesService } from '../../services/categories.service';
     FormsModule,
     InputTextModule,
     TooltipModule,
+    RouterModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
