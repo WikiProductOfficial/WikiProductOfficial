@@ -6,11 +6,9 @@
 >
   <div class="logo-container flex flex-row align-items-center gap-2">
     <i (click)="sidebarVisible = true" class="pi pi-bars"></i>
-    <div class="">
-      <a routerLink="/">
-        <span class="wiki text-2xl lg:text-4xl">Wiki</span
-        ><span class="product text-2xl lg:text-4xl">Product</span>
-      </a>
+    <div class="cursor-pointer" [routerLink]="['/']">
+      <span class="wiki text-2xl lg:text-4xl">Wiki</span
+      ><span class="product text-2xl lg:text-4xl">Product</span>
     </div>
   </div>
   <div class="flex flex-row gap-2">
