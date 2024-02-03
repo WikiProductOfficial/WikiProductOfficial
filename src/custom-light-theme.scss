@@ -1,3 +1,4 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
 :root {
   font-family: "Inter var", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -12,8 +13,7 @@
   --surface-f: #ffffff;
   --text-color: #4b5563;
   --text-color-secondary: #6b7280;
-  --primary-color: var(--primary-600);
-  --secondary-color: var(--primary-900);
+  --primary-color: var(--primary-500);
   --primary-color-text: #ffffff;
   --surface-0: #ffffff;
   --surface-50: #f9fafb;
