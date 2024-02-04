@@ -5,7 +5,7 @@ import { Blob } from '../../../models/ui-models/blob.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-
+import { DividerModule } from 'primeng/divider';
 @Component({
   selector: 'app-main-welcome-section',
   standalone: true,
@@ -15,6 +15,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     InputGroupModule,
     InputGroupAddonModule,
     InputTextModule,
+    DividerModule,
   ],
   templateUrl: './main-welcome-section.component.html',
   styleUrl: './main-welcome-section.component.scss',

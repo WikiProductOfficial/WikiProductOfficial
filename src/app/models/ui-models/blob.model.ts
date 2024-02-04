@@ -16,8 +16,10 @@ export class Blob {
       0,
       100 - (this.size / window.innerHeight) * 100
     );
-    this.vx = this.randomCoordinates(0.5, 1) * Math.random() > 0.5 ? -0.5 : 0.5;
-    this.vy = this.randomCoordinates(0.5, 1) * Math.random() > 0.5 ? -0.5 : 0.5;
+    this.vx =
+      this.randomCoordinates(0.5, 1) * Math.random() > 0.5 ? -0.25 : 0.25;
+    this.vy =
+      this.randomCoordinates(0.5, 1) * Math.random() > 0.5 ? -0.25 : 0.25;
   }
   update() {
     console.log();
