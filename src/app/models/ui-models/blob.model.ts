@@ -10,11 +10,11 @@ export class Blob {
     this.size = el.getBoundingClientRect().width;
     this.x = this.randomCoordinates(
       0,
-      97 - (this.size / window.innerWidth) * 100
+      75 - (this.size / window.innerWidth) * 100
     );
     this.y = this.randomCoordinates(
       0,
-      100 - (this.size / window.innerHeight) * 100
+      75 - (this.size / window.innerHeight) * 100
     );
     this.vx =
       this.randomCoordinates(0.5, 1) * Math.random() > 0.5 ? -0.25 : 0.25;
@@ -26,10 +26,10 @@ export class Blob {
     window.innerHeight - this.size;
     this.x += this.vx;
     this.y += this.vy;
-    if (this.x >= 97 - (this.size / window.innerWidth) * 100 || this.x < 0) {
+    if (this.x >= 75 - (this.size / window.innerWidth) * 100 || this.x < 0) {
       this.vx *= -1;
     }
-    if (this.y >= 100 - (this.size / window.innerHeight) * 100 || this.y < 0) {
+    if (this.y >= 75 - (this.size / window.innerHeight) * 100 || this.y < 0) {
       this.vy *= -1;
     }
   }

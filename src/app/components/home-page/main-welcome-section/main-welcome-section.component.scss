@@ -212,3 +212,9 @@
 .p-button {
   border: 1px solid var(--surface-d);
 }
+
+@media (max-width: 1024px) {
+  .blob {
+    width: 150px;
+  }
+}
