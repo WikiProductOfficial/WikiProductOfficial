@@ -27,3 +27,11 @@ def get_item(request, item_id):
 
     serialized_item = serializers.ItemSerializer(item)
     return Response(serialized_item.data)
+
+
+# API endpoint to get all items
+@api_view(['GET'])
+def get_categories(request):
+    categories = models.Category.objects.all()
+    serialized_categories = serializers.CategorySerializer(categories, many=True)
+    return Response(serialized_categories.data)
