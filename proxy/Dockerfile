@@ -5,9 +5,11 @@ COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
 COPY ./run.sh /run.sh
 
-ENV LISTEN_PORT=8000 
-ENV APP_HOST=app
-ENV APP_PORT=9000
+# Set environment variables to match the docker-compose settings
+ENV LISTEN_PORT=8000
+ENV APP_HOST=backend
+ENV APP_PORT=9000  
+# Make sure this matches the backend service's exposed port
 
 USER root
 

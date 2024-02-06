@@ -1,29 +1,35 @@
 version: "3.9"
 
 services:
-  app:
+  backend:
     build:
-      context: .
+      context: ./backend
     restart: always
     volumes:
-      - static-data:/vol/web
+      - static-data:/vol/web/static  # Ensure this is correctly mapped for Nginx to serve
     environment:
       - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=0  # Assuming production, so DEBUG should be off
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-      
     depends_on:
       - db
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "4200:4200"
 
   db:
     image: postgres:13-alpine
     restart: always
     volumes:
-    # to save the database after the server is down
-      - postgres-data:/var/lib/postgresql/data 
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -34,9 +40,9 @@ services:
       context: ./proxy
     restart: always
     depends_on:
-      - app
+      - backend
     ports:
-      - 80:8000
+      - "80:8000"
     volumes:
       - static-data:/vol/static
 

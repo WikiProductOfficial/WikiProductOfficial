@@ -1,63 +1,45 @@
-# Backend
+# Application Setup and Launch Guide
 
-## Local Server Setup Instructions
+Welcome to the setup guide for our application. Follow these instructions to get your environment ready and launch the application using Docker.
 
-This document provides instructions on how to build and run local servers for development and production environments using Docker Compose.
+## Prerequisites
+
+* **Docker Desktop**: Ensure Docker Desktop is installed on your machine. Visit the official Docker website for download and installation instructions.
+
+## Running the Application
 
 ### Development Environment
 
-#### Building the Development Local Server
-
-To build the development local server, use the following command:
+1 - **Build the Containers**
+Open a terminal and navigate to your project's root directory. Build the Docker containers with the following command:
 
 `docker-compose -f docker-compose.yml build`
 
-
-#### Running the Development Local Server
-
-To run the development local server, use the following command:
+2 - **Start the Containers**
+After the build completes, launch the containers with:
 
 `docker-compose -f docker-compose.yml up`
 
+This will start all services defined in your docker-compose.yml file.
+
+3 - **Accessing the Application**
+    * Frontend: http://localhost:4200 or http://127.0.0.1:4200
+    * Backend (Development): http://localhost:8000 or http://127.0.0.1:8000
+
 ### Production Environment
 
-#### Building the Production Local Server
-
-To build the production local server, use the following command:
+1 - **Build the Containers**
+To build your containers for production, run:
 
 `docker-compose -f docker-compose-deploy.yml build`
 
-#### Running the Production Local Server
-
-To build the production local server, use the following command:
+2 - **Run the Containers**
+Start your application in production mode with:
 
 `docker-compose -f docker-compose-deploy.yml up`
 
+3 - **Accessing the Application**
+    * Frontend: The frontend URL remains the same as in the development environment.
+    * Backend (Production): http://localhost or http://127.0.0.1
 
-# Frontend
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+*Note: for production create a file in the root directory called `.env` and copy paste `.env.sample`*

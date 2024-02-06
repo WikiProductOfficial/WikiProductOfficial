@@ -1,5 +1,5 @@
 FROM python:3.9-alpine3.13
-LABEL maintainer="maintainer"
+LABEL maintainer="backend-maintainer"
 
 ENV PYTHONUNBUFFERED 1
 
@@ -8,7 +8,8 @@ COPY ./app /app
 COPY ./scripts /scripts
 
 WORKDIR /app
-EXPOSE 8000
+# Confirming the port exposed matches the proxy configuration
+EXPOSE 8000  
 
 # Create virtual environment and install dependencies
 RUN python -m venv /py && \
@@ -25,9 +26,8 @@ RUN python -m venv /py && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts
 
-
 ENV PATH="/scripts:/py/bin:$PATH"
 
 USER user
 
-CMD [ "run.sh" ]
+CMD ["run.sh"]
