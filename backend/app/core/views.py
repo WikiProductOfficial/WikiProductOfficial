@@ -29,9 +29,16 @@ def get_item(request, item_id):
     return Response(serialized_item.data)
 
 
-# API endpoint to get all items
+# API endpoint to get all categories
 @api_view(['GET'])
 def get_categories(request):
+    categories = models.Category.objects.all()
+    serialized_categories = serializers.CategorySerializer(categories, many=True)
+    return Response(serialized_categories.data)
+
+# API endpoint to get popular
+@api_view(['GET'])
+def get_popular_items(request):
     categories = models.Category.objects.all()
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
