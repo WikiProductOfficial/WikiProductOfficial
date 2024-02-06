@@ -1,0 +1,48 @@
+p-button {
+  $buttonBg: var(--surface-800);
+  $buttonPadding: 0rem 0rem;
+}
+$buttonBg: var(--surface-800);
+$buttonPadding: 0rem 0rem;
+button {
+  $buttonBg: var(--surface-800);
+  $buttonPadding: 0rem 0rem;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - var(--scrollbar-width, 0px));
+  z-index: 1100;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.5s, border-color 0.5s ease;
+}
+.navbar-blur {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.p-button {
+  background: var(--transparent);
+  border: 1px solid var(--surface-border);
+}
+
+.p-inputtext {
+  background: var(--transparent);
+}
+.moon-icon {
+  color: #6b7280;
+}
+.sun-icon {
+  color: #ffffff99;
+}
+.wiki {
+  color: var(--secondary-color);
+  font-weight: bolder;
+}
+.product {
+  color: var(--primary-color);
+  font-weight: bolder;
+}
