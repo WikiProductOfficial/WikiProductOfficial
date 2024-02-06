@@ -34,7 +34,8 @@ export class Blob {
     }
   }
   move() {
-    this.el.style.transform = ` translate(${this.x}vw, ${this.y}vh)`;
+    this.el.style.top = `${this.y}%`;
+    this.el.style.left = `${this.x}%`;
   }
   private randomCoordinates(min: number, max: number): number {
     return Math.random() * (max - min) + min;

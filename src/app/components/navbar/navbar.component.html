@@ -73,16 +73,22 @@
 
 <!-- navigation sidebar -->
 <p-sidebar [(visible)]="sidebarVisible">
-  <div class="search-bar-container" *ngIf="!isLargeScreen">
-    <span class="p-input-icon-right">
-      <i class="pi pi-search"></i>
-      <input type="text" pInputText [(ngModel)]="value" />
-    </span>
-  </div>
-  <h3>Top Categories</h3>
-  <div class="overflow-y-auto flex flex-column">
-    @for (category of categories; track $index) {
-    <p-button [label]="category" [text]="true" severity="secondary"></p-button>
-    }
+  <div class="">
+    <div class="search-bar-container col-4" *ngIf="!isLargeScreen">
+      <span class="p-input-icon-right">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText [(ngModel)]="value" />
+      </span>
+    </div>
+    <h3>Top Categories</h3>
+    <div class="flex flex-column">
+      @for (category of categories; track $index) {
+      <p-button
+        [label]="category"
+        [text]="true"
+        severity="secondary"
+      ></p-button>
+      }
+    </div>
   </div>
 </p-sidebar>
