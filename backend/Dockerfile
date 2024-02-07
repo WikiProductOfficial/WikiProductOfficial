@@ -1,5 +1,5 @@
 FROM python:3.9-alpine3.13
-LABEL maintainer="backend-maintainer"
+LABEL maintainer="backend-server"
 
 ENV PYTHONUNBUFFERED 1
 
