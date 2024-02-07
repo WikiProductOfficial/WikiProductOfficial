@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   backend:
+    image: backend-dev
     build:
       context: ./backend
     command: >
@@ -23,6 +24,7 @@ services:
       - db
 
   frontend:
+    image: frontend-dev
     build:
       context: ./frontend
     command: >
