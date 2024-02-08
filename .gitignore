@@ -171,3 +171,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+
+# System folders
+database/
+static/
