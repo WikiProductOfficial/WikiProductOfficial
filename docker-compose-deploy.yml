@@ -7,10 +7,10 @@ services:
       context: ./backend
     restart: always
     volumes:
-      - static-data:/vol/web/static  # Ensure this is correctly mapped for Nginx to serve
+      - static-data:/vol/web/static
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=0  # Assuming production, so DEBUG should be off
+      - DEBUG=0
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
