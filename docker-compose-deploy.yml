@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: wikiproduct.azurecr.io/backend
+    image: backend
     build:
       context: ./backend
     restart: always
@@ -18,9 +18,11 @@ services:
       - DB_PASS=${DB_PASS}
     depends_on:
       - db
+    ports:
+      - "8000:8000"
 
   frontend:
-    image: wikiproduct.azurecr.io/frontend
+    image: frontend
     build:
       context: ./frontend
     restart: always
@@ -36,15 +38,17 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
+    ports:
+      - "5432:5432"
 
   proxy:
-    image: wikiproduct.azurecr.io/proxy
+    image: proxy
     build:
       context: ./proxy
     restart: always
     depends_on:
       - backend
-    ports:
-      - "80:8000"
     volumes:
       - ./static/:/vol/web/static
+    ports:
+      - "80:8000"
