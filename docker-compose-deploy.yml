@@ -18,16 +18,14 @@ services:
       - DB_PASS=${DB_PASS}
     depends_on:
       - db
-    ports:
-      - "8000:8000"
 
-  frontend:
-    image: frontend
-    build:
-      context: ./frontend
-    restart: always
-    ports:
-      - "4200:4200"
+  # frontend:
+  #   image: frontend
+  #   build:
+  #     context: ./frontend
+  #   restart: always
+  #   ports:
+  #     - "4200:4200"
 
   db:
     image: postgres:13-alpine
