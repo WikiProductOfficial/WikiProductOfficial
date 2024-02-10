@@ -1,14 +1,3 @@
-p-button {
-  $buttonBg: var(--surface-800);
-  $buttonPadding: 0rem 0rem;
-}
-$buttonBg: var(--surface-800);
-$buttonPadding: 0rem 0rem;
-button {
-  $buttonBg: var(--surface-800);
-  $buttonPadding: 0rem 0rem;
-}
-
 .navbar {
   position: fixed;
   top: 0;
@@ -19,8 +8,9 @@ button {
   transition: background-color 0.5s, border-color 0.5s ease;
 }
 .navbar-blur {
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: var(--navbar-bg);
   border-bottom: 1px solid var(--surface-border);
 }
 
