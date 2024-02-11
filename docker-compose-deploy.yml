@@ -19,13 +19,13 @@ services:
     depends_on:
       - db
 
-  # frontend:
-  #   image: frontend
-  #   build:
-  #     context: ./frontend
-  #   restart: always
-  #   ports:
-  #     - "4200:4200"
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+    restart: always
+    ports:
+      - "4200:4200"
 
   db:
     image: postgres:13-alpine

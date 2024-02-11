@@ -6,11 +6,7 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "python manage.py wait_for_db &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - 8000:8000
+      sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
     environment:
@@ -20,6 +16,8 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+    networks:
+      - internal-net
     depends_on:
       - db
 
@@ -27,14 +25,14 @@ services:
     image: frontend-dev
     build:
       context: ./frontend
-    command: >
-      sh -c "npm install && ng serve --host 0.0.0.0"
     ports: 
       - "4200:4200"
-    
+    environment:
+      - BACKEND_URL=http://backend:8000
     depends_on: 
       - backend
-  
+    networks:
+      - internal-net
 
   db:
     image: postgres:13-alpine
@@ -42,3 +40,8 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+    networks:
+      - internal-net
+
+networks:
+  internal-net:
