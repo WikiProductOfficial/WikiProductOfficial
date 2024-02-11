@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
   sidebarVisible: boolean = false;
   navbarScrolled: boolean = false;
   isLargeScreen: boolean = false;
-  categories!: string[];
+  categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
   value: any;
 
@@ -45,7 +45,8 @@ export class NavbarComponent implements OnInit {
   }
   ngOnInit(): void {
     this.categoriesService.getCategories().subscribe((data) => {
-      this.categories = data.categories;
+      console.log(data)
+      this.categories = data;
     });
     this.checkScreenSize();
   }

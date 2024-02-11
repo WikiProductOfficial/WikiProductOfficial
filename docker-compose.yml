@@ -8,33 +8,40 @@ services:
     command: >
       sh -c "python manage.py wait_for_db &&
              python manage.py migrate &&
+             python manage.py createsu &&
              python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - 8000:8000
     volumes:
       - ./backend/app:/backend/app
     environment:
       - SECRET_KEY=devsecretkey
       - DEBUG=1
+      - CORS_ALLOWED_ORIGINS=http://localhost:4200
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - DJANGO_SU_NAME=admin
+      - DJANGO_SU_EMAIL=admin@example.com
+      - DJANGO_SU_PASSWORD=admin
+    ports:
+      - "8000:8000"
     depends_on:
       - db
+    networks:
+      - internal-net
 
   frontend:
     image: frontend-dev
     build:
       context: ./frontend
-    command: >
-      sh -c "npm install && ng serve --host 0.0.0.0"
-    ports: 
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
       - "4200:4200"
-    
-    depends_on: 
+    depends_on:
       - backend
-  
+    networks:
+      - internal-net
 
   db:
     image: postgres:13-alpine
@@ -42,3 +49,8 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+    networks:
+      - internal-net
+
+networks:
+  internal-net:

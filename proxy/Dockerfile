@@ -10,7 +10,6 @@ ENV LISTEN_PORT=8000
 ENV APP_HOST=backend
 ENV APP_PORT=9000  
 
-
 USER root
 
 RUN mkdir -p /vol/static && \
