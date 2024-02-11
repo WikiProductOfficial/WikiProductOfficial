@@ -6,30 +6,35 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
     environment:
       - SECRET_KEY=devsecretkey
       - DEBUG=1
+      - CORS_ALLOWED_ORIGINS=http://localhost:4200
       - DB_HOST=db
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
-    networks:
-      - internal-net
+    ports:
+      - "8000:8000"
     depends_on:
       - db
+    networks:
+      - internal-net
 
   frontend:
     image: frontend-dev
     build:
       context: ./frontend
-    ports: 
-      - "4200:4200"
     environment:
       - BACKEND_URL=http://backend:8000
-    depends_on: 
+    ports:
+      - "4200:4200"
+    depends_on:
       - backend
     networks:
       - internal-net

@@ -131,6 +131,6 @@ dmypy.json
 /data
 
 
-# Data
-static/
+# System folders
 database/
+static/

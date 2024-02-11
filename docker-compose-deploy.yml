@@ -24,8 +24,9 @@ services:
     build:
       context: ./frontend
     restart: always
-    ports:
-      - "4200:4200"
+    volumes:
+      - ./static/:/vol/web/static
+
 
   db:
     image: postgres:13-alpine
@@ -36,8 +37,6 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
-    ports:
-      - "5432:5432"
 
   proxy:
     image: proxy
@@ -45,7 +44,7 @@ services:
       context: ./proxy
     restart: always
     depends_on:
-      - backend
+      - frontend
     volumes:
       - ./static/:/vol/web/static
     ports:
