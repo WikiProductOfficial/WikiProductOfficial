@@ -8,12 +8,15 @@ body {
   margin: 0;
 }
 .transparent-button-icon {
-  color: var(--transparent-button-icon);
+  color: var(--surface-900);
 }
 
 .transparent-button {
   background: var(--transparent);
   border: 1px solid var(--surface-border);
+}
+.transparent-button:hover {
+  background: var(--surface-hover);
 }
 
 .transparent-input-text {
