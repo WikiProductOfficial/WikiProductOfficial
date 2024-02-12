@@ -1,1 +1,4 @@
-export const environment = {};
+export const environment = {
+  production: true,
+  backendUrl: 'http://localhost:8000',
+};

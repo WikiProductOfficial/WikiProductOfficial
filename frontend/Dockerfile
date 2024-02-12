@@ -1,20 +1,21 @@
-# Use Node.js base image for development
-FROM node:20.11-alpine3.19
+FROM node:20.11-alpine3.19 AS build
 
-# Set the working directory
 WORKDIR /frontend
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies and Angular CLI globally
 RUN npm install -g @angular/cli && npm install
 
-# Copy the rest of your frontend's source code
+# RUN npx ngcc --properties es2023 browser module main --first-only --create-ivy-entry-points
+
 COPY . .
 
-# Expose the port the app runs on
+COPY scripts ./scripts
+
+# Make sure the script is executable
+RUN chmod +x ./scripts/run.sh
+
 EXPOSE 4200
 
-# Command to run the app using Angular CLI
-CMD ["ng", "serve", "--host", "0.0.0.0", "--disable-host-check"]
+# Command to run the app using run.sh script
+CMD ["./scripts/run.sh"]
