@@ -7,10 +7,10 @@ services:
       context: ./backend
     restart: always
     volumes:
-      - ./static/:/vol/web/static
+      - static-data:/vol/web
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=0
+      - DEBUG=1
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
@@ -24,25 +24,26 @@ services:
     networks:
       - internal-net
 
-  frontend:
-    image: frontend
+  nginx:
+    image: nginx
     build:
-      context: ./frontend
+      context: .  # This sets the build context to the current directory, including frontend and nginx
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:8080"
     restart: always
     volumes:
-      - ./static/:/vol/web/static
-    environment:
-      - BACKEND_URL=http://backend:8000
+      - static-data:/vol/static
+      - frontend_builds:/usr/share/nginx/html
     depends_on:
       - backend
     networks:
       - internal-net
-
   db:
     image: postgres:13-alpine
     restart: always
     volumes:
-      - ./database/postgres/:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -50,19 +51,35 @@ services:
     networks:
       - internal-net
 
-  proxy:
-    image: proxy
-    build:
-      context: ./proxy
-    restart: always
-    volumes:
-      - ./static/:/vol/web/static
-    depends_on:
-      - frontend
-    ports:
-      - "80:8000"
-    networks:
-      - internal-net
-      
 networks:
   internal-net:
+
+volumes:
+  postgres-data:
+  static-data:
+  frontend_builds:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # frontend:
+  #   image: frontend
+  #   build:
+  #     context: ./frontend
+  #   # restart: always
+  #   volumes:
+  #     - frontend_builds:/frontend/dist
+  #   environment:
+  #     - SERVER_URL=http://nginx:80
+  #   networks:
+  #     - internal-net

@@ -12,4 +12,4 @@ python manage.py collectstatic --noinput
 python manage.py migrate
 python manage.py createsu
 
-uwsgi --socket :9000 --workers 4 --master --enable-threads --module app.wsgi
+uwsgi --socket :8000 --workers 4 --master --enable-threads --module app.wsgi
