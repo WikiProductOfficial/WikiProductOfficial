@@ -7,3 +7,16 @@ body {
   width: 100%;
   margin: 0;
 }
+.transparent-button-icon {
+  color: var(--transparent-button-icon);
+}
+
+.transparent-button {
+  background: var(--transparent);
+  border: 1px solid var(--surface-border);
+}
+
+.transparent-input-text {
+  background: var(--transparent);
+  border: 1px solid var(--surface-border);
+}
