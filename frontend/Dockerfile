@@ -10,12 +10,15 @@ RUN npm install -g @angular/cli && npm install
 
 COPY . .
 
-COPY scripts ./scripts
+# Change permissions of scripts to ensure they are executable
+RUN chmod -R +x /frontend/scripts
 
-# Make sure the script is executable
-RUN chmod +x ./scripts/run.sh
-
+# Expose the port your app runs on
 EXPOSE 4200
 
+# Add the scripts directory to the PATH for easy execution
+ENV PATH="/frontend/scripts:$PATH"
+
+
 # Command to run the app using run.sh script
-CMD ["./scripts/run.sh"]
+CMD ["run.sh"]

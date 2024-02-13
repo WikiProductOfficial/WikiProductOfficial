@@ -41,7 +41,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Location
-        fields = ['url', 'store']
+        fields = ['map_url', 'store']
 
 class ReviewSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
