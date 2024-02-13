@@ -39,7 +39,7 @@ class Image(models.Model):
 class Store(models.Model):
     store_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    url = models.URLField(max_length=255)
+    store_url = models.URLField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -67,7 +67,7 @@ class ItemBelongsTo(models.Model):
         unique_together = (('item', 'category'),)
 
 class Location(models.Model):
-    url = models.CharField(max_length=255, primary_key=True)
+    map_url = models.CharField(max_length=255, primary_key=True)
     store = models.ForeignKey(Store, on_delete=models.CASCADE, db_column='Store_ID')
 
     class Meta:
