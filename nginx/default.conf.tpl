@@ -2,7 +2,7 @@ server {
     listen ${LISTEN_PORT};
 
     location / {
-        root /usr/share/nginx/html/wiki-product/browser;
+        root /usr/share/nginx/html/browser/;
     }
 
     location /static {
