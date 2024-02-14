@@ -4,11 +4,17 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 import { CookieService } from 'ngx-cookie-service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +27,7 @@ import { RouterModule } from '@angular/router';
     InputTextModule,
     TooltipModule,
     RouterModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -31,12 +38,16 @@ export class NavbarComponent implements OnInit {
   isLargeScreen: boolean = false;
   categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
-  value: any;
+  query: any;
+  searchForm = new FormGroup({
+    query: new FormControl('', [Validators.required, Validators.min(1)]),
+  });
 
   constructor(
     private themeService: ThemeService,
     private cookieService: CookieService,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private router: Router
   ) {
     effect(() => {
       this.cookieService.set('theme', JSON.stringify(this.isDarkTheme()));
@@ -45,7 +56,7 @@ export class NavbarComponent implements OnInit {
   }
   ngOnInit(): void {
     this.categoriesService.getCategories().subscribe((data) => {
-      console.log(data)
+      console.log(data);
       this.categories = data;
     });
     this.checkScreenSize();
@@ -70,5 +81,11 @@ export class NavbarComponent implements OnInit {
   }
   scrollTo(element: HTMLElement): void {
     element.scrollIntoView({ behavior: 'smooth' });
+  }
+  search() {
+    if (this.searchForm.valid) {
+      this.router.navigate(['/results'], { queryParams: { q: this.query } });
+      this.query = '';
+    }
   }
 }

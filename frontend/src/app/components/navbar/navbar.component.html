@@ -12,17 +12,23 @@
     </div>
   </div>
   <div class="flex flex-row gap-2">
-    <div class="search-bar-container" *ngIf="isLargeScreen">
-      <span class="p-input-icon-right">
-        <i class="pi pi-search transparent-button-icon"></i>
-        <input
-          class="transparent-input-text"
-          type="text"
-          pInputText
-          [(ngModel)]="value"
-        />
-      </span>
-    </div>
+    <ng-template #searchBar>
+      <form [formGroup]="searchForm" (ngSubmit)="search()">
+        <span class="p-input-icon-right">
+          <i class="pi pi-search transparent-button-icon"></i>
+          <input
+            class="transparent-input-text"
+            type="text"
+            pInputText
+            [(ngModel)]="query"
+            formControlName="query"
+          />
+        </span>
+      </form>
+    </ng-template>
+    @if (isLargeScreen){
+    <ng-container *ngTemplateOutlet="searchBar"></ng-container>
+    }
     <!-- Wishlist button -->
     <button
       class="p-ripple p-element p-button p-component p-button-icon-only transparent-button"
@@ -62,13 +68,10 @@
 
 <!-- navigation sidebar -->
 <p-sidebar [(visible)]="sidebarVisible">
-  <div class="">
-    <div class="search-bar-container col-4" *ngIf="!isLargeScreen">
-      <span class="p-input-icon-right">
-        <i class="pi pi-search"></i>
-        <input type="text" pInputText [(ngModel)]="value" />
-      </span>
-    </div>
+  <div class="py-3">
+    @if (!isLargeScreen){
+    <ng-container *ngTemplateOutlet="searchBar"></ng-container>
+    }
     <h3>Categories</h3>
     <div class="flex flex-column">
       @for (category of categories; track $index) {
