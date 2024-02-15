@@ -1,20 +1,23 @@
 <app-navbar></app-navbar>
 
-<section>
+<section class="flex justify-content-center align-items-center md:justify-content-start">
   <div class="px-4 py-8 md:px-6 lg:px-8 text-center md:text-left">
-  <span class="error font-bold text-4xl md:text-6xl">{{ errorCode }}</span>
+  <span class="error font-bold text-6xl md:text-8xl">{{ errorCode }}</span>
   <!-- <span class="pi pi-file-excel ml-2" style="font-size: 2.5rem"></span> -->
-  <p class="text-lg md:text-xl mb-6">{{ errorMessage }}</p>
+  <div class="content-section flex flex-column justify-content-around text-center md:text-left">
+    <p class="text-lg md:text-xl mb-6">{{ errorMessage }}</p>
+    <div>
+      <p-button [text]="true" (onClick)="goBack()">
+        <span class="pi pi-arrow-left p-button-icon p-button-icon-left"></span>
+        <span class="p-button-label ng-star-inserted">Go back</span>
+      </p-button>
 
-  <p-button [text]="true" (onClick)="goBack()">
-    <span class="pi pi-arrow-left p-button-icon p-button-icon-left"></span>
-    <span class="p-button-label ng-star-inserted">Go back</span>
-  </p-button>
-
-  <button class="p-ripple p-element p-button p-component" (click)="goToHome()">
-    <span class="pi pi-home p-button-icon p-button-icon-right"></span>
-    <span class="p-button-label ng-star-inserted">Go to Home</span>
-  </button>
+      <button class="p-ripple p-element p-button p-component" (click)="goToHome()">
+        <span class="pi pi-home p-button-icon p-button-icon-right"></span>
+        <span class="p-button-label ng-star-inserted">Go to Home</span>
+      </button>
+    </div>
+  </div>
   </div>
 </section>
 
