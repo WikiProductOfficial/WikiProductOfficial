@@ -15,7 +15,9 @@ class Category(models.Model):
 class Item(models.Model):
     item_id = models.AutoField(primary_key=True, db_column='Item_ID')
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=500)
+    urls = models.JSONField(default=dict(), blank=True, null=True)
+    details = models.JSONField(default=dict(), blank=True, null=True)
+    description = models.CharField(max_length=2000)
     price = models.FloatField()
     summarized_reviews = models.CharField(max_length=255)
 
