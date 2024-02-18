@@ -1,0 +1,69 @@
+@if (isLargeScreen){
+<!--Whole filter section-->
+<div class="container">
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</div>
+} @else if (!isLargeScreen) {
+<button (click)="this.visible = true">nnnn</button>
+<p-dialog
+  header="Header"
+  [(visible)]="visible"
+  [style]="{ width: '50vw' }"
+  [maximizable]="true"
+  [modal]="true"
+  class="justify-content-center"
+>
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</p-dialog>
+
+}
+<ng-template #content>
+  <!--Price range slider filter-->
+  <div class="price-range">
+    <h3>Filter</h3>
+    <div class="card flex flex-wrap gap-3 p-fluid">
+      <div class="flex-auto">
+        <label class="mb-2 block font-bold" for="stacked">Min Price</label>
+        <p-inputNumber
+          [(ngModel)]="minPrice"
+          [showButtons]="true"
+          inputId="stacked"
+          mode="currency"
+          currency="SAR"
+        >
+        </p-inputNumber>
+      </div>
+      <div class="flex-auto">
+        <label class="mb-2 block font-bold" for="stacked">Max Price</label>
+        <p-inputNumber
+          [(ngModel)]="maxPrice"
+          [showButtons]="true"
+          inputId="stacked"
+          mode="currency"
+          currency="SAR"
+        >
+        </p-inputNumber>
+      </div>
+    </div>
+  </div>
+  <!--Sold on checkbox filter-->
+  <h4>Sold On</h4>
+  <div class="sold-on">
+    <div class="card flex justify-content-center">
+      <div class="flex flex-column gap-2">
+        <div *ngFor="let store of stores" class="field-checkbox">
+          <p-checkbox
+            [label]="store.name"
+            name="group"
+            [value]="store"
+            [(ngModel)]="selectedStores"
+          ></p-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Apply filter button-->
+  <div class="card flex justify-content-center mt-3">
+    <p-button label="Apply"></p-button>
+  </div>
+</ng-template>
