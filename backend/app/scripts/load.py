@@ -16,14 +16,14 @@ def run(*args):
     # models.Store.objects.all().delete()
     
     count = 0
-    if None in args:
+    if not len(args):
         limit  = len(df)
     else:
         limit = int(args[0]) * 1000
     
     for _, row in df.iterrows():
         if count < limit:
-            print(row)
+            # print(row) # For Debugging
             count += 1
             category = None
             # Inserting Category
