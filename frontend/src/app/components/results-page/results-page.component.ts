@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductsDataViewComponent } from './products-data-view/products-data-view.component';
+import { FiltersComponent } from './filters/filters.component';
 
 @Component({
   selector: 'app-results-page',
