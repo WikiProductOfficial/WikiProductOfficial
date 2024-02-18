@@ -4,11 +4,11 @@
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </div>
 } @else if (!isLargeScreen) {
-<button (click)="this.visible = true">nnnn</button>
 <p-dialog
   header="Header"
   [(visible)]="visible"
   [style]="{ width: '50vw' }"
+  (visibleChange)="this.visibilityChange.emit(this.visible)"
   [maximizable]="true"
   [modal]="true"
   class="justify-content-center"

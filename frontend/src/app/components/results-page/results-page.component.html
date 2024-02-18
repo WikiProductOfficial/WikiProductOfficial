@@ -1,3 +1,9 @@
 <div class="page-container">
-  <app-filters></app-filters>
+  <button pButton (click)="isFiltersVisible = !isFiltersVisible">
+    Show Filters
+  </button>
+  <app-filters
+    [visible]="isFiltersVisible"
+    (visibilityChange)="onVisibilityChange($event)"
+  ></app-filters>
 </div>

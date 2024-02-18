@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,9 @@ interface Store {
   styleUrl: './filters.component.scss',
 })
 export class FiltersComponent implements OnInit {
+  @Input() visible: boolean = false;
+  @Output() visibilityChange: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   // set initial values
   selectedStores: Store[] = [];
   stores: Store[] = [];
@@ -37,7 +40,6 @@ export class FiltersComponent implements OnInit {
   maxPrice: number = 80;
   showFilters: boolean = true;
   isLargeScreen: boolean = true;
-  visible: boolean = false;
 
   ngOnInit() {
     // retrive price range & stores, it will be mocked initially till integration

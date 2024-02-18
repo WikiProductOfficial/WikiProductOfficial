@@ -8,4 +8,9 @@ import { FiltersComponent } from './filters/filters.component';
   templateUrl: './results-page.component.html',
   styleUrl: './results-page.component.scss',
 })
-export class ResultsPageComponent {}
+export class ResultsPageComponent {
+  isFiltersVisible: boolean = false;
+  onVisibilityChange(isVisible: boolean) {
+    this.isFiltersVisible = isVisible;
+  }
+}
