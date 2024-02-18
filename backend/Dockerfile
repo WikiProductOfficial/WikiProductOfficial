@@ -3,23 +3,32 @@ LABEL maintainer="backend-server"
 
 ENV PYTHONUNBUFFERED 1
 
+# Setup the working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk update && \
+    apk add --no-cache postgresql-client && \
+    apk add --no-cache --virtual .tmp-deps \
+        build-base postgresql-dev musl-dev linux-headers
+
+# Setup virtual environment
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip
+
+# Copy just the requirements.txt initially
 COPY ./requirements.txt /requirements.txt
+
+# Install Python dependencies
+RUN /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps
+
+# Copy the rest of your application code after installing dependencies
 COPY ./app /app
 COPY ./scripts /scripts
 
-WORKDIR /app
-# Confirming the port exposed matches the proxy configuration
-EXPOSE 8000  
-
-# Create virtual environment and install dependencies
-RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
-    apk add --update --no-cache --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev linux-headers && \
-    /py/bin/pip install -r /requirements.txt && \
-    apk del .tmp-deps && \
-    adduser --disabled-password --no-create-home user && \
+# Adjust permissions and create necessary directories
+RUN adduser --disabled-password --no-create-home user && \
     mkdir -p /vol/web/static && \
     mkdir -p /vol/web/media && \
     chown -R user:user /vol && \
@@ -27,6 +36,9 @@ RUN python -m venv /py && \
     chmod -R +x /scripts
 
 ENV PATH="/scripts:/py/bin:$PATH"
+
+# Confirming the port exposed matches the proxy configuration
+EXPOSE 8000  
 
 USER user
 

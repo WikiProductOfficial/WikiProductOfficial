@@ -20,7 +20,7 @@ COPY ./nginx/run.sh /run.sh
 
 ENV LISTEN_PORT=8080
 ENV APP_HOST=backend
-ENV APP_PORT=8000  
+ENV APP_PORT=8000
 
 USER root
 
@@ -36,4 +36,5 @@ USER nginx
 
 EXPOSE 8080
 
-CMD ["/run.sh"]
+
+CMD [ "run.sh" ]
