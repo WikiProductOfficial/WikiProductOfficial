@@ -1,3 +1,8 @@
-<div class="page-container">
-  <p>results-page works! {{ query }}</p>
+<div class="page-container flex">
+  <div class="hidden lg:col-2 lg:block">
+    <p>results-page works! {{ query }}</p>
+  </div>
+  <div class="col-12 lg:col-10">
+    <app-products-data-view></app-products-data-view>
+  </div>
 </div>
