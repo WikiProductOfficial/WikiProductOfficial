@@ -6,19 +6,19 @@ class CategorySerializer(serializers.ModelSerializer):
     children = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = models.Category
-        fields = ['category_id', 'category', 'parent', 'children']
+        fields = "__all__"
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
-        fields = ['image_id', 'image_name', 'image_url']
+        fields = "__all__"
 
 class ItemSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Item
-        fields = ['item_id', 'name', 'description', 'price', 'summarized_reviews', 'images']
+        fields = "__all__"
 
 class ItemsHistorySerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
@@ -26,7 +26,7 @@ class ItemsHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ItemsHistory
-        fields = ['created_on', 'item', 'store', 'price']
+        fields = "__all__"
 
 class ItemBelongsToSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
@@ -34,23 +34,23 @@ class ItemBelongsToSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ItemBelongsTo
-        fields = ['item', 'category']
+        fields = "__all__"
 
 class LocationSerializer(serializers.ModelSerializer):
     store = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = models.Location
-        fields = ['map_url', 'store']
+        fields = "__all__"
 
 class ReviewSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
 
     class Meta:
         model = models.Review
-        fields = ['review_id', 'item', 'stars', 'content']
+        fields = "__all__"
 
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Store
-        fields = ['store_id', 'name', 'url']
+        fields = "__all__"

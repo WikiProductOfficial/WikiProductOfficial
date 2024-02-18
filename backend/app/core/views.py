@@ -12,7 +12,7 @@ def home(request):
 # API endpoint to get all items
 @api_view(['GET'])
 def get_items(request):
-    items = models.Item.objects.all()
+    items = models.Item.objects.all().order_by("item_id")[:50]
     serialized_items = serializers.ItemSerializer(items, many=True)
     return Response(serialized_items.data)
 

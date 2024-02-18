@@ -40,6 +40,7 @@ ENV PATH="/scripts:/py/bin:$PATH"
 # Confirming the port exposed matches the proxy configuration
 EXPOSE 8000  
 
-USER user
+# TODO: Uncomment this for deployment
+# USER user
 
 CMD ["run.sh"]
