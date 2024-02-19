@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import JSONParser
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Local application imports
 from . import models, serializers
@@ -27,6 +29,17 @@ from . import models, serializers
 
 
 # GET Search
+@swagger_auto_schema(
+    method='get',  # Ensure this matches the HTTP method in @api_view
+    manual_parameters=[
+        openapi.Parameter(
+            name='query',
+            in_=openapi.IN_QUERY,
+            description='Search query for items, looking for partial matches.',
+            type=openapi.TYPE_STRING
+        )
+    ]
+)
 @api_view(['GET'])
 def search(request):
     query = request.GET.get('query', '')  # Get the search query parameter
