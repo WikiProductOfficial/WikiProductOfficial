@@ -19,7 +19,7 @@ def run(*args):
     if not len(args):
         limit  = len(df)
     else:
-        limit = int(args[0]) * 1000
+        limit = int(args[0]) *  100
     
     for _, row in df.iterrows():
         if count < limit:

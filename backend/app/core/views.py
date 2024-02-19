@@ -32,7 +32,11 @@ def search(request):
     query = request.GET.get('query', '')  # Get the search query parameter
     if query:
         # Filter items based on the query. Adjust field names as needed.
-        items = models.Item.objects.filter(name__icontains=query)[:50]  # Example field 'name'
+        items = models.Item.objects.raw(
+            """SELECT *
+               FROM items
+               WHERE UPPER(name::text) LIKE UPPER(%s)""",
+            ["%" + query.replace(" ", "%") + "%"])[:50]  # Example field 'name'
         serializer = serializers.ItemSerializer(items, many=True)
         return JsonResponse(serializer.data, safe=False)
     else:
