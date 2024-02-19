@@ -38,7 +38,6 @@ export class NavbarComponent implements OnInit {
   isLargeScreen: boolean = false;
   categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
-  query: any;
   searchForm = new FormGroup({
     query: new FormControl('', [Validators.required, Validators.min(1)]),
   });
@@ -84,8 +83,10 @@ export class NavbarComponent implements OnInit {
   }
   search() {
     if (this.searchForm.valid) {
-      this.router.navigate(['/results'], { queryParams: { q: this.query } });
-      this.query = '';
+      this.router.navigate(['/results'], {
+        queryParams: { q: this.searchForm.get('query')?.value },
+      });
+      this.searchForm.reset();
     }
   }
 }
