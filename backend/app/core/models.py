@@ -19,6 +19,7 @@ class Item(models.Model):
     details = models.JSONField(default=dict, blank=True, null=True)
     description = models.CharField(max_length=2000)
     price = models.FloatField()
+    rating = models.FloatField()
     review_count = models.IntegerField()
     summarized_reviews = models.CharField(max_length=255)
 

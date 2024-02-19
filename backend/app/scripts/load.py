@@ -23,7 +23,7 @@ def run(*args):
     
     for _, row in df.iterrows():
         if count < limit:
-            # print(row) # For Debugging
+            print(row) # For Debugging
             count += 1
             category = None
             # Inserting Category
@@ -43,6 +43,7 @@ def run(*args):
                                                     details={} if row["details"] is np.nan else row["details"],
                                                     description=str(row["description"])[:500],
                                                     price=row["price"],
+                                                    rating = 0 if pd.isna(row["stars"]) else float(row["stars"]),
                                                     review_count = 0 if pd.isna(row["star_count"]) else int(row["star_count"]),
                                                     summarized_reviews="null")
             # Inserting Image
