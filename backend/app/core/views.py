@@ -12,31 +12,31 @@ from rest_framework.parsers import JSONParser
 from . import models, serializers
 
 
-@api_view(['POST'])
-def search(request):
-    ### Inital build  of the search function to test it - feel free to changed
-    data = JSONParser().parse(request)
-    query = data.get('query', '')
-    if query:
-        items = models.Item.objects.filter(name__icontains=query)[:1000] 
-        serializer = serializers.ItemSerializer(items, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({'message': 'No query provided'}, status=400)
-
-
-
-# # GET Search
-# @api_view(['GET'])
+# @api_view(['POST'])
 # def search(request):
-#     query = request.GET.get('query', '')  # Get the search query parameter
+#     ### Inital build  of the search function to test it - feel free to changed
+#     data = JSONParser().parse(request)
+#     query = data.get('query', '')
 #     if query:
-#         # Filter items based on the query. Adjust field names as needed.
-#         items = Item.objects.filter(name__icontains=query)[:1000]  # Example field 'name'
-#         serializer = ItemSerializer(items, many=True)
-#         return JsonResponse(serializer.data, safe=False)
+#         items = models.Item.objects.filter(name__icontains=query)[:50] 
+#         serializer = serializers.ItemSerializer(items, many=True)
+#         return Response(serializer.data)
 #     else:
-#         return JsonResponse({'message': 'No query provided'}, status=400)
+#         return Response({'message': 'No query provided'}, status=400)
+
+
+
+# GET Search
+@api_view(['GET'])
+def search(request):
+    query = request.GET.get('query', '')  # Get the search query parameter
+    if query:
+        # Filter items based on the query. Adjust field names as needed.
+        items = models.Item.objects.filter(name__icontains=query)[:50]  # Example field 'name'
+        serializer = serializers.ItemSerializer(items, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return JsonResponse({'message': 'No query provided'}, status=400)
 
 
 
