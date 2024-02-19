@@ -13,8 +13,11 @@ services:
       volumes:
         - static-data:/vol/static
         - frontend_builds:/usr/share/nginx/html
+      depends_on:
+        - backend
       networks:
         - frontend
+      
 
   backend:
     image: backend
