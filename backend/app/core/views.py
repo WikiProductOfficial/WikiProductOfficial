@@ -14,6 +14,7 @@ from . import models, serializers
 
 @api_view(['POST'])
 def search(request):
+    ### Inital build  of the search function to test it - feel free to changed
     data = JSONParser().parse(request)
     query = data.get('query', '')
     if query:
