@@ -6,14 +6,18 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
-//TODO: adjust show filter button
-//TODO: send queries parameters on apply
 //TODO: clean code & push
 //TODO: Tree Component situation
 
 interface Store {
   id: number;
   name: string;
+}
+
+interface FilteredProducts {
+  minPrice?: number;
+  maxPrice?: number;
+  stores?: number[];
 }
 @Component({
   selector: 'app-filters',
@@ -39,7 +43,7 @@ export class FiltersComponent implements OnInit {
   minPrice: number = 20;
   maxPrice: number = 80;
   showFilters: boolean = true;
-  isLargeScreen: boolean = true;
+  isLargeScreen: boolean = false;
 
   ngOnInit() {
     // retrive price range & stores, it will be mocked initially till integration
@@ -48,7 +52,24 @@ export class FiltersComponent implements OnInit {
       this.stores = stores;
     });
   }
+  onApply() {
+    // init query
+    const filteredProducts: FilteredProducts = {};
 
+    // Add price range to query
+    if (this.minPrice !== undefined && this.maxPrice !== undefined) {
+      filteredProducts.minPrice = this.minPrice;
+      filteredProducts.maxPrice = this.maxPrice;
+    }
+
+    // Add selected stores filter if any stores are selected
+    if (this.selectedStores && this.selectedStores.length > 0) {
+      filteredProducts.stores = this.selectedStores.map((store) => store.id);
+    }
+
+    // Send query to a service ' service will be created '
+    console.log('Query:', filteredProducts);
+  }
   getStores(): Promise<Store[]> {
     return new Promise((resolve) => {
       // service will be used here
