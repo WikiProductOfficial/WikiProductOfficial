@@ -6,8 +6,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
-//TODO: clean code & push
-//TODO: Tree Component situation
 
 interface Store {
   id: number;
@@ -19,6 +17,7 @@ interface FilteredProducts {
   maxPrice?: number;
   stores?: number[];
 }
+
 @Component({
   selector: 'app-filters',
   standalone: true,
@@ -37,6 +36,9 @@ export class FiltersComponent implements OnInit {
   @Input() visible: boolean = false;
   @Output() visibilityChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
+  // for filter process
+  @Output() filteredProductsChange: EventEmitter<FilteredProducts> =
+    new EventEmitter<FilteredProducts>();
   // set initial values
   selectedStores: Store[] = [];
   stores: Store[] = [];
@@ -66,6 +68,9 @@ export class FiltersComponent implements OnInit {
     if (this.selectedStores && this.selectedStores.length > 0) {
       filteredProducts.stores = this.selectedStores.map((store) => store.id);
     }
+
+    // Emit filteredProducts
+    this.filteredProductsChange.emit(filteredProducts);
 
     // Send query to a service ' service will be created '
     console.log('Query:', filteredProducts);
