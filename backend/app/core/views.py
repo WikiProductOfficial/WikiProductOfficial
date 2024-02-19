@@ -1,13 +1,43 @@
+# Django imports
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from rest_framework.response import Response
+
+# Django REST Framework imports
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import JSONParser
+
+# Local application imports
 from . import models, serializers
 
 
-def home(request):
-    return render(request, 'home.html')
+@api_view(['POST'])
+def search(request):
+    data = JSONParser().parse(request)
+    query = data.get('query', '')
+    if query:
+        items = models.Item.objects.filter(name__icontains=query)[:1000] 
+        serializer = serializers.ItemSerializer(items, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({'message': 'No query provided'}, status=400)
+
+
+
+# # GET Search
+# @api_view(['GET'])
+# def search(request):
+#     query = request.GET.get('query', '')  # Get the search query parameter
+#     if query:
+#         # Filter items based on the query. Adjust field names as needed.
+#         items = Item.objects.filter(name__icontains=query)[:1000]  # Example field 'name'
+#         serializer = ItemSerializer(items, many=True)
+#         return JsonResponse(serializer.data, safe=False)
+#     else:
+#         return JsonResponse({'message': 'No query provided'}, status=400)
+
+
 
 # API endpoint to get all items
 @api_view(['GET'])
@@ -42,3 +72,4 @@ def get_popular_items(request):
     categories = models.Category.objects.all()
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
+
