@@ -9,6 +9,48 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
 import { RouterModule } from '@angular/router';
+import { TreeModule } from 'primeng/tree';
+
+export interface CategoryNode {
+  label: string;
+  data?: any; // You can add additional properties as needed
+  children?: CategoryNode[];
+}
+
+// Creating a mock array of tree nodes
+const mockNodes: CategoryNode[] = [
+  {
+    label: 'Folder 1',
+    children: [
+      {
+        label: 'File 1',
+      },
+      {
+        label: 'File 2',
+      },
+    ],
+  },
+  {
+    label: 'Folder 2',
+    children: [
+      {
+        label: 'Subfolder 1',
+        children: [
+          {
+            label: 'File 3',
+          },
+          {
+            label: 'File 4',
+          },
+        ],
+      },
+      {
+        label: 'File 5',
+      },
+    ],
+  },
+  // Add more nodes as needed
+];
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +63,7 @@ import { RouterModule } from '@angular/router';
     InputTextModule,
     TooltipModule,
     RouterModule,
+    TreeModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -32,6 +75,7 @@ export class NavbarComponent implements OnInit {
   categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
   value: any;
+  files: CategoryNode[] = mockNodes;
 
   constructor(
     private themeService: ThemeService,
@@ -45,7 +89,7 @@ export class NavbarComponent implements OnInit {
   }
   ngOnInit(): void {
     this.categoriesService.getCategories().subscribe((data) => {
-      console.log(data)
+      console.log(data);
       this.categories = data;
     });
     this.checkScreenSize();

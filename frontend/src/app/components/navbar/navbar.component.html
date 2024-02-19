@@ -70,7 +70,7 @@
       </span>
     </div>
     <h3>Categories</h3>
-    <div class="flex flex-column">
+    <!-- <div class="flex flex-column">
       @for (category of categories; track $index) {
       <p-button
         [label]="category.category"
@@ -78,6 +78,7 @@
         severity="secondary"
       ></p-button>
       }
-    </div>
+    </div> -->
+    <p-tree class="w-full md:w-30rem" [value]="files"></p-tree>
   </div>
 </p-sidebar>
