@@ -13,6 +13,8 @@ from drf_yasg import openapi
 # Local application imports
 from . import models, serializers
 
+#Library imports
+import math
 
 # @api_view(['POST'])
 # def search(request):
@@ -42,16 +44,39 @@ from . import models, serializers
 )
 @api_view(['GET'])
 def search(request):
+    PER_PAGE = 12 # Number of results per page "CONSTANT"
+    
     query = request.GET.get('query', '')  # Get the search query parameter
+    page = int(request.GET.get('page', 1))  #  Get the pagination number (default is 1)
+    
+    
     if query:
+        start = (page - 1) * PER_PAGE # The  item at which we should start our query
+        end = page * PER_PAGE # The item at which we should stop our query
+        
         # Filter items based on the query. Adjust field names as needed.
         items = models.Item.objects.raw(
             """SELECT *
                FROM items
                WHERE UPPER(name::text) LIKE UPPER(%s)""",
-            ["%" + query.replace(" ", "%") + "%"])[:50]  # Example field 'name'
-        serializer = serializers.ItemSerializer(items, many=True)
-        return JsonResponse(serializer.data, safe=False)
+            ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
+        
+        max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
+        
+        # check if the page does not exceed the maximum allowed value
+        if page <= max_pages:
+            serializer = serializers.ItemSerializer(items[start:end], many=True)
+        else:
+            return JsonResponse({'message': "The page number exceeds the max"}, status=400)
+            
+            
+        return JsonResponse({
+            "results": serializer.data,
+            "max_pages": max_pages,
+            "serializer_count": len(serializer.data),
+            "items_count": len(items),
+            }, safe=False)
+        
     else:
         return JsonResponse({'message': 'No query provided'}, status=400)
 
