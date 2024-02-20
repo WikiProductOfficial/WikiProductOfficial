@@ -73,8 +73,6 @@ def search(request):
         return JsonResponse({
             "results": serializer.data,
             "max_pages": max_pages,
-            "serializer_count": len(serializer.data),
-            "items_count": len(items),
             }, safe=False)
         
     else:
