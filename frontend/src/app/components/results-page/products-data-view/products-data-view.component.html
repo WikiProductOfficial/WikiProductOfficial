@@ -1,4 +1,10 @@
-<p-dataView #dv [value]="products" [layout]="layout">
+<app-loader *ngIf="searchService.loading"></app-loader>
+<p-dataView
+  *ngIf="!searchService.loading"
+  #dv
+  [value]="products"
+  [layout]="layout"
+>
   <ng-template pTemplate="header">
     <div class="flex justify-content-end">
       <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
