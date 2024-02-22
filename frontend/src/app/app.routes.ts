@@ -8,6 +8,5 @@ export const routes: Routes = [
   { path: 'results', component: ResultsPageComponent },
 
   //error path
-  {path: '**', component: NotfoundComponent}
-
+  { path: '**', component: NotfoundComponent },
 ];
