@@ -15,6 +15,7 @@ from . import models, serializers
 
 #Library imports
 import math
+import json
 
 # @api_view(['POST'])
 # def search(request):
@@ -46,8 +47,10 @@ import math
 def search(request):
     PER_PAGE = 12 # Number of results per page "CONSTANT"
     
-    query = request.GET.get('query', '')  # Get the search query parameter
-    page = int(request.GET.get('page', 1))  #  Get the pagination number (default is 1)
+    query = request.query_params.get('query', '')  # Get the search query parameter
+    page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
+    if page  < 1:
+        return Response({"error":"Invalid page number. Page number must be 1 or greater"})
     
     
     if query:
@@ -66,14 +69,12 @@ def search(request):
         # check if the page does not exceed the maximum allowed value
         if page <= max_pages:
             serializer = serializers.ItemSerializer(items[start:end], many=True)
+            return JsonResponse({
+                "results": serializer.data, 
+                "max_pages": max_pages,
+                }, safe=False)
         else:
             return JsonResponse({'message': "The page number exceeds the max"}, status=400)
-            
-            
-        return JsonResponse({
-            "results": serializer.data,
-            "max_pages": max_pages,
-            }, safe=False)
         
     else:
         return JsonResponse({'message': 'No query provided'}, status=400)
@@ -114,3 +115,18 @@ def get_popular_items(request):
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
 
+
+# API endpoint to get wishlist items
+@api_view(['GET'])
+def get_wishlist(request):
+    wishlist_ids = request.query_params.get('wishlist', [])
+    if wishlist_ids:
+        try:
+            wishlist_ids = [int(item) for item in wishlist_ids.strip("[]").split(',')]
+            wishlist_items = models.Item.objects.filter(item_id__in=wishlist_ids).order_by('item_id')
+            serialized_wishlist_items = serializers.ItemSerializer(wishlist_items, many=True)
+            return Response(serialized_wishlist_items.data)
+        except:
+            return Response({"Error": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
