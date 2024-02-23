@@ -1,12 +1,12 @@
 # Django imports
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+# from django.http import JsonResponse
 
 # Django REST Framework imports
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import JSONParser
+# from rest_framework.parsers import JSONParser
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -15,7 +15,6 @@ from . import models, serializers
 
 #Library imports
 import math
-import json
 
 # @api_view(['POST'])
 # def search(request):
@@ -69,15 +68,15 @@ def search(request):
         # check if the page does not exceed the maximum allowed value
         if page <= max_pages:
             serializer = serializers.ItemSerializer(items[start:end], many=True)
-            return JsonResponse({
+            return Response({
                 "results": serializer.data, 
                 "max_pages": max_pages,
-                }, safe=False)
+                })
         else:
-            return JsonResponse({'message': "The page number exceeds the max"}, status=400)
+            return Response({'message': "The page number exceeds the max"}, status=400)
         
     else:
-        return JsonResponse({'message': 'No query provided'}, status=400)
+        return Response({'message': 'No query provided'}, status=400)
 
 
 
