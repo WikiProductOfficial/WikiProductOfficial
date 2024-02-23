@@ -20,5 +20,5 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProductsDataViewComponent {
   @Input() products!: any[];
-  layout: 'list' | 'grid' = 'list';
+  layout: 'list' | 'grid' = 'grid';
 }

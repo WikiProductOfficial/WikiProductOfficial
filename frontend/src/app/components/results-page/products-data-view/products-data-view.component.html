@@ -63,10 +63,10 @@
     <div class="grid grid-nogutter">
       <div *ngFor="let product of products" class="col-6 md:col-4 lg:col-3">
         <div
-          class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl m-3"
+          class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl m-1 md:m-2"
         >
           <div
-            class="h-15rem w-full bg-white flex justify-content-center align-items-center p-4 border-round-top-xl mb-3"
+            class="h-15rem w-full bg-white flex justify-content-center align-items-center p-2 border-round-top-xl mb-3"
           >
             <img
               [src]="product.images[0].image_url"

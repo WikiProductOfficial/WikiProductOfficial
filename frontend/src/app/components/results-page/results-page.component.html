@@ -2,7 +2,15 @@
   <div class="hidden lg:col-2 lg:block">
     <app-filters></app-filters>
   </div>
-  <div class="col-12 lg:col-10">
+  <div class="flex flex-column col-12 lg:col-10">
     <app-products-data-view [products]="results"></app-products-data-view>
+    <p-paginator
+      styleClass="m-2"
+      [rows]="12"
+      [totalRecords]="maxPages * 12"
+      [alwaysShow]="true"
+      [pageLinkSize]="3"
+      (onPageChange)="onPageChange($event)"
+    ></p-paginator>
   </div>
 </div>

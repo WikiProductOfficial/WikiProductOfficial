@@ -9,9 +9,9 @@ import { environment } from '../../environments/environment';
 export class SearchService {
   constructor(private http: HttpClient) {}
 
-  getProducts(query: string): Observable<any> {
+  getProducts(query: string, page: string): Observable<any> {
     return this.http
-      .get<any>(`${environment.backendUrl}/search/?query=${query}`)
+      .get<any>(`${environment.backendUrl}/search/?query=${query}&page=${page}`)
       .pipe(
         catchError((error) => {
           console.error('An error occurred:', error.error);
