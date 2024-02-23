@@ -13,4 +13,9 @@
       (onPageChange)="onPageChange($event)"
     ></p-paginator>
   </div>
+  <app-filters
+    [visible]="isFiltersVisible"
+    (visibilityChange)="onVisibilityChange($event)"
+    (filteredProductsChange)="onProductFilterChange($event)"
+  ></app-filters>
 </div>
