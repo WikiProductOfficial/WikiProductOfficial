@@ -21,37 +21,15 @@ export class ResultsPageComponent {
   onVisibilityChange(isVisible: boolean) {
     this.isFiltersVisible = isVisible;
   }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   onProductFilterChange(filteredProducts: FilteredProducts) {
-    // Construct the query parameters string
-    let queryParams = '';
-
-    if (filteredProducts.minPrice !== undefined) {
-      queryParams += `minPrice=${filteredProducts.minPrice}&`;
-    }
-
-    if (filteredProducts.maxPrice !== undefined) {
-      queryParams += `maxPrice=${filteredProducts.maxPrice}&`;
-    }
-
-    if (
-      filteredProducts.stores !== undefined &&
-      filteredProducts.stores.length > 0
-    ) {
-      queryParams += `stores=${filteredProducts.stores.join(',')}&`;
-    }
-
-    if (queryParams.endsWith('&')) {
-      queryParams = queryParams.slice(0, -1);
-    }
-
-    // Navigate to the same route with query parameters
+    // update roate
+    this.filteredProducts = filteredProducts;
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: queryParams ? { filter: queryParams } : {},
-      queryParamsHandling: 'merge',
+      queryParams: filteredProducts,
     });
+    console.log(filteredProducts);
   }
-
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 }

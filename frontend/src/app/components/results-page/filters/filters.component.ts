@@ -6,7 +6,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 
-
 interface Store {
   id: number;
   name: string;
@@ -42,10 +41,10 @@ export class FiltersComponent implements OnInit {
   // set initial values
   selectedStores: Store[] = [];
   stores: Store[] = [];
-  minPrice: number = 20;
-  maxPrice: number = 80;
+  minPrice: number = 0;
+  maxPrice: number = 1000; // will be replaced later with max product price
   showFilters: boolean = true;
-  isLargeScreen: boolean = false;
+  isLargeScreen: boolean = true;
 
   ngOnInit() {
     // retrive price range & stores, it will be mocked initially till integration
@@ -55,26 +54,25 @@ export class FiltersComponent implements OnInit {
     });
   }
   onApply() {
-    // init query
-    const filteredProducts: FilteredProducts = {};
-
-    // Add price range to query
-    if (this.minPrice !== undefined && this.maxPrice !== undefined) {
-      filteredProducts.minPrice = this.minPrice;
-      filteredProducts.maxPrice = this.maxPrice;
-    }
-
-    // Add selected stores filter if any stores are selected
-    if (this.selectedStores && this.selectedStores.length > 0) {
-      filteredProducts.stores = this.selectedStores.map((store) => store.id);
-    }
-
-    // Emit filteredProducts
+    // create filter object or fill it
+    const filteredProducts: FilteredProducts = {
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      stores: this.selectedStores.map((store) => store.id),
+    };
+    // emit to parent
     this.filteredProductsChange.emit(filteredProducts);
-
-    // Send query to a service ' service will be created '
-    console.log('Query:', filteredProducts);
   }
+
+  onReset() {
+    // reset selections to default
+    this.selectedStores = [];
+    this.minPrice = 0;
+    this.maxPrice = 1000;
+    // here will emit empty queries, so that no filter needed.
+    this.filteredProductsChange.emit({});
+  }
+
   getStores(): Promise<Store[]> {
     return new Promise((resolve) => {
       // service will be used here
