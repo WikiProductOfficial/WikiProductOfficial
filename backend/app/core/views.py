@@ -116,20 +116,21 @@ def get_popular_items(request):
 
 
 # API endpoint to get wishlist items
-# @swagger_auto_schema(
-#     method='get',  # Ensure this matches the HTTP method in @api_view
-#     manual_parameters=[
-#         openapi.Parameter(
-#             name='wishlist',
-#             in_=openapi.IN_BODY,
-#             description='Search query for items, looking for partial matches.',
-#             type=openapi.TYPE_ARRAY,
-#             schema=
-#             required= True
-#         )
-#     ]
-# )
-@api_view(['GET'])
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'wishlist': openapi.Schema(
+                type=openapi.TYPE_ARRAY,
+                items=openapi.Schema(type=openapi.TYPE_INTEGER)
+            )
+        },
+        required=['wishlist']
+    )
+)
+
+@api_view(['POST'])
 def get_wishlist(request):
     wishlist_ids = request.data.get('wishlist', [])
     if wishlist_ids:
