@@ -14,9 +14,9 @@ FROM nginxinc/nginx-unprivileged:1-alpine
 LABEL maintainer="nginx-server"
 
 COPY --from=frontend-build /frontend/dist/wiki-product /usr/share/nginx/html
-COPY ./nginx/default.conf.tpl /etc/nginx/default.conf.tpl
-COPY ./nginx/uwsgi_params /etc/nginx/uwsgi_params
-COPY ./nginx/run.sh /run.sh
+COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
+COPY ./uwsgi_params /etc/nginx/uwsgi_params
+COPY ./run.sh /run.sh
 
 ENV LISTEN_PORT=8080
 ENV APP_HOST=backend
