@@ -1,12 +1,12 @@
 # Django imports
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+# from django.http import JsonResponse
 
 # Django REST Framework imports
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import JSONParser
+# from rest_framework.parsers import JSONParser
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -46,8 +46,10 @@ import math
 def search(request):
     PER_PAGE = 12 # Number of results per page "CONSTANT"
     
-    query = request.GET.get('query', '')  # Get the search query parameter
-    page = int(request.GET.get('page', 1))  #  Get the pagination number (default is 1)
+    query = request.query_params.get('query', '')  # Get the search query parameter
+    page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
+    if page  < 1:
+        return Response({"error":"Invalid page number. Page number must be 1 or greater"})
     
     
     if query:
@@ -66,17 +68,15 @@ def search(request):
         # check if the page does not exceed the maximum allowed value
         if page <= max_pages:
             serializer = serializers.ItemSerializer(items[start:end], many=True)
+            return Response({
+                "results": serializer.data, 
+                "max_pages": max_pages,
+                })
         else:
-            return JsonResponse({'message': "The page number exceeds the max"}, status=400)
-            
-            
-        return JsonResponse({
-            "results": serializer.data,
-            "max_pages": max_pages,
-            }, safe=False)
+            return Response({'message': "The page number exceeds the max"}, status=400)
         
     else:
-        return JsonResponse({'message': 'No query provided'}, status=400)
+        return Response({'message': 'No query provided'}, status=400)
 
 
 
@@ -114,3 +114,31 @@ def get_popular_items(request):
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
 
+
+# API endpoint to get wishlist items
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'wishlist': openapi.Schema(
+                type=openapi.TYPE_ARRAY,
+                items=openapi.Schema(type=openapi.TYPE_INTEGER)
+            )
+        },
+        required=['wishlist']
+    )
+)
+
+@api_view(['POST'])
+def get_wishlist(request):
+    wishlist_ids = request.data.get('wishlist', [])
+    if wishlist_ids:
+        try:
+            wishlist_items = models.Item.objects.filter(item_id__in=wishlist_ids).order_by('item_id')
+            serialized_wishlist_items = serializers.ItemSerializer(wishlist_items, many=True)
+            return Response(serialized_wishlist_items.data)
+        except:
+            return Response({"Error": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
