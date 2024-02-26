@@ -18,7 +18,7 @@ COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
 COPY ./run.sh /run.sh
 
-ENV LISTEN_PORT=8080
+ENV LISTEN_PORT=80
 ENV APP_HOST=backend
 ENV APP_PORT=8000  
 
@@ -34,6 +34,6 @@ RUN mkdir -p /vol/static && \
 
 USER nginx
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["/run.sh"]

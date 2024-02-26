@@ -5,10 +5,9 @@ services:
   nginx:
       image: nginx
       build:
-        context: .  # This sets the build context to the current directory, including frontend and nginx
-        dockerfile: nginx/Dockerfile
+        context: ./nginx
       ports:
-        - "80:8080"
+        - "80:80"
       restart: always
       volumes:
         - static-data:/vol/static
@@ -35,6 +34,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DB_PORT=${DB_PORT}
       - DJANGO_SU_NAME=${DJANGO_SU_NAME}
       - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
