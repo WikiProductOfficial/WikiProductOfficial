@@ -6,7 +6,7 @@ COPY frontend/package*.json ./
 
 RUN npm install -g @angular/cli && npm install
 
-COPY frontend/. .
+COPY ../frontend/. .
 
 RUN ng build --configuration=production
 
