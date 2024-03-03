@@ -7,11 +7,13 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class CategoriesService {
-  private apiUrl = `${environment.backendUrl}/categories/`;
-  constructor(private http: HttpClient) {}
+  private backendUrl: string;
+  constructor(private http: HttpClient) {
+    this.backendUrl = `${window.location.protocol}//${window.location.hostname}:${environment.backendPort}${environment.backendPath}`;
+  }
 
   getCategories(): Observable<any> {
-    return this.http.get<any>(this.apiUrl).pipe(
+    return this.http.get<any>(this.backendUrl).pipe(
       catchError((error) => {
         console.error('An error occurred:', error.error);
         return throwError(
