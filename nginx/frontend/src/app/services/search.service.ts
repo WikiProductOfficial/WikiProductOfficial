@@ -7,11 +7,14 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class SearchService {
-  constructor(private http: HttpClient) {}
+  private backendUrl: string;
+  constructor(private http: HttpClient) {
+    this.backendUrl = `${window.location.protocol}//${window.location.hostname}:${environment.backendPort}${environment.backendPath}`;
+  }
 
   getProducts(query: string): Observable<any> {
     return this.http
-      .get<any>(`${environment.backendUrl}/search/?query=${query}`)
+      .get<any>(`${this.backendUrl}/search/?query=${query}`)
       .pipe(
         catchError((error) => {
           console.error('An error occurred:', error.error);
