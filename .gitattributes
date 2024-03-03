@@ -1,0 +1,2 @@
+# Set line endings to LF, even on Windows, to eliminate CRLF LF incompatibility.
+*.sh text eol=lf
