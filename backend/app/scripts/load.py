@@ -23,7 +23,7 @@ def run(*args):
     
     for _, row in df.iterrows():
         if count < limit:
-            print(row) # For Debugging
+            # print(row) # For Debugging
             count += 1
             category = None
             # Inserting Category

@@ -62,7 +62,6 @@ def search(request):
         end = page * PER_PAGE # The item at which we should stop our query
         
         query = query.strip().split(" ")
-        print(f"Query: {query}")
         # Filter items based on the query. Adjust field names as needed.
         # OLD way
         # items = models.Item.objects.raw(
