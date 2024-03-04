@@ -13,6 +13,11 @@ from drf_yasg import openapi
 # Local application imports
 from . import models, serializers
 
+# Imports for querying
+from django.db.models import Q
+from functools import reduce
+import operator
+
 #Library imports
 import math
 
@@ -56,22 +61,31 @@ def search(request):
         start = (page - 1) * PER_PAGE # The  item at which we should start our query
         end = page * PER_PAGE # The item at which we should stop our query
         
+        query = query.strip().split(" ")
+        print(f"Query: {query}")
         # Filter items based on the query. Adjust field names as needed.
-        items = models.Item.objects.raw(
-            """SELECT *
-               FROM items
-               WHERE UPPER(name::text) LIKE UPPER(%s)""",
-            ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
+        # OLD way
+        # items = models.Item.objects.raw(
+        #     """SELECT *
+        #        FROM items
+        #        WHERE UPPER(name::text) LIKE UPPER(%s)""",
+        #     ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
+        
+        # New way of searching
+        condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
+        items = models.Item.objects.filter(condition)
         
         max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
         
         # check if the page does not exceed the maximum allowed value
-        if page <= max_pages:
+        if page <= max_pages and items.count() > 0:
             serializer = serializers.ItemSerializer(items[start:end], many=True)
             return Response({
                 "results": serializer.data, 
                 "max_pages": max_pages,
                 })
+        elif items.count() <= 0:
+            return Response({'message': "There is no such items"}, status=400)
         else:
             return Response({'message': "The page number exceeds the max"}, status=400)
         
