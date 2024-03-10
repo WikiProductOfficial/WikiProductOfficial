@@ -1,0 +1,41 @@
+name: Testing deployment using Postman
+
+on:
+  push:
+    branches:
+    - main
+    - abdulmohsen
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  docker:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Start containers
+      run: docker-compose -f "docker-compose-deploy.yml" up -d --build
+
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 20
+
+    - name: Sleep to ensure everything is loaded
+      run: sleep 60
+
+    - name: Install Newman (Postman CLI)
+      run: npm install -g newman
+
+    - name: Run Postman tests
+      run: newman run tests/deploy_testing.postman_collection.json
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose-deploy.yml" down
