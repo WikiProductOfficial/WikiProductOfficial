@@ -25,7 +25,7 @@ jobs:
     - name: Install node
       uses: actions/setup-node@v1
       with:
-        node-version: 'latest'
+        node-version: 20
 
     - name: Sleep to ensure everything is loaded
       run: sleep 60
