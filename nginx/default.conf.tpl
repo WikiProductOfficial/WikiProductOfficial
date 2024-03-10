@@ -1,8 +1,11 @@
 server {
     listen ${LISTEN_PORT};
 
+    root /usr/share/nginx/html/browser/;
+    index index.html;
+
     location / {
-        root /usr/share/nginx/html/browser/;
+        # try_files /index.html =404;
     }
 
     location /static {
