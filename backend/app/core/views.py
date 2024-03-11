@@ -14,7 +14,7 @@ from drf_yasg import openapi
 from . import models, serializers
 
 # Imports for querying
-from django.db.models import Q
+from django.db.models import Q, Max
 from functools import reduce
 import operator
 
@@ -55,6 +55,22 @@ import math
             default= 1,
             
         ),
+        openapi.Parameter(
+            name='min_price',
+            in_=openapi.IN_QUERY,
+            description='Min price for the price range.',
+            type=openapi.TYPE_NUMBER,
+            format=openapi.FORMAT_FLOAT,
+            required=False
+        ),
+        openapi.Parameter(
+            name='max_price',
+            in_=openapi.IN_QUERY,
+            description='Max price for the price range.',
+            type=openapi.TYPE_NUMBER,
+            format=openapi.FORMAT_FLOAT,
+            required=False
+        ),
     ]
 )
 @api_view(['GET'])
@@ -63,6 +79,7 @@ def search(request):
     
     query = request.query_params.get('query', '')  # Get the search query parameter
     page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
+    
     if page  < 1:
         return Response({"error":"Invalid page number. Page number must be 1 or greater"})
     
@@ -70,6 +87,8 @@ def search(request):
     if query:
         start = (page - 1) * PER_PAGE # The  item at which we should start our query
         end = page * PER_PAGE # The item at which we should stop our query
+        min_price = float(request.query_params.get("min_price", 0))
+        max_price = float(request.query_params.get("max_price", 0))
         
         query = query.strip().split(" ")
         # Filter items based on the query. Adjust field names as needed.
@@ -80,10 +99,25 @@ def search(request):
         #        WHERE UPPER(name::text) LIKE UPPER(%s)""",
         #     ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
         
+        
         # New way of searching
         condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
         items = models.Item.objects.filter(condition)
         
+        # Should over on the front-end
+        # if min_price.isnumeric():
+        #     min_price = float(min_price)
+        # else:
+        #     min_price = float(0)
+        # if max_price.isnumeric():
+        #     max_price = float(max_price)
+        # else:
+        #     max_price = float(items.aggregate(Max("price"))["price__max"])
+        
+        if not max_price or max_price<= min_price:
+            max_price = float(items.aggregate(Max("price"))["price__max"])
+            
+        items =items.filter(price__range=(min_price,max_price))
         max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
         
         # check if the page does not exceed the maximum allowed value
@@ -92,6 +126,8 @@ def search(request):
             return Response({
                 "results": serializer.data, 
                 "max_pages": max_pages,
+                "min_price": min_price,
+                "max_price": max_price,
                 })
         elif items.count() <= 0:
             return Response({'message': "There is no such items"}, status=400)
