@@ -71,9 +71,32 @@ import math
             format=openapi.FORMAT_FLOAT,
             required=False
         ),
+        openapi.Parameter(
+            name='sort',
+            in_=openapi.IN_QUERY,
+            description="""Sort By:
+                         "pa": "price",     # ascending by price
+                         "pd": "-price",    # descending by price
+                         "na": "name",      # ascending by name
+                         "nd": "-name",     # descending by name
+                         "ra": "rating",    # ascending by rating
+                         "rd": "-rating"    # descending by rating
+                         """,
+            type=openapi.TYPE_STRING,
+            required=False,
+        ),
+        openapi.Parameter(
+            name='store',
+            in_=openapi.IN_QUERY,
+            description="""Use Store Ids separated with commas""",
+            type=openapi.TYPE_STRING,
+            required=False,
+            default="1,2,3"
+        ),
     ]
 )
 @api_view(['GET'])
+# TODO: Catigory filter
 def search(request):
     PER_PAGE = 12 # Number of results per page "CONSTANT"
     
@@ -89,35 +112,32 @@ def search(request):
         end = page * PER_PAGE # The item at which we should stop our query
         min_price = float(request.query_params.get("min_price", 0))
         max_price = float(request.query_params.get("max_price", 0))
+        sort = request.query_params.get('sort', "")
+        ORDER_BY_CONST= {"pa": "price",
+                         "pd": "-price", 
+                         "na": "name",
+                         "nd": "-name",
+                         "ra": "rating",
+                         "rd": "-rating"}
+        
         
         query = query.strip().split(" ")
-        # Filter items based on the query. Adjust field names as needed.
-        # OLD way
-        # items = models.Item.objects.raw(
-        #     """SELECT *
-        #        FROM items
-        #        WHERE UPPER(name::text) LIKE UPPER(%s)""",
-        #     ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
-        
         
         # New way of searching
         condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
         items = models.Item.objects.filter(condition)
         
-        # Should over on the front-end
-        # if min_price.isnumeric():
-        #     min_price = float(min_price)
-        # else:
-        #     min_price = float(0)
-        # if max_price.isnumeric():
-        #     max_price = float(max_price)
-        # else:
-        #     max_price = float(items.aggregate(Max("price"))["price__max"])
-        
         if not max_price or max_price<= min_price:
             max_price = float(items.aggregate(Max("price"))["price__max"])
-            
-        items =items.filter(price__range=(min_price,max_price))
+        
+        # Filtering the price
+        items= items.filter(price__range=(min_price,max_price))
+        
+        # Sort by
+        if sort in ORDER_BY_CONST.keys():
+            items= items.order_by(ORDER_BY_CONST[sort])
+        
+        
         max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
         
         # check if the page does not exceed the maximum allowed value
