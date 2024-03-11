@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  backendUrl: 'https://wikiproduct.up.railway.app/api',
+  backendPort: '80',
+  backendPath: '/api',
 };

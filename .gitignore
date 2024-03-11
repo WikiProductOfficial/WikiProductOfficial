@@ -102,7 +102,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env  # Keep env for fast plug & play. We will remove it later.
 .venv
 env/
 venv/
