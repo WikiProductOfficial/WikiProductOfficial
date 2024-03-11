@@ -43,8 +43,18 @@ import math
             name='query',
             in_=openapi.IN_QUERY,
             description='Search query for items, looking for partial matches.',
-            type=openapi.TYPE_STRING
-        )
+            type=openapi.TYPE_STRING,
+            default="hyun s 2 02"
+        ),
+        openapi.Parameter(
+            name='page',
+            in_=openapi.IN_QUERY,
+            description='Insert the page number for pagination.',
+            type=openapi.TYPE_INTEGER,
+            required=False,
+            default= 1,
+            
+        ),
     ]
 )
 @api_view(['GET'])
