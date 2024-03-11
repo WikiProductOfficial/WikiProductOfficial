@@ -86,7 +86,7 @@ import math
             required=False,
         ),
         openapi.Parameter(
-            name='store',
+            name='stores',
             in_=openapi.IN_QUERY,
             description="""Use Store Ids separated with commas""",
             type=openapi.TYPE_STRING,
@@ -113,6 +113,7 @@ def search(request):
         min_price = float(request.query_params.get("min_price", 0))
         max_price = float(request.query_params.get("max_price", 0))
         sort = request.query_params.get('sort', "")
+        stores = request.query_params.get('stores', "")
         ORDER_BY_CONST= {"pa": "price",
                          "pd": "-price", 
                          "na": "name",
@@ -130,13 +131,16 @@ def search(request):
         if not max_price or max_price<= min_price:
             max_price = float(items.aggregate(Max("price"))["price__max"])
         
-        # Filtering the price
+        # Filtering by price range
         items= items.filter(price__range=(min_price,max_price))
         
         # Sort by
         if sort in ORDER_BY_CONST.keys():
             items= items.order_by(ORDER_BY_CONST[sort])
         
+        # Filtering by stores
+        # if stores:
+        #     items= items.filter()
         
         max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
         
@@ -182,7 +186,7 @@ def get_item(request, item_id):
 # API endpoint to get all categories
 @api_view(['GET'])
 def get_categories(request):
-    categories = models.Category.objects.all()
+    categories = models.Category.objects.all().order_by('category_id')
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
 
@@ -221,3 +225,10 @@ def get_wishlist(request):
             return Response({"Error": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+# API endpoint to get all stores
+@api_view(['GET'])
+def get_stores(request):
+    stores = models.Store.objects.all().order_by("store_id")
+    serialized_stores = serializers.StoreSerializer(stores, many=True)
+    return Response(serialized_stores.data)
