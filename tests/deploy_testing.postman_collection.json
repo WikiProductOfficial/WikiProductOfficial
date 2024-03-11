@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "c46a36cc-11f5-4b80-b1dd-7318083d55a2",
+		"name": "Deploy Testing",
+		"description": "A basic testing method to provide automated testing on push/pull request.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28130400"
+	},
+	"item": [
+		{
+			"name": "Backend",
+			"item": [
+				{
+					"name": "With result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"max_page is given and is a number\", function () {",
+									"    pm.expect(typeof pm.response.json().max_pages === 'number');",
+									"});",
+									"",
+									"pm.test(\"Ensure at least 5 results are given\", function () {",
+									"    let results = pm.response.json().results;",
+									"",
+									"    pm.expect(results.length > 5);",
+									"})",
+									"",
+									"pm.test(\"Ensure a result is valid (has a name and a price)\", function () {",
+									"    let result = pm.response.json().results[0];",
+									"",
+									"    pm.expect(result.name).to.not.be.null;",
+									"    pm.expect(result.price).to.not.be.null;",
+									"})",
+									"",
+									"// Automatically Generated",
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.results).to.exist;",
+									"    pm.expect(responseData.max_pages).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Item ID is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.results).to.be.an('array');",
+									"",
+									"    responseData.results.forEach(function(result) {",
+									"        pm.expect(result.item_id).to.be.a('number');",
+									"        pm.expect(result.item_id).to.be.at.least(0);",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Image URL is a valid URL format\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  responseData.results.forEach(function(result) {",
+									"    result.images.forEach(function(image) {",
+									"      pm.expect(image.image_url).to.be.a('string').and.to.match(/^http(s)?:\\/\\/[^\\s]*$/, \"Invalid URL format\");",
+									"    });",
+									"  });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/api/search/?query=hyu",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "hyu"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "No result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response status code is 400\", function () {",
+									"  pm.expect(pm.response.code).to.equal(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.message).to.exist;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message is a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"    pm.expect(responseData.message).to.not.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Content-Type is application/json\", function () {",
+									"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/api/search/?query=hyuhyuhyu",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"api",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "hyuhyuhyu"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Connection",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if the response status is 200 OK\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Check if the response body contains the correct title tag\r",
+							"pm.test(\"Index Page should have the correct title\", function () {\r",
+							"    var expectedTitle = \"WikiProduct\";\r",
+							"    var titleMatch = pm.response.text().match(/<title>(.*?)<\\/title>/i);\r",
+							"    pm.expect(titleMatch).to.not.be.null;\r",
+							"    var actualTitle = titleMatch[1].trim();\r",
+							"    pm.expect(actualTitle).to.eql(expectedTitle);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost",
+					"host": [
+						"localhost"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Static Files",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is an image\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"image/\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"followRedirects": false,
+				"maxRedirects": "1"
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/favicon.ico",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"favicon.ico"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
