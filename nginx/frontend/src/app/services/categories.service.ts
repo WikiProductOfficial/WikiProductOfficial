@@ -13,7 +13,7 @@ export class CategoriesService {
   }
 
   getCategories(): Observable<any> {
-    return this.http.get<any>(this.backendUrl).pipe(
+    return this.http.get<any>(`${this.backendUrl}/categories/`).pipe(
       catchError((error) => {
         console.error('An error occurred:', error.error);
         return throwError(
