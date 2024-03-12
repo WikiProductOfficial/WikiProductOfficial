@@ -30,7 +30,6 @@ COPY ./scripts /scripts
 # Adjust permissions and create necessary directories
 RUN adduser --disabled-password --no-create-home user && \
     mkdir -p /vol/web/static && \
-    mkdir -p /vol/web/media && \
     chown -R user:user /vol && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts
