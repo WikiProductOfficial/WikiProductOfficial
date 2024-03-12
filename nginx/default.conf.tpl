@@ -3,6 +3,9 @@ server {
     root /usr/share/nginx/html/browser;
     index index.html;
 
+    root /usr/share/nginx/html/browser/;
+    index index.html;
+
     location / {
         try_files $uri $uri/ /index.html;
     }
