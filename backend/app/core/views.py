@@ -14,7 +14,7 @@ from drf_yasg import openapi
 from . import models, serializers
 
 # Imports for querying
-from django.db.models import Q
+from django.db.models import Q, Max
 from functools import reduce
 import operator
 
@@ -43,54 +43,127 @@ import math
             name='query',
             in_=openapi.IN_QUERY,
             description='Search query for items, looking for partial matches.',
-            type=openapi.TYPE_STRING
-        )
+            type=openapi.TYPE_STRING,
+            default="hyun s 2 02"
+        ),
+        openapi.Parameter(
+            name='page',
+            in_=openapi.IN_QUERY,
+            description='Insert the page number for pagination.',
+            type=openapi.TYPE_INTEGER,
+            required=False,
+            default= 1,
+            
+        ),
+        openapi.Parameter(
+            name='min_price',
+            in_=openapi.IN_QUERY,
+            description='Min price for the price range.',
+            type=openapi.TYPE_NUMBER,
+            format=openapi.FORMAT_FLOAT,
+            required=False
+        ),
+        openapi.Parameter(
+            name='max_price',
+            in_=openapi.IN_QUERY,
+            description='Max price for the price range.',
+            type=openapi.TYPE_NUMBER,
+            format=openapi.FORMAT_FLOAT,
+            required=False
+        ),
+        openapi.Parameter(
+            name='sort',
+            in_=openapi.IN_QUERY,
+            description="""Sort By:
+                         "pa": "price",     # ascending by price
+                         "pd": "-price",    # descending by price
+                         "na": "name",      # ascending by name
+                         "nd": "-name",     # descending by name
+                         "ra": "rating",    # ascending by rating
+                         "rd": "-rating"    # descending by rating
+                         """,
+            type=openapi.TYPE_STRING,
+            required=False,
+        ),
+        openapi.Parameter(
+            name='stores',
+            in_=openapi.IN_QUERY,
+            description="""Use Store Ids separated with commas""",
+            type=openapi.TYPE_STRING,
+            required=False,
+            default="1,2,3"
+        ),
     ]
 )
 @api_view(['GET'])
+# TODO: Catigory filter
 def search(request):
-    PER_PAGE = 12 # Number of results per page "CONSTANT"
-    
-    query = request.query_params.get('query', '')  # Get the search query parameter
-    page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
-    if page  < 1:
-        return Response({"error":"Invalid page number. Page number must be 1 or greater"})
-    
-    
-    if query:
-        start = (page - 1) * PER_PAGE # The  item at which we should start our query
-        end = page * PER_PAGE # The item at which we should stop our query
+    try:
+        PER_PAGE = 12 # Number of results per page "CONSTANT"
         
-        query = query.strip().split(" ")
-        print(f"Query: {query}")
-        # Filter items based on the query. Adjust field names as needed.
-        # OLD way
-        # items = models.Item.objects.raw(
-        #     """SELECT *
-        #        FROM items
-        #        WHERE UPPER(name::text) LIKE UPPER(%s)""",
-        #     ["%" + query.replace(" ", "%") + "%"])  # Example field 'name'
+        query = request.query_params.get('query', '')  # Get the search query parameter
+        page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
         
-        # New way of searching
-        condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
-        items = models.Item.objects.filter(condition)
+        if page  < 1:
+            return Response({"error":"Invalid page number. Page number must be 1 or greater"})
         
-        max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
         
-        # check if the page does not exceed the maximum allowed value
-        if page <= max_pages and items.count() > 0:
-            serializer = serializers.ItemSerializer(items[start:end], many=True)
-            return Response({
-                "results": serializer.data, 
-                "max_pages": max_pages,
-                })
-        elif items.count() <= 0:
-            return Response({'message': "There is no such items"}, status=400)
+        if query:
+            start = (page - 1) * PER_PAGE # The  item at which we should start our query
+            end = page * PER_PAGE # The item at which we should stop our query
+            min_price = float(request.query_params.get("min_price", 0))
+            max_price = float(request.query_params.get("max_price", 0))
+            sort = request.query_params.get('sort', "")
+            stores = request.query_params.get('stores', "")
+            ORDER_BY_CONST= {"pa": "price",
+                            "pd": "-price", 
+                            "na": "name",
+                            "nd": "-name",
+                            "ra": "rating",
+                            "rd": "-rating"}
+            
+            
+            query = query.strip().split(" ")
+            
+            # New way of searching
+            condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
+            items = models.Item.objects.filter(condition)
+            
+            if not max_price or max_price<= min_price:
+                max_price = float(items.aggregate(Max("price"))["price__max"])
+            
+            # Filtering by price range
+            items= items.filter(price__range=(min_price,max_price))
+            
+            # Sort by
+            if sort in ORDER_BY_CONST.keys():
+                items= items.order_by(ORDER_BY_CONST[sort])
+            
+            # Filtering by stores
+            # if stores:
+            #     items= items.filter()
+            
+            max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
+            
+            # check if the page does not exceed the maximum allowed value
+            if page <= max_pages and items.count() > 0:
+                serializer = serializers.ItemSerializer(items[start:end], many=True)
+                return Response({
+                    "results": serializer.data, 
+                    "max_pages": max_pages,
+                    "min_price": min_price,
+                    "max_price": max_price,
+                    })
+            elif items.count() <= 0:
+                return Response({'message': "There is no such items"}, status=400)
+            else:
+                return Response({'message': "The page number exceeds the max"}, status=400)
+            
         else:
-            return Response({'message': "The page number exceeds the max"}, status=400)
-        
-    else:
-        return Response({'message': 'No query provided'}, status=400)
+            return Response({'message': 'No query provided'}, status=400)
+    except:
+        return Response({'message': 'Something went wrong'}, status=400)
+
 
 
 
@@ -117,7 +190,7 @@ def get_item(request, item_id):
 # API endpoint to get all categories
 @api_view(['GET'])
 def get_categories(request):
-    categories = models.Category.objects.all()
+    categories = models.Category.objects.all().order_by('category_id')
     serialized_categories = serializers.CategorySerializer(categories, many=True)
     return Response(serialized_categories.data)
 
@@ -156,3 +229,10 @@ def get_wishlist(request):
             return Response({"Error": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+# API endpoint to get all stores
+@api_view(['GET'])
+def get_stores(request):
+    stores = models.Store.objects.all().order_by("store_id")
+    serialized_stores = serializers.StoreSerializer(stores, many=True)
+    return Response(serialized_stores.data)
