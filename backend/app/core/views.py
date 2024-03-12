@@ -98,68 +98,72 @@ import math
 @api_view(['GET'])
 # TODO: Catigory filter
 def search(request):
-    PER_PAGE = 12 # Number of results per page "CONSTANT"
-    
-    query = request.query_params.get('query', '')  # Get the search query parameter
-    page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
-    
-    if page  < 1:
-        return Response({"error":"Invalid page number. Page number must be 1 or greater"})
-    
-    
-    if query:
-        start = (page - 1) * PER_PAGE # The  item at which we should start our query
-        end = page * PER_PAGE # The item at which we should stop our query
-        min_price = float(request.query_params.get("min_price", 0))
-        max_price = float(request.query_params.get("max_price", 0))
-        sort = request.query_params.get('sort', "")
-        stores = request.query_params.get('stores', "")
-        ORDER_BY_CONST= {"pa": "price",
-                         "pd": "-price", 
-                         "na": "name",
-                         "nd": "-name",
-                         "ra": "rating",
-                         "rd": "-rating"}
+    try:
+        PER_PAGE = 12 # Number of results per page "CONSTANT"
+        
+        query = request.query_params.get('query', '')  # Get the search query parameter
+        page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
+        
+        if page  < 1:
+            return Response({"error":"Invalid page number. Page number must be 1 or greater"})
         
         
-        query = query.strip().split(" ")
-        
-        # New way of searching
-        condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
-        items = models.Item.objects.filter(condition)
-        
-        if not max_price or max_price<= min_price:
-            max_price = float(items.aggregate(Max("price"))["price__max"])
-        
-        # Filtering by price range
-        items= items.filter(price__range=(min_price,max_price))
-        
-        # Sort by
-        if sort in ORDER_BY_CONST.keys():
-            items= items.order_by(ORDER_BY_CONST[sort])
-        
-        # Filtering by stores
-        # if stores:
-        #     items= items.filter()
-        
-        max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
-        
-        # check if the page does not exceed the maximum allowed value
-        if page <= max_pages and items.count() > 0:
-            serializer = serializers.ItemSerializer(items[start:end], many=True)
-            return Response({
-                "results": serializer.data, 
-                "max_pages": max_pages,
-                "min_price": min_price,
-                "max_price": max_price,
-                })
-        elif items.count() <= 0:
-            return Response({'message': "There is no such items"}, status=400)
+        if query:
+            start = (page - 1) * PER_PAGE # The  item at which we should start our query
+            end = page * PER_PAGE # The item at which we should stop our query
+            min_price = float(request.query_params.get("min_price", 0))
+            max_price = float(request.query_params.get("max_price", 0))
+            sort = request.query_params.get('sort', "")
+            stores = request.query_params.get('stores', "")
+            ORDER_BY_CONST= {"pa": "price",
+                            "pd": "-price", 
+                            "na": "name",
+                            "nd": "-name",
+                            "ra": "rating",
+                            "rd": "-rating"}
+            
+            
+            query = query.strip().split(" ")
+            
+            # New way of searching
+            condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
+            items = models.Item.objects.filter(condition)
+            
+            if not max_price or max_price<= min_price:
+                max_price = float(items.aggregate(Max("price"))["price__max"])
+            
+            # Filtering by price range
+            items= items.filter(price__range=(min_price,max_price))
+            
+            # Sort by
+            if sort in ORDER_BY_CONST.keys():
+                items= items.order_by(ORDER_BY_CONST[sort])
+            
+            # Filtering by stores
+            # if stores:
+            #     items= items.filter()
+            
+            max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
+            
+            # check if the page does not exceed the maximum allowed value
+            if page <= max_pages and items.count() > 0:
+                serializer = serializers.ItemSerializer(items[start:end], many=True)
+                return Response({
+                    "results": serializer.data, 
+                    "max_pages": max_pages,
+                    "min_price": min_price,
+                    "max_price": max_price,
+                    })
+            elif items.count() <= 0:
+                return Response({'message': "There is no such items"}, status=400)
+            else:
+                return Response({'message': "The page number exceeds the max"}, status=400)
+            
         else:
-            return Response({'message': "The page number exceeds the max"}, status=400)
-        
-    else:
-        return Response({'message': 'No query provided'}, status=400)
+            return Response({'message': 'No query provided'}, status=400)
+    except:
+        return Response({'message': 'Something went wrong'}, status=400)
+
 
 
 
