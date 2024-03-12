@@ -1,12 +1,10 @@
 server {
     listen ${LISTEN_PORT};
-    root /usr/share/nginx/html/browser/;
+    root /usr/share/nginx/html/browser;
     index index.html;
 
-
-
     location / {
-        alias /usr/share/nginx/html/browser/;
+        try_files $uri $uri/ /index.html;
     }
 
     location /static {
@@ -14,7 +12,7 @@ server {
     }
 
     location /api {
-        uwsgi_pass              ${APP_HOST}:${APP_PORT};
-        include                 /etc/nginx/uwsgi_params;
+        uwsgi_pass ${APP_HOST}:${APP_PORT};
+        include /etc/nginx/uwsgi_params;
     }
 }
