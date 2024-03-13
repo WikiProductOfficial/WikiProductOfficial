@@ -1,6 +1,22 @@
 version: "3.9"
 
 services:
+
+  nginx:
+      image: nginx
+      build:
+        context: ./nginx
+      ports:
+        - "80:80"
+      restart: always
+      volumes:
+        - static-data:/vol/static
+      depends_on:
+        - backend
+      networks:
+        - frontend
+      
+
   backend:
     image: backend
     build:
@@ -17,29 +33,16 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
+      - DB_PORT=${DB_PORT}
       - DJANGO_SU_NAME=${DJANGO_SU_NAME}
       - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
     depends_on:
       - db
     networks:
-      - internal-net
-
-  nginx:
-    image: nginx
-    build:
-      context: .  # This sets the build context to the current directory, including frontend and nginx
-      dockerfile: nginx/Dockerfile
-    ports:
-      - "80:8080"
-    restart: always
-    volumes:
-      - static-data:/vol/static
-      - frontend_builds:/usr/share/nginx/html
-    depends_on:
+      - frontend
       - backend
-    networks:
-      - internal-net
+
   db:
     image: postgres:13-alpine
     restart: always
@@ -50,37 +53,12 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
     networks:
-      - internal-net
+      - backend
 
 networks:
-  internal-net:
+  frontend:
+  backend:
 
 volumes:
   postgres-data:
   static-data:
-  frontend_builds:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # frontend:
-  #   image: frontend
-  #   build:
-  #     context: ./frontend
-  #   # restart: always
-  #   volumes:
-  #     - frontend_builds:/frontend/dist
-  #   environment:
-  #     - SERVER_URL=http://nginx:80
-  #   networks:
-  #     - internal-net

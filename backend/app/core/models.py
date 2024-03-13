@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 class Category(models.Model):
     category_id = models.AutoField(primary_key=True)
@@ -15,8 +16,12 @@ class Category(models.Model):
 class Item(models.Model):
     item_id = models.AutoField(primary_key=True, db_column='Item_ID')
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=500)
+    urls = ArrayField(models.JSONField(default=dict, blank=True, null=True), blank=True, null=True)
+    details = models.JSONField(default=dict, blank=True, null=True)
+    description = models.CharField(max_length=2000)
     price = models.FloatField()
+    rating = models.FloatField(null=True, default=None)
+    review_count = models.IntegerField()
     summarized_reviews = models.CharField(max_length=255)
 
     def __str__(self):
@@ -78,6 +83,7 @@ class Review(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, db_column='Item_ID')
     stars = models.PositiveSmallIntegerField()
     content = models.CharField(max_length=255)
+    review_url = models.URLField(max_length=255)
 
     class Meta:
         db_table = 'review'

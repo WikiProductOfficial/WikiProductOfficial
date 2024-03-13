@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'core',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +115,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
+        'PORT': os.environ.get('DB_PORT')
     }
 }
 
@@ -155,10 +157,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/static/'
-MEDIA_URL = 'static/media/'
-
 STATIC_ROOT = '/vol/web/static'
-MEDIA_ROOT = '/vol/web/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -6,19 +6,19 @@ COPY frontend/package*.json ./
 
 RUN npm install -g @angular/cli && npm install
 
-COPY frontend/. .
+COPY ./frontend/. .
 
 RUN ng build --configuration=production
 
 FROM nginxinc/nginx-unprivileged:1-alpine
 LABEL maintainer="nginx-server"
 
-COPY --from=frontend-build /frontend/dist/wiki-product /usr/share/nginx/html
-COPY ./nginx/default.conf.tpl /etc/nginx/default.conf.tpl
-COPY ./nginx/uwsgi_params /etc/nginx/uwsgi_params
-COPY ./nginx/run.sh /run.sh
+COPY --from=frontend-build /frontend/dist/wiki-product /usr/share/nginx/html/
+COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./uwsgi_params /etc/nginx/uwsgi_params
+COPY ./run.sh /run.sh
 
-ENV LISTEN_PORT=8080
+ENV LISTEN_PORT=80
 ENV APP_HOST=backend
 ENV APP_PORT=8000  
 
@@ -30,10 +30,10 @@ RUN mkdir -p /vol/static && \
     chown nginx:nginx /etc/nginx/conf.d/default.conf && \
     chmod +x /run.sh
 
-VOLUME /vol/static
+# VOLUME /vol/static
 
-USER nginx
+# USER nginx
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["/run.sh"]

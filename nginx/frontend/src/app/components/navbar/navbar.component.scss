@@ -1,0 +1,24 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - var(--scrollbar-width, 0px));
+  z-index: 1100;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.5s, border-color 0.5s ease;
+}
+.navbar-blur {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.wiki {
+  color: var(--secondary-color);
+  font-weight: bolder;
+}
+.product {
+  color: var(--primary-color);
+  font-weight: bolder;
+}
