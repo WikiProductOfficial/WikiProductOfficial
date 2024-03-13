@@ -47,4 +47,7 @@ def run(*args):
             # Inserting Item_belongs_to
             models.ItemBelongsTo.objects.update_or_create(item=item[0], category=category[0])
             
+            # Inserting ItemHistory
+            models.ItemsHistory.objects.update_or_create(item=item[0], store=store[0], price=row["price"])
+            
             # Inserting Reviews
