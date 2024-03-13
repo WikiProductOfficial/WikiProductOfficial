@@ -11,6 +11,7 @@ import { FiltersComponent } from './filters/filters.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { SearchService } from '../../services/search.service';
 import { ButtonModule } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 
 interface FilteredProducts {
   minPrice?: number;
