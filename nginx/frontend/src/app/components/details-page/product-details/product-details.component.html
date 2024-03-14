@@ -1,0 +1,17 @@
+<p-galleria
+  [value]="images"
+  [showItemNavigators]="true"
+  [responsiveOptions]="responsiveOptions"
+  [circular]="true"
+  [numVisible]="3"
+  [containerStyle]="{ 'max-width': '640px' }"
+>
+  <ng-template pTemplate="item" let-item>
+    <img [src]="item.itemImageSrc" style="width: 40%; display: block" />
+  </ng-template>
+  <ng-template pTemplate="thumbnail" let-item>
+    <div class="grid grid-nogutter justify-content-center">
+      <img [src]="item.thumbnailImageSrc" style="width: 40%; display: block" />
+    </div>
+  </ng-template>
+</p-galleria>
