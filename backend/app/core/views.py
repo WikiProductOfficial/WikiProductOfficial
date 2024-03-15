@@ -140,8 +140,13 @@ def search(request):
                 items= items.order_by(ORDER_BY_CONST[sort])
             
             # Filtering by stores
-            # if stores:
-            #     items= items.filter()
+            if stores:
+                stores = [int(store_id) for store_id in stores.split(',') if store_id.isdigit()]
+                print(stores)
+                try:
+                    items = items.filter(itemshistory__store__in=stores)
+                except Exception as e:
+                    return Response({"message": "Something went wrong"},status=400)
             
             max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
             
