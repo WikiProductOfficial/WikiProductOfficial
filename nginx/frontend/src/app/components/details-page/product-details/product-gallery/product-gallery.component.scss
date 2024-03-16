@@ -1,0 +1,9 @@
+:host ::ng-deep .p-galleria .p-galleria-thumbnail-container {
+  background: rgba(255, 255, 255, 0) !important;
+  padding: 1rem 0.25rem !important;
+  justify-content: center !important;
+}
+
+:host ::ng-deep .p-galleria .p-galleria-item-nav {
+  color: grey;
+}

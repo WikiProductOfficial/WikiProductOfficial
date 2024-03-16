@@ -1,0 +1,46 @@
+<!--The whole providers prices tab view-->
+<div class="card">
+  <p-tabView>
+    <!--for each provider, create a tab-->
+    <p-tabPanel *ngFor="let provider of providers" [header]="provider.header">
+      <div class="provider-info">
+        <div
+          class="top-section"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div>
+            <!--Provider price-->
+            <h2 class="price" style="margin: 0">Price: {{ provider.price }}</h2>
+            <!--provider company name-->
+            <p class="company-name" style="margin: 0">
+              Company: {{ provider.companyName }}
+            </p>
+          </div>
+          <!--a logo of the provider-->
+          <img
+            [src]="provider.imageUrl"
+            alt="Provider Image"
+            style="width: 100px; height: auto"
+          />
+        </div>
+
+        <div
+          class="buttons-section"
+          style="margin-top: 20px; display: flex; gap: 40px"
+        >
+          <!--button to visit product website from the provider-->
+          <p-button
+            (click)="visit(provider.visitUrl)"
+            label="Visit Website"
+          ></p-button>
+          <!--a button to save the product to wishlist-->
+          <p-button label="Add to Wishlist"></p-button>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

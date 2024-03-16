@@ -34,6 +34,9 @@
 .content-style {
   max-width: 1000px;
   font-size: 1.2rem;
+  @media (max-width: 720px) {
+    font-size: 0.8rem;
+  }
   margin: 10px auto;
 }
 

@@ -1,0 +1,36 @@
+<!--The whole details section-->
+<div
+  class="description-text"
+  style="flex: 1; min-width: 300px; padding: 0 20px; text-align: left"
+>
+  <!--Product Name-->
+  <h2>{{ description?.title }}</h2>
+  <!--Product Brand & Model-->
+  <p>Brand: {{ description?.brand }}</p>
+  <p>Model: {{ description?.model }}</p>
+  <!--Reviews using stars-->
+  <div style="display: flex; align-items: center">
+    <div>Community Reviews:</div>
+    <div style="display: flex; align-items: center">
+      <p-rating
+        [(ngModel)]="rateValue"
+        [readonly]="true"
+        [cancel]="false"
+        class="description-text"
+      ></p-rating>
+      <span class="description-text">{{ rateValue }}</span>
+    </div>
+  </div>
+  <!--Features using list-->
+  <div>
+    <p>Features:</p>
+    <ul style="padding: 1">
+      <li
+        *ngFor="let feature of description?.features"
+        style="margin-bottom: 0.5rem"
+      >
+        {{ feature }}
+      </li>
+    </ul>
+  </div>
+</div>
