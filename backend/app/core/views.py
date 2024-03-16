@@ -93,81 +93,86 @@ import math
             required=False,
             default="1,2,3"
         ),
+        openapi.Parameter(
+            name='category',
+            in_=openapi.IN_QUERY,
+            description='Category ID to filter items by. For example, 88. However, if a Category\'s is used, then the query parameter will be rendered useless.',
+            type=openapi.TYPE_INTEGER,
+            required=False,
+        ),
     ]
 )
 @api_view(['GET'])
-# TODO: Catigory filter
 def search(request):
     try:
         PER_PAGE = 12 # Number of results per page "CONSTANT"
         
         query = request.query_params.get('query', '')  # Get the search query parameter
         page = int(request.query_params.get('page', 1))  #  Get the pagination number (default is 1)
+        category_id = request.query_params.get('category', None) # Get the  Category id from URL Parameter (None if not provided)
         
         if page  < 1:
             return Response({"error":"Invalid page number. Page number must be 1 or greater"})
         
-        
-        if query:
-            start = (page - 1) * PER_PAGE # The  item at which we should start our query
-            end = page * PER_PAGE # The item at which we should stop our query
-            min_price = float(request.query_params.get("min_price", 0))
-            max_price = float(request.query_params.get("max_price", 0))
-            sort = request.query_params.get('sort', "")
-            stores = request.query_params.get('stores', "")
-            ORDER_BY_CONST= {"pa": "price",
-                            "pd": "-price", 
-                            "na": "name",
-                            "nd": "-name",
-                            "ra": "rating",
-                            "rd": "-rating"}
+        # Get all of the parameters
+        start = (page - 1) * PER_PAGE # The  item at which we should start our query
+        end = page * PER_PAGE # The item at which we should stop our query
+        min_price = float(request.query_params.get("min_price", 0))  # Min price for filtering
+        max_price = float(request.query_params.get("max_price", 0))  # Max price for filtering
+        sort = request.query_params.get('sort', "")  # Sorting method
+        stores = request.query_params.get('stores', "")  # Stores to filter on
+
+        items = None
+        if category_id:
+            # Searching the a category with its children
+            category = models.Category.objects.get(category_id=category_id)
+            items = models.Item.objects.filter(itembelongsto__category__in=category.get_descendants(include_self=True))
             
-            
+            # # For Debugging the category and its children
+            # for item in items:
+            #     # Get the category for the current item
+            #     category_data = item.itembelongsto_set.first().category
+            #     print(f'category data: {category_data}')
+            #     # Create a category serializer with the category data
+            #     category_serializer = serializers.CategorySerializer(category_data)
+            #     # Set the category field in the item serializer
+            #     print(f"Serialized category:{category_serializer.data}")
+        elif query:
             query = query.strip().split(" ")
             
             # New way of searching
             condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
             items = models.Item.objects.filter(condition)
             
-            if not max_price or max_price<= min_price:
-                max_price = float(items.aggregate(Max("price"))["price__max"])
+        # Correcting the max price if needed
+        max_price= max_price_corrector(items=items, min_price=min_price, max_price=max_price)
+        
+        # Filtering by price range
+        items= price_range_filtering(items=items, min_price=min_price, max_price=max_price)
+        # Sort by
+        items= sorting_filter(items=items, sort=sort)
+        
+        # Filtering by stores
+        items= store_filtering(items=items, stores=stores)
+        
+        # Result
+        return search_result(
+            items=items,
+            page=page,
+            PER_PAGE= PER_PAGE,
+            start=start,
+            end=end,
+            min_price=min_price,
+            max_price=max_price,
+            )
             
-            # Filtering by price range
-            items= items.filter(price__range=(min_price,max_price))
-            
-            # Sort by
-            if sort in ORDER_BY_CONST.keys():
-                items= items.order_by(ORDER_BY_CONST[sort])
-            
-            # Filtering by stores
-            if stores:
-                stores = [int(store_id) for store_id in stores.split(',') if store_id.isdigit()]
-                print(stores)
-                try:
-                    items = items.filter(itemshistory__store__in=stores)
-                except Exception as e:
-                    return Response({"message": "Something went wrong"},status=400)
-            
-            max_pages = math.ceil(len(items)/PER_PAGE) #  Calculate how many pages there can be
-            
-            # check if the page does not exceed the maximum allowed value
-            if page <= max_pages and items.count() > 0:
-                serializer = serializers.ItemSerializer(items[start:end], many=True)
-                return Response({
-                    "results": serializer.data, 
-                    "max_pages": max_pages,
-                    "min_price": min_price,
-                    "max_price": max_price,
-                    })
-            elif items.count() <= 0:
-                return Response({'message': "There is no such items"}, status=400)
-            else:
-                return Response({'message': "The page number exceeds the max"}, status=400)
-            
-        else:
-            return Response({'message': 'No query provided'}, status=400)
+    except models.Category.DoesNotExist:
+        return Response({'message': 'Invalid category ID'}, status=400)
     except:
-        return Response({'message': 'Something went wrong'}, status=400)
+        return Response({'message': "Something went wrong"}, status=400)
+    # # For Debugging or Development
+    # except Exception as e:
+    #     return Response({'error_message': str(e)}, status=400)
 
 
 
@@ -241,3 +246,65 @@ def get_stores(request):
     stores = models.Store.objects.all().order_by("store_id")
     serialized_stores = serializers.StoreSerializer(stores, many=True)
     return Response(serialized_stores.data)
+
+
+
+# Methods to be used by the api endpoints
+
+# Sort Filtering Method
+def sorting_filter(items, sort):
+    ORDER_BY_CONST= {"pa": "price",
+                    "pd": "-price", 
+                    "na": "name",
+                    "nd": "-name",
+                    "ra": "rating",
+                    "rd": "-rating"}
+    if sort:
+        # Sort by
+        if sort in ORDER_BY_CONST.keys():
+            items= items.order_by(ORDER_BY_CONST[sort])
+            return items
+        else:
+            raise Exception("Invalid value for sort parameter.")
+    
+    return items.order_by("item_id")
+
+# Store Filtering Method
+def store_filtering(items, stores):
+    if stores:
+        stores = [int(store_id) for store_id in stores.split(',') if store_id.isdigit()]
+        items = items.filter(itemshistory__store__in=stores)
+        return items
+    return items
+
+# Correcting Max price
+def max_price_corrector(items,min_price,max_price):
+    if not max_price or max_price<= min_price:
+        max_price = float(items.aggregate(Max("price"))["price__max"])
+        return max_price
+    return max_price
+
+# Price range  Filtering Method
+def price_range_filtering(items, min_price, max_price):
+    # Filtering by price range
+    items= items.filter(price__range=(min_price,max_price))
+    
+    return items
+
+# Preparing the Search Result Method
+def search_result(items, page, PER_PAGE, start, end, min_price, max_price):
+    max_pages = math.ceil(items.count()/PER_PAGE) #  Calculate how many pages there can be
+    
+    # check if the page does not exceed the maximum allowed value
+    if page <= max_pages and items.count() > 0:
+        serializer = serializers.ItemSerializer(items[start:end], many=True)
+        return Response({
+            "results": serializer.data, 
+            "max_pages": max_pages,
+            "min_price": min_price,
+            "max_price": max_price,
+            })
+    elif items.count() <= 0:
+        return Response({'message': "There is no such items"}, status=400)
+    else:
+        return Response({'message': "The page number exceeds the max"}, status=400)
