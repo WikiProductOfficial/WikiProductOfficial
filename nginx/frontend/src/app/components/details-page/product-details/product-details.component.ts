@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TabViewModule } from 'primeng/tabview';
 import { ProviderInfo } from '../../../models/providerInfo.model';
 import { ButtonModule } from 'primeng/button';
+
 @Component({
   selector: 'app-product-details',
   standalone: true,

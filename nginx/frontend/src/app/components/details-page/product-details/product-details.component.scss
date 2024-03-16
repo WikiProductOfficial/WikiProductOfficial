@@ -7,6 +7,14 @@
   color: grey;
 }
 
+:host ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  background: none;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-panels {
+  background: none;
+}
+
 .description-text {
   font-size: 1rem;
   padding: 0 1rem;

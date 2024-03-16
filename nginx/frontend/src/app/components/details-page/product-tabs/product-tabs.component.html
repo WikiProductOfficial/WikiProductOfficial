@@ -1,0 +1,22 @@
+<p-tabView>
+  <ng-container *ngFor="let tab of tabs">
+    <p-tabPanel [header]="tab.header">
+      <ul *ngIf="tab.contentType === 0">
+        <li class="content-style" *ngFor="let item of tab.content">
+          {{ item }}
+        </li>
+      </ul>
+
+      <table *ngIf="tab.contentType === 1" class="table">
+        <tr
+          class="content-style"
+          *ngFor="let item of tab.content; let i = index"
+        >
+          <td>{{ tab.contentHead ? tab.contentHead[i] : "" }}</td>
+          <td>:</td>
+          <td>{{ item }}</td>
+        </tr>
+      </table>
+    </p-tabPanel>
+  </ng-container>
+</p-tabView>

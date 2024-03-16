@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProviderInfo } from '../models/providerInfo.model';
+import { ProductTabs } from '../models/product-tabs.model';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,7 @@ export class ProductService {
   }
 
   // Get product description
+
   getDescription(): Promise<any> {
     const description = {
       title:
@@ -67,6 +69,7 @@ export class ProductService {
   }
 
   // Get Providers
+
   getProviderData(): ProviderInfo[] {
     return [
       {
@@ -93,6 +96,49 @@ export class ProductService {
         imageUrl:
           'https://media.licdn.com/dms/image/D4D12AQHwi4jdRd3fQQ/article-cover_image-shrink_720_1280/0/1685279753620?e=1715817600&v=beta&t=YFLMefH_CKTjH0rS02UYGlJrRBqVies5p2VvnKqLDL8',
         visitUrl: 'https://www.apple.com/ipad-pro/',
+      },
+    ];
+  }
+
+  // get product tabs
+  getProductTabs(): ProductTabs[] {
+    return [
+      {
+        header: 'Description',
+        contentType: 0,
+        contentHead: null,
+        content: [
+          'α9 Gen5 AI Processor with AI Picture Pro & AI 4K Upscaling',
+          'Pixel Dimming, Perfect Black, 100% Color Fidelity & Color Volume',
+          'Hands-free Voice Control, Always Ready',
+          'Dolby Vision IQ with Precision Detail, Dolby Atmos, Filmmaker Mode',
+          'Eye Comfort Display: Low-Blue Light, Flicker-Free',
+          'α9 Gen5 AI Processor with AI Picture Pro & AI 4K Upscaling',
+          'Pixel Dimming, Perfect Black, 100% Color Fidelity & Color Volume',
+          'Hands-free Voice Control, Always Ready',
+          'Dolby Vision IQ with Precision Detail, Dolby Atmos, Filmmaker Mode',
+          'Eye Comfort Display: Low-Blue Light, Flicker-Free',
+        ],
+      },
+      {
+        header: 'Specification',
+        contentType: 1,
+        contentHead: [
+          'Expandable Memory Type',
+          'Secondary Camera Resolution',
+          'Charging Type',
+          'Display Resolution Type',
+          'SIM Type',
+          'Connection Type',
+        ],
+        content: [
+          'No Expandable Memory',
+          '12 MP',
+          'Type-C',
+          'Full HD',
+          'No SIM Card',
+          'Wifi',
+        ],
       },
     ];
   }
