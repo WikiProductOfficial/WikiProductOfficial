@@ -9,6 +9,15 @@ class Category(models.Model):
     def __str__(self):
         return self.category
     
+    def get_descendants(self, include_self=False):
+        descendants = []
+        queue = [self] if include_self else []
+        while queue:
+            current = queue.pop()
+            descendants.append(current)
+            queue.extend(current.children.all())
+        return descendants
+    
     class Meta:
         db_table = 'categories'
 
