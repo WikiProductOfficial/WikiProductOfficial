@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ProviderInfo } from '../models/providerInfo.model';
 import { ProductTabs } from '../models/product-tabs.model';
+import { RelatedProduct } from '../models/related-product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -139,6 +140,49 @@ export class ProductService {
           'No SIM Card',
           'Wifi',
         ],
+      },
+    ];
+  }
+
+  // get related Product
+  getRelatedProducts(): RelatedProduct[] {
+    return [
+      {
+        imageSource: 'assets/images/zeke funko.jpg',
+        title:
+          'Funko Pop! Deluxe Marvel: Sinister 6 - Doctor Octopus, Amazon Exclusive, Figure 1 of 7 Funko Pop! Avengers Endgame: I Am Iron Man Glow-In-the-Dark Deluxe Vinyl Figure, Multicolored',
+        price: 89,
+        rating: 4,
+      },
+      {
+        imageSource: 'assets/images/pngwing.com.png',
+        title: 'Green Hills',
+        price: 999,
+        rating: 5,
+      },
+      {
+        imageSource: 'assets/images/pngwing.com.png',
+        title: 'Iceland breeze',
+        price: 293,
+        rating: 5,
+      },
+      {
+        imageSource: 'assets/images/a.jpg',
+        title: 'Product 4',
+        price: 119,
+        rating: 5,
+      },
+      {
+        imageSource: 'assets/images/im.jpg',
+        title: 'Product 5',
+        price: 123,
+        rating: 5,
+      },
+      {
+        imageSource: 'assets/images/imgg.png',
+        title: 'Product 6',
+        price: 320,
+        rating: 5,
       },
     ];
   }
