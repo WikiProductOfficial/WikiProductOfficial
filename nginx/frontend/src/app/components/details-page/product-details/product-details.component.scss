@@ -1,0 +1,34 @@
+:host ::ng-deep .p-galleria .p-galleria-thumbnail-container {
+  background: rgba(255, 255, 255, 0) !important;
+  padding: 1rem 0.25rem !important;
+}
+
+:host ::ng-deep .p-galleria .p-galleria-item-nav {
+  color: grey;
+}
+
+.description-text {
+  font-size: 1rem;
+  padding: 0 1rem;
+}
+
+@media (max-width: 1024px) {
+  .page-container {
+    flex-direction: column;
+  }
+
+  .description-text {
+    font-size: 0.9rem;
+  }
+
+  .page-container > div {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .description-text {
+    font-size: 0.8rem;
+  }
+}

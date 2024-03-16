@@ -1,17 +1,119 @@
-<p-galleria
-  [value]="images"
-  [showItemNavigators]="true"
-  [responsiveOptions]="responsiveOptions"
-  [circular]="true"
-  [numVisible]="3"
-  [containerStyle]="{ 'max-width': '640px' }"
+<!-- Flex container for galleria and description -->
+<div
+  class="page-container"
+  style="
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 1280px;
+    margin: auto;
+  "
 >
-  <ng-template pTemplate="item" let-item>
-    <img [src]="item.itemImageSrc" style="width: 40%; display: block" />
-  </ng-template>
-  <ng-template pTemplate="thumbnail" let-item>
-    <div class="grid grid-nogutter justify-content-center">
-      <img [src]="item.thumbnailImageSrc" style="width: 40%; display: block" />
+  <!-- Galleria container -->
+  <div style="flex: 1; min-width: 300px">
+    <p-galleria
+      [value]="images"
+      [showItemNavigators]="true"
+      [responsiveOptions]="responsiveOptions"
+      [circular]="true"
+      [numVisible]="5"
+      [containerStyle]="{ 'max-width': '640px', margin: 'auto' }"
+    >
+      <ng-template pTemplate="item" let-item>
+        <img
+          [src]="item.itemImageSrc"
+          style="max-width: 100%; height: 450px; display: block; margin: auto"
+        />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+          <img
+            [src]="item.thumbnailImageSrc"
+            style="max-width: 80%; display: block; margin: auto"
+          />
+        </div>
+      </ng-template>
+    </p-galleria>
+  </div>
+
+  <!-- Product description container -->
+  <div
+    class="description-text"
+    style="flex: 1; min-width: 300px; padding: 0 20px; text-align: left"
+  >
+    <h2>{{ description?.title }}</h2>
+    <p>Brand: {{ description?.brand }}</p>
+    <p>Model: {{ description?.model }}</p>
+    <div style="display: flex; align-items: center">
+      <div>Community Reviews:</div>
+      <div style="display: flex; align-items: center">
+        <p-rating
+          [(ngModel)]="rateValue"
+          [readonly]="true"
+          [cancel]="false"
+          class="description-text"
+        ></p-rating>
+        <span class="description-text">{{ rateValue }}</span>
+      </div>
     </div>
-  </ng-template>
-</p-galleria>
+    <!--Features-->
+    <div>
+      <p>Features:</p>
+      <ul style="padding: 1">
+        <li
+          *ngFor="let feature of description?.features"
+          style="margin-bottom: 0.5rem"
+        >
+          {{ feature }}
+        </li>
+      </ul>
+    </div>
+    <!--Prices-->
+    <div class="card">
+      <p-tabView>
+        <p-tabPanel
+          *ngFor="let provider of providers"
+          [header]="provider.header"
+        >
+          <div class="provider-info">
+            <div
+              class="top-section"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div>
+                <h2 class="price" style="margin: 0">
+                  Price: {{ provider.price }}
+                </h2>
+                <p class="company-name" style="margin: 0">
+                  Company: {{ provider.companyName }}
+                </p>
+              </div>
+              <img
+                [src]="provider.imageUrl"
+                alt="Provider Image"
+                style="width: 100px; height: auto"
+              />
+            </div>
+
+            <div
+              class="buttons-section"
+              style="margin-top: 20px; display: flex; gap: 40px"
+            >
+              <p-button
+                (click)="visit(provider.visitUrl)"
+                label="Visit Website"
+              ></p-button>
+              <p-button label="Add to Wishlist"></p-button>
+            </div>
+          </div>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>
