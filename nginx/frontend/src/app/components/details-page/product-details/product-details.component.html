@@ -12,7 +12,10 @@
   "
 >
   <!--Product gallery-->
-  <app-product-gallery style="flex: 1; min-width: 300px"></app-product-gallery>
+  <app-product-gallery
+    [images]="product.image_urls"
+    style="flex: 1; min-width: 300px"
+  ></app-product-gallery>
 
   <!-- Product description container -->
   <div
@@ -20,8 +23,10 @@
     style="flex: 1; min-width: 300px; padding: 0 20px; text-align: left"
   >
     <!--Product describe 'right side text'-->
-    <app-product-describe></app-product-describe>
+    <app-product-describe
+      [description]="product.description"
+    ></app-product-describe>
     <!--product price from providers show as tab view-->
-    <app-product-prices></app-product-prices>
+    <app-product-prices [providers]="product.providers"></app-product-prices>
   </div>
 </div>

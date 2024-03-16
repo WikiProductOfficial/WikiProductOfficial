@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GalleriaModule } from 'primeng/galleria';
 import { ProductService } from '../../../../services/product.service';
 
@@ -11,12 +11,10 @@ import { ProductService } from '../../../../services/product.service';
 })
 export class ProductGalleryComponent {
   //gallery
-  images: any[] | undefined;
+  @Input() images!: string[];
   responsiveOptions: any[] | undefined;
 
-  constructor(private productService: ProductService) {}
   ngOnInit() {
-    this.productService.getImages().then((images) => (this.images = images));
     this.responsiveOptions = [
       {
         breakpoint: '1024px',

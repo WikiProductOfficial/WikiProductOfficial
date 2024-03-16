@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ProviderInfo } from '../../../../models/providerInfo.model';
+import { Component, Input } from '@angular/core';
+import { ProviderInfo } from '../../../../models/details-page-models/providerInfo.model';
 import { ProductService } from '../../../../services/product.service';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
@@ -14,13 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductPricesComponent {
   //providers
-  providers: ProviderInfo[] = [];
-
-  constructor(private productService: ProductService) {}
-
-  ngOnInit() {
-    this.providers = this.productService.getProviderData();
-  }
+  @Input() providers!: ProviderInfo[];
 
   visit(url: string): void {
     window.open(url, '_blank');

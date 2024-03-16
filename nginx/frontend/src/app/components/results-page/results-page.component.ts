@@ -23,7 +23,7 @@ export class ResultsPageComponent implements OnInit {
     this.searchService.getProducts(this.query).subscribe(
       (data) => {
         this.results = data;
-        console.log(data);
+        // console.log(data);
       },
       (error) => {
         console.error('Error:', error);

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RatingModule } from 'primeng/rating';
-import { ProductService } from '../../../../services/product.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProductDescription } from '../../../../models/details-page-models/product-description.model';
 
 @Component({
   selector: 'app-product-describe',
@@ -13,19 +13,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class ProductDescribeComponent {
   //description
-  description!: any;
+  @Input() description!: ProductDescription;
   rateValue!: number;
 
-  constructor(private productService: ProductService) {}
-
   ngOnInit() {
-    this.productService
-      .getDescription()
-      .then(
-        (description) => (
-          (this.description = description),
-          (this.rateValue = this.description.rating)
-        )
-      );
+    this.rateValue = this.description.rating;
   }
 }

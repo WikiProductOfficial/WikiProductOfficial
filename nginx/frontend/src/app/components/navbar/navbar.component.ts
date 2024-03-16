@@ -55,7 +55,7 @@ export class NavbarComponent implements OnInit {
   }
   ngOnInit(): void {
     this.categoriesService.getCategories().subscribe((data) => {
-      console.log(data);
+      // console.log(data);
       this.categories = data;
     });
     this.checkScreenSize();
