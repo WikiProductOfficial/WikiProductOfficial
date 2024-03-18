@@ -4,11 +4,11 @@
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </div>
 } @else if (!isLargeScreen) {
-<button (click)="this.visible = true">nnnn</button>
 <p-dialog
   header="Header"
   [(visible)]="visible"
   [style]="{ width: '50vw' }"
+  (visibleChange)="this.visibilityChange.emit(this.visible)"
   [maximizable]="true"
   [modal]="true"
   class="justify-content-center"
@@ -30,6 +30,7 @@
           inputId="stacked"
           mode="currency"
           currency="SAR"
+          [step]="5"
         >
         </p-inputNumber>
       </div>
@@ -41,6 +42,7 @@
           inputId="stacked"
           mode="currency"
           currency="SAR"
+          [step]="5"
         >
         </p-inputNumber>
       </div>
@@ -64,6 +66,6 @@
   </div>
   <!--Apply filter button-->
   <div class="card flex justify-content-center mt-3">
-    <p-button label="Apply"></p-button>
+    <button pButton class="w-full" label="Apply" (click)="onApply()"></button>
   </div>
 </ng-template>

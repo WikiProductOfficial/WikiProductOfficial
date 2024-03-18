@@ -1,0 +1,14 @@
+// paginator style
+:host ::ng-deep .p-paginator {
+  background: none;
+  border: none;
+}
+:host ::ng-deep .p-highlight {
+  color: var(--primary-color-text);
+  background-color: var(--primary-color);
+}
+@media (max-width: 768px) {
+  :host ::ng-deep .p-paginator * {
+    min-width: 2rem;
+  }
+}

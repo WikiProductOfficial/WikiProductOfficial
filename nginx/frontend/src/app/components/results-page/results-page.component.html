@@ -1,8 +1,24 @@
 <div class="page-container flex">
   <div class="hidden lg:col-2 lg:block">
-    <app-filters></app-filters>
+    <app-filters
+      [visible]="isFiltersVisible"
+      (visibilityChange)="onVisibilityChange($event)"
+      (filteredProductsChange)="onProductFilterChange($event)"
+    ></app-filters>
   </div>
-  <div class="col-12 lg:col-10">
-    <app-products-data-view [products]="results"></app-products-data-view>
+  <div class="flex flex-column col-12 lg:col-10">
+    <app-products-data-view
+      [products]="results"
+      [selectedSortOption]="sort()"
+      (sortOptionSelected)="onSortOptionSelected($event)"
+    ></app-products-data-view>
+    <p-paginator
+      styleClass="m-2"
+      [rows]="12"
+      [totalRecords]="maxPages * 12"
+      [alwaysShow]="true"
+      [pageLinkSize]="3"
+      (onPageChange)="onPageChange($event)"
+    ></p-paginator>
   </div>
 </div>
