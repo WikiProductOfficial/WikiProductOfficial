@@ -26,7 +26,7 @@ import { DropdownModule } from 'primeng/dropdown';
 export class ProductsDataViewComponent {
   constructor(public searchService: SearchService) {}
   @Input() products!: any[];
-  @Input() selectedSortOption!: string | null;
+  @Input() selectedSortOption!: string | undefined;
   @Output() sortOptionSelected = new EventEmitter<string>();
   layout: 'list' | 'grid' = 'grid';
   sortOptions = [

@@ -13,7 +13,7 @@ export class SearchService {
   getProducts(
     query: string,
     page: string,
-    sort: string | null
+    sort: string | undefined
   ): Observable<any> {
     this.loading = true;
     let url = `${environment.backendUrl}/search/?`;

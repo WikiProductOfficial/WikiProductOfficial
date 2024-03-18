@@ -34,7 +34,7 @@ export class ResultsPageComponent implements OnInit {
   // Query fields
   query: WritableSignal<string> = signal('');
   page: WritableSignal<string> = signal('1');
-  sort: WritableSignal<string | null> = signal(null);
+  sort: WritableSignal<string | undefined> = signal(undefined);
 
   // Results of the query
   results: any;
@@ -106,7 +106,7 @@ export class ResultsPageComponent implements OnInit {
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.query.set(params.get('q') || '');
       this.page.set(params.get('page') || '1');
-      this.sort.set(params.get('sort') || null);
+      this.sort.set(params.get('sort') || undefined);
 
       this.searchService
         .getProducts(this.query(), this.page(), this.sort())
