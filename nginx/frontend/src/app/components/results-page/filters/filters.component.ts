@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-
 interface Store {
   id: number;
   name: string;
@@ -39,10 +38,10 @@ export class FiltersComponent implements OnInit {
   @Output() filteredProductsChange: EventEmitter<FilteredProducts> =
     new EventEmitter<FilteredProducts>();
   // set initial values
-  selectedStores: Store[] = [];
-  stores: Store[] = [];
-  minPrice: number | undefined = undefined;
-  maxPrice: number | undefined = undefined;
+  @Input() stores: Store[] = [];
+  @Input() selectedStores: Store[] = [];
+  @Input() minPrice: number | undefined = undefined;
+  @Input() maxPrice: number | undefined = undefined;
   showFilters: boolean = true;
   isLargeScreen: boolean = true;
 
@@ -56,23 +55,14 @@ export class FiltersComponent implements OnInit {
   onApply() {
     // init query
     const filteredProducts: FilteredProducts = {};
-
-    // Add price range to query
-    if (this.minPrice !== undefined && this.maxPrice !== undefined) {
-      filteredProducts.minPrice = this.minPrice;
-      filteredProducts.maxPrice = this.maxPrice;
-    }
-
+    filteredProducts.minPrice = this.minPrice;
+    filteredProducts.maxPrice = this.maxPrice;
     // Add selected stores filter if any stores are selected
     if (this.selectedStores && this.selectedStores.length > 0) {
       filteredProducts.stores = this.selectedStores.map((store) => store.id);
     }
-
     // Emit filteredProducts
     this.filteredProductsChange.emit(filteredProducts);
-
-    // Send query to a service ' service will be created '
-    console.log('Query:', filteredProducts);
   }
   getStores(): Promise<Store[]> {
     return new Promise((resolve) => {

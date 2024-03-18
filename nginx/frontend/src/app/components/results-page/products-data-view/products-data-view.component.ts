@@ -54,4 +54,9 @@ export class ProductsDataViewComponent {
       this.sortOptionSelected.emit(this.selectedSortOption);
     }
   }
+
+  onProductClicked(productId: number) {
+    console.log('product clicked', productId);
+    // Add your code here to handle the product click event
+  }
 }
