@@ -7,7 +7,11 @@
     ></app-filters>
   </div>
   <div class="flex flex-column col-12 lg:col-10">
-    <app-products-data-view [products]="results"></app-products-data-view>
+    <app-products-data-view
+      [products]="results"
+      [selectedSortOption]="sort()"
+      (sortOptionSelected)="onSortOptionSelected($event)"
+    ></app-products-data-view>
     <p-paginator
       styleClass="m-2"
       [rows]="12"

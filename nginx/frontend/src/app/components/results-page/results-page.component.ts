@@ -34,6 +34,8 @@ export class ResultsPageComponent implements OnInit {
   // Query fields
   query: WritableSignal<string> = signal('');
   page: WritableSignal<string> = signal('1');
+  sort: WritableSignal<string | null> = signal(null);
+
   // Results of the query
   results: any;
   maxPages!: number;
@@ -92,12 +94,22 @@ export class ResultsPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
+  onSortOptionSelected(event: any) {
+    this.sort.set(event);
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: event },
+      queryParamsHandling: 'merge',
+    });
+  }
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.query.set(params.get('q') || '');
       this.page.set(params.get('page') || '1');
+      this.sort.set(params.get('sort') || null);
+
       this.searchService
-        .getProducts(this.query(), this.page())
+        .getProducts(this.query(), this.page(), this.sort())
         .subscribe((data) => {
           this.results = data.results;
           this.maxPages = data.max_pages;

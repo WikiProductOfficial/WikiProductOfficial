@@ -10,21 +10,36 @@ export class SearchService {
   constructor(private http: HttpClient) {}
   loading: boolean = false;
 
-  getProducts(query: string, page: string): Observable<any> {
+  getProducts(
+    query: string,
+    page: string,
+    sort: string | null
+  ): Observable<any> {
     this.loading = true;
-    return this.http
-      .get<any>(`${environment.backendUrl}/search/?query=${query}&page=${page}`)
-      .pipe(
-        catchError((error) => {
-          console.error('An error occurred:', error.error);
-          return throwError(
-            () =>
-              new Error('Failed to load JSON data; see console for details.')
-          );
-        }),
-        finalize(() => {
-          this.loading = false; // loading is finished, remove spinner
-        })
-      );
+    let url = `${environment.backendUrl}/search/?`;
+
+    if (query) {
+      url += `query=${query}&`;
+    }
+
+    if (page) {
+      url += `page=${page}&`;
+    }
+
+    if (sort) {
+      url += `sort=${sort}&`;
+    }
+
+    return this.http.get<any>(url).pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error.error);
+        return throwError(
+          () => new Error('Failed to load JSON data; see console for details.')
+        );
+      }),
+      finalize(() => {
+        this.loading = false; // loading is finished, remove spinner
+      })
+    );
   }
 }

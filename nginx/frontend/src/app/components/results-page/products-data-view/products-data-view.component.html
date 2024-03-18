@@ -6,7 +6,34 @@
   [layout]="layout"
 >
   <ng-template pTemplate="header">
-    <div class="flex justify-content-end">
+    <!-- TODO:Search Title -->
+    <div class="flex justify-content-end gap-2">
+      <!-- Sortby options dropdown -->
+      <span class="p-float-label">
+        <p-dropdown
+          [options]="sortOptions"
+          [(ngModel)]="selectedSortOption"
+          (onChange)="onSortOptionChange()"
+          placeholder="Sort By"
+        >
+          <ng-template let-option pTemplate="selectedItem">
+            @if (option){
+            <div class="flex align-items-center gap-2">
+              <i [class]="option.icon"></i>
+              <div>{{ option.label }}</div>
+            </div>
+            }
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <i [class]="option.icon"></i>
+              <div>{{ option.label }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <label for="float-label">Sort By</label>
+      </span>
+      <!-- dataView Layout Options -->
       <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
     </div>
   </ng-template>

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-products-data-view',
@@ -19,10 +20,38 @@ import { LoaderComponent } from '../../../shared/loader/loader.component';
     RatingModule,
     FormsModule,
     LoaderComponent,
+    DropdownModule,
   ],
 })
 export class ProductsDataViewComponent {
   constructor(public searchService: SearchService) {}
   @Input() products!: any[];
+  @Input() selectedSortOption!: string | null;
+  @Output() sortOptionSelected = new EventEmitter<string>();
   layout: 'list' | 'grid' = 'grid';
+  sortOptions = [
+    {
+      label: 'Price: Lowest first',
+      value: 'pa',
+      icon: 'pi pi-sort-amount-down-alt',
+    },
+    {
+      label: 'Price: Highest first',
+      value: 'pd',
+      icon: 'pi pi-sort-amount-down',
+    },
+    { label: 'Name: A to Z', value: 'na', icon: 'pi pi-sort-alpha-down' },
+    { label: 'Name: Z to A', value: 'nd', icon: 'pi pi-sort-alpha-down-alt' },
+    {
+      label: 'Highest Rating',
+      value: 'rd',
+      icon: 'pi pi-star',
+    },
+  ];
+
+  onSortOptionChange() {
+    if (this.selectedSortOption) {
+      this.sortOptionSelected.emit(this.selectedSortOption);
+    }
+  }
 }
