@@ -54,7 +54,6 @@ export class ResultsPageComponent implements OnInit {
       const storesString = filteredProducts.stores.join(',');
       this.filters().stores = storesString;
     }
-    console.log(this.filters);
     // Navigate to the same route with query parameters
     this.router.navigate([], {
       relativeTo: this.activatedRoute,

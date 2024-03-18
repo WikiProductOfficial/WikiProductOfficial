@@ -1,25 +1,25 @@
-<!-- Loading if data not ready -->
-<ng-template [ngIf]="loading">
-  <div class="loading-container">
-    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
-  </div>
-</ng-template>
+<div class="page-container">
+  <!-- Loading if data not ready -->
+  <ng-template [ngIf]="productService.loading">
+    <div class="loading-container">
+      <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+  </ng-template>
 
+  <!--The whole details page-->
+  <ng-template [ngIf]="!productService.loading">
+    <!--Product Main details 'Photos & Description & Prices in brief'-->
 
-<!--The whole details page-->
-<ng-template [ngIf]="!loading">
-  <!--Product Main details 'Photos & Description & Prices in brief'-->
-  <div class="page-container flex">
     <app-product-details [product]="detailedProduct"></app-product-details>
-  </div>
-  <!--Product Tabs "Detailed Descriptions & Specifications"-->
-  <div class="page-container">
-    <app-product-tabs [tabs]="detailedProduct.tabs"></app-product-tabs>
-  </div>
+    <!--Product Tabs "Detailed Descriptions & Specifications"-->
+    <div class="page-container">
+      <app-product-tabs [tabs]="detailedProduct.tabs"></app-product-tabs>
+    </div>
 
-  <!--Related or similar products-->
-  <app-related-products
-    [relatedProducts]="detailedProduct.related_products"
-    style="margin: auto"
-  ></app-related-products>
-</ng-template>
+    <!--Related or similar products-->
+    <app-related-products
+      [relatedProducts]="detailedProduct.related_products"
+      style="margin: auto"
+    ></app-related-products>
+  </ng-template>
+</div>

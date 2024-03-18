@@ -4,6 +4,7 @@ import { ProviderInfo } from './providerInfo.model';
 import { RelatedProduct } from './related-product.model';
 
 export interface DetailedProduct {
+  name: string;
   item_id: number;
   image_urls: string[];
   description: ProductDescription;

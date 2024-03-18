@@ -1,30 +1,16 @@
 <!-- Flex container for galleria and description -->
 <div
-  class="page-container"
-  style="
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    max-width: 1280px;
-    margin: auto;
-  "
+  class="flex flex-column md:flex-row justify-content-center align-items-center gap-4"
 >
   <!--Product gallery-->
-  <app-product-gallery
-    [images]="product.image_urls"
-    style="flex: 1; min-width: 300px"
-  ></app-product-gallery>
+  <app-product-gallery [images]="product.images"></app-product-gallery>
 
   <!-- Product description container -->
-  <div
-    class="description-text"
-    style="flex: 1; min-width: 300px; padding: 0 20px; text-align: left"
-  >
+  <div class="description-text">
     <!--Product describe 'right side text'-->
     <app-product-describe
       [description]="product.description"
+      [name]="product.name"
     ></app-product-describe>
     <!--product price from providers show as tab view-->
     <app-product-prices [providers]="product.providers"></app-product-prices>

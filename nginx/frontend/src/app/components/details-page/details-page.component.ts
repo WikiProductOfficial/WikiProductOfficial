@@ -21,21 +21,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './details-page.component.scss',
 })
 export class DetailsPageComponent {
-  detailedProduct!: DetailedProduct;
-  loading: boolean = true;
+  detailedProduct!: any;
 
-  constructor(private productService: ProductService) {}
+  constructor(protected productService: ProductService) {}
 
   ngOnInit() {
-    this.productService.getDetailedProduct().subscribe({
+    this.productService.getDetailedProduct(1).subscribe({
       next: (data) => {
         this.detailedProduct = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('error!', err);
-
-        this.loading = false;
       },
     });
   }

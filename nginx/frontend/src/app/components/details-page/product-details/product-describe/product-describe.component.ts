@@ -14,6 +14,7 @@ import { ProductDescription } from '../../../../models/details-page-models/produ
 export class ProductDescribeComponent {
   //description
   @Input() description!: ProductDescription;
+  @Input() name!: string;
   rateValue!: number;
 
   ngOnInit() {

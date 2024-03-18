@@ -11,7 +11,7 @@ import { ProductService } from '../../../../services/product.service';
 })
 export class ProductGalleryComponent {
   //gallery
-  @Input() images!: string[];
+  @Input() images!: any[];
   responsiveOptions: any[] | undefined;
 
   ngOnInit() {

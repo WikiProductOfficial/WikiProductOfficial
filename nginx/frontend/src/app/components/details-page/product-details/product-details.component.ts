@@ -19,5 +19,5 @@ import { DetailedProduct } from '../../../models/details-page-models/detailed-pr
   styleUrl: './product-details.component.scss',
 })
 export class ProductDetailsComponent {
-  @Input() product!: DetailedProduct;
+  @Input() product!: any;
 }
