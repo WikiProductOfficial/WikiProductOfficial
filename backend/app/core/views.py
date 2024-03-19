@@ -137,12 +137,15 @@ def search(request):
             #     category_serializer = serializers.CategorySerializer(category_data)
             #     # Set the category field in the item serializer
             #     print(f"Serialized category:{category_serializer.data}")
-        elif query:
+        if query:
             query = query.strip().split(" ")
             
             # New way of searching
             condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
-            items = models.Item.objects.filter(condition)
+            if items:
+                items = items.filter(condition)
+            else:
+                items = models.Item.objects.filter(condition)
             
         # Correcting the max price if needed
         max_price= max_price_corrector(items=items, min_price=min_price, max_price=max_price)
