@@ -89,10 +89,11 @@ class Location(models.Model):
 
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, db_column='Item_ID')
-    stars = models.PositiveSmallIntegerField()
-    content = models.CharField(max_length=255)
-    review_url = models.URLField(max_length=255)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, db_column='Item_ID', related_name='reviews')
+    rating = models.PositiveSmallIntegerField()
+    content = models.CharField(max_length=5000)
+    date = models.DateField()
+    # review_url = models.URLField(max_length=255)
 
     class Meta:
         db_table = 'review'

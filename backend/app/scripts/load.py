@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
 from core import models
-import json
+import ast
+from datetime import date
+
 
 def run(*args):
     df = pd.read_csv("./scripts/warehouse.csv")
-    
+    # replace NaN with empty string because when in the use it becomes a float type
+    df['reviews'] = df['reviews'].fillna('')
     count = 0
     if not len(args):
         limit  = len(df)
@@ -14,7 +17,7 @@ def run(*args):
     
     for _, row in df.iterrows():
         if count < limit:
-            print(row) # For Debugging
+            # print(row) # For Debugging
             count += 1
             category = None
             # Inserting Category
@@ -51,3 +54,9 @@ def run(*args):
             models.ItemsHistory.objects.update_or_create(item=item[0], store=store[0], price=row["price"])
             
             # Inserting Reviews
+            reviews = row["reviews"]
+            if reviews:
+                reviews= ast.literal_eval(reviews)
+                for r in reviews:
+                    models.Review.objects.create(item=item[0], rating=r["rating"], content= r["content"], date=date.fromisoformat(r["date"]))
+    print("Loading finished")

@@ -13,8 +13,14 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = "__all__"
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Review
+        exclude= ["review_id"]
+
 class ItemSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Item
@@ -41,13 +47,6 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Location
-        fields = "__all__"
-
-class ReviewSerializer(serializers.ModelSerializer):
-    item = ItemSerializer(read_only=True)
-
-    class Meta:
-        model = models.Review
         fields = "__all__"
 
 class StoreSerializer(serializers.ModelSerializer):
