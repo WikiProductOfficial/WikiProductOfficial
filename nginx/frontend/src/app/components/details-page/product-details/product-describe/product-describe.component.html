@@ -7,7 +7,7 @@
   <h2>{{ name }}</h2>
   <!--Reviews using stars-->
   <div style="display: flex; align-items: center">
-    <div>Community Reviews:</div>
+    <h3>Rating:</h3>
     <div style="display: flex; align-items: center">
       <p-rating
         [(ngModel)]="rateValue"
@@ -20,14 +20,17 @@
   </div>
   <!--Features using list-->
   <div>
-    <p>Features:</p>
-    <ul style="padding: 1">
+    <h3>Description:</h3>
+    <p>
+      {{ product.description }}
+    </p>
+    <!-- <ul style="padding: 1">
       <li
         *ngFor="let feature of description?.features"
         style="margin-bottom: 0.5rem"
       >
         {{ feature }}
       </li>
-    </ul>
+    </ul> -->
   </div>
 </div>

@@ -13,11 +13,11 @@ import { ProductDescription } from '../../../../models/details-page-models/produ
 })
 export class ProductDescribeComponent {
   //description
-  @Input() description!: ProductDescription;
+  @Input() product!: any;
   @Input() name!: string;
   rateValue!: number;
 
   ngOnInit() {
-    this.rateValue = this.description.rating;
+    this.rateValue = this.product.rating;
   }
 }

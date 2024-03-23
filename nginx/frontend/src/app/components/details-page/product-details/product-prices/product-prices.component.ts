@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductPricesComponent {
   //providers
-  @Input() providers!: ProviderInfo[];
+  @Input() product!: any;
 
   visit(url: string): void {
     window.open(url, '_blank');

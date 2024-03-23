@@ -9,10 +9,10 @@
   <div class="description-text">
     <!--Product describe 'right side text'-->
     <app-product-describe
-      [description]="product.description"
+      [product]="product"
       [name]="product.name"
     ></app-product-describe>
     <!--product price from providers show as tab view-->
-    <app-product-prices [providers]="product.providers"></app-product-prices>
+    <app-product-prices [product]="product"></app-product-prices>
   </div>
 </div>

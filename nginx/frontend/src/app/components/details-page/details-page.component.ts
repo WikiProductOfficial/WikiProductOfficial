@@ -6,6 +6,7 @@ import { ProductService } from '../../services/product.service';
 import { DetailedProduct } from '../../models/details-page-models/detailed-product.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-details-page',
@@ -23,13 +24,26 @@ import { CommonModule } from '@angular/common';
 export class DetailsPageComponent {
   detailedProduct!: any;
 
-  constructor(protected productService: ProductService) {}
+  constructor(
+    protected productService: ProductService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.productService.getDetailedProduct(1).subscribe({
-      next: (data) => {
-        this.detailedProduct = data;
-      },
+
+    this.route.paramMap.subscribe((params) => {
+      const productId = params.get('id');
+      if (productId) {
+        this.productService.getDetailedProduct(+productId).subscribe({
+          next: (data) => {
+            this.detailedProduct = data;
+          },
+          error: (error) => {
+            console.error('Error fetching detailed product:', error);
+           
+          },
+        });
+      }
     });
   }
 }
