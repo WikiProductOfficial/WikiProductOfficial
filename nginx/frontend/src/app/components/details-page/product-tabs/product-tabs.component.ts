@@ -1,16 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
 import { CommonModule } from '@angular/common';
+import { Product } from '../../../models/product.model';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-tabs',
   standalone: true,
-  imports: [TabViewModule, CommonModule],
+  imports: [FormsModule, RatingModule, TabViewModule, CommonModule],
   templateUrl: './product-tabs.component.html',
   styleUrl: './product-tabs.component.scss',
 })
 export class ProductTabsComponent implements OnInit {
-  @Input() product!: any;
+  @Input() product!: Product;
   details: any = {};
   detailKeys: string[] = [];
 
@@ -30,10 +33,8 @@ export class ProductTabsComponent implements OnInit {
 
     const keyValuePairs = detailsString.replace(/['{}]/g, '').split(', ');
     keyValuePairs.forEach((pair) => {
-
       const [key, value] = pair.split(/:(.+)/);
       if (key && value) {
-
         object[key.trim()] = value.trim();
       }
     });

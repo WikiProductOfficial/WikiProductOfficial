@@ -69,3 +69,93 @@ ul.content-style li {
 ul.content-style li:nth-child(even) {
   background-color: var(--surface-d);
 }
+
+:host ::ng-deep .p-tabview {
+  max-width: 80rem; 
+  margin: 0 auto;
+  width: 100%;
+}
+
+.description,
+.specification {
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.spec-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.spec-table th,
+.spec-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.spec-table tr:last-child td {
+  border-bottom: none;
+}
+
+.reviews-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.review-card {
+  flex: 0 0 calc(50% - 1rem);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.review-rating,
+.review-date {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.review-content {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    flex: 0 0 calc(100% - 1rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .description,
+  .specification {
+    padding: 1.5rem;
+  }
+
+  .spec-table th,
+  .spec-table td {
+    padding: 1rem;
+  }
+}
+
+.description,
+.specification,
+.reviews-container {
+  max-width: 80rem;
+  margin: auto;
+  padding: 1rem;
+}
