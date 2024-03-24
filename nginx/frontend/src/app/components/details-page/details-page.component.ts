@@ -3,10 +3,10 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { ProductTabsComponent } from './product-tabs/product-tabs.component';
 import { RelatedProductsComponent } from './related-products/related-products.component';
 import { ProductService } from '../../services/product.service';
-import { DetailedProduct } from '../../models/details-page-models/detailed-product.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Product } from '../../models/product.model';
 
 @Component({
   selector: 'app-details-page',
@@ -22,7 +22,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './details-page.component.scss',
 })
 export class DetailsPageComponent {
-  detailedProduct!: any;
+  detailedProduct!: Product;
 
   constructor(
     protected productService: ProductService,
@@ -30,7 +30,6 @@ export class DetailsPageComponent {
   ) {}
 
   ngOnInit() {
-
     this.route.paramMap.subscribe((params) => {
       const productId = params.get('id');
       if (productId) {
@@ -40,7 +39,6 @@ export class DetailsPageComponent {
           },
           error: (error) => {
             console.error('Error fetching detailed product:', error);
-           
           },
         });
       }

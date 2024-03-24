@@ -2,8 +2,6 @@ import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CarouselModule } from 'primeng/carousel';
 import { RatingModule } from 'primeng/rating';
-import { ProductService } from '../../../services/product.service';
-import { RelatedProduct } from '../../../models/details-page-models/related-product.model';
 
 @Component({
   selector: 'app-related-products',
@@ -13,8 +11,6 @@ import { RelatedProduct } from '../../../models/details-page-models/related-prod
   styleUrl: './related-products.component.scss',
 })
 export class RelatedProductsComponent {
-  @Input() relatedProducts!: RelatedProduct[];
-
   responsiveOptions: any[] = [
     {
       breakpoint: '1024px',

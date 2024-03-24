@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { ProviderInfo } from '../../../../models/details-page-models/providerInfo.model';
-import { ProductService } from '../../../../services/product.service';
 import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { Product } from '../../../../models/product.model';
 
 @Component({
   selector: 'app-product-prices',
@@ -14,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductPricesComponent {
   //providers
-  @Input() product!: any;
+  @Input() product!: Product;
 
   visit(url: string): void {
     window.open(url, '_blank');

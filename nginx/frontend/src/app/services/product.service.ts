@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { DetailedProduct } from '../models/details-page-models/detailed-product.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { catchError, delay, finalize, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 export class ProductService {
   constructor(private http: HttpClient) {}
   loading: boolean = false;
-  getDetailedProduct(productId: number): Observable<DetailedProduct> {
+  getDetailedProduct(productId: number): Observable<Product> {
     this.loading = true;
     let url = `${environment.backendUrl}/items/${productId}/`;
     return this.http.get<any>(url).pipe(

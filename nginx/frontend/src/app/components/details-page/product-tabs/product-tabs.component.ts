@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TabViewModule } from 'primeng/tabview';
-import { ProductService } from '../../../services/product.service';
-import { ProductTabs } from '../../../models/details-page-models/product-tabs.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -22,7 +20,7 @@ export class ProductTabsComponent implements OnInit {
 
   private parseProductDetails(): void {
     const detailsString = this.product.details;
-    
+
     this.details = this.convertDetailsStringToObject(detailsString);
     this.detailKeys = Object.keys(this.details);
   }

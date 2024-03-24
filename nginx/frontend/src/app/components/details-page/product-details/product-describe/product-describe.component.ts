@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { RatingModule } from 'primeng/rating';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ProductDescription } from '../../../../models/details-page-models/product-description.model';
+import { Product } from '../../../../models/product.model';
 
 @Component({
   selector: 'app-product-describe',
@@ -13,8 +13,7 @@ import { ProductDescription } from '../../../../models/details-page-models/produ
 })
 export class ProductDescribeComponent {
   //description
-  @Input() product!: any;
-  @Input() name!: string;
+  @Input() product!: Product;
   rateValue!: number;
 
   ngOnInit() {
