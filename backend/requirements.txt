@@ -7,3 +7,4 @@ django-rest-swagger
 drf_yasg
 django-extensions
 pandas
+python-dateutil
