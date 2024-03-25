@@ -1,0 +1,35 @@
+<div class="chat-container flex flex-column justify-content-between">
+  <div class="chat-header text-center p-3">Chatbot</div>
+  <div class="message-container flex flex-column">
+    <div
+      class="message"
+      *ngFor="let message of messages | async"
+      [ngClass]="{
+        from: message.sentBy === 'bot',
+        to: message.sentBy === 'user'
+      }"
+    >
+      {{ message.content }}
+    </div>
+  </div>
+
+  <div class="flex justify-content-center">
+    <p-inputGroup>
+      <input
+        class="transparent-field"
+        type="text"
+        pInputText
+        placeholder="Type a message..."
+        [(ngModel)]="formValue"
+        (keyup.enter)="sendMessage()"
+      />
+      <button
+        type="button"
+        (click)="sendMessage()"
+        pButton
+        icon="pi pi-send"
+        class="p-button"
+      ></button>
+    </p-inputGroup>
+  </div>
+</div>
