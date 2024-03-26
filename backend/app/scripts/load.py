@@ -2,8 +2,6 @@ import time
 import pandas as pd
 import numpy as np
 from core import models
-import ast
-from datetime import date
 from dateutil.parser import parse
 
 def handle_category(category_path):
@@ -32,7 +30,6 @@ def insert_reviews(reviews_list, item):
 def run(*args):
     start = time.time()
     
-    # df = pd.read_csv("./scripts/warehouse.csv")
     df = pd.read_pickle("./scripts/clean_warehouse.pkl")
     
     # Filling NaN values
@@ -73,10 +70,6 @@ def run(*args):
             details= row["details"], # Default {}
             description= str(row["description"])[:5000], # Truncate to first 5000 characters
             price=row["price"],
-            # Old code for insertion (Once proven DELETE)
-            # details= {} if pd.isna(row["details"]) else row["details"], # Default {}
-            # rating = None if pd.isna(row["stars"]) else float(row["stars"]), # Default None if stars is NaN
-            # review_count = 0 if pd.isna(row["star_count"]) else int(row["star_count"]), # Default 0 if star_count is NaN
             rating = row["stars"], # Default None
             review_count = row["star_count"], # Default 0
             summary= row['summary']
