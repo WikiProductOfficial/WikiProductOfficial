@@ -1,0 +1,39 @@
+<p-tabView>
+  <p-tabPanel header="Description">
+    <div class="description">
+      <p>{{ product.description }}</p>
+    </div>
+  </p-tabPanel>
+
+  <p-tabPanel header="Specification">
+    <div class="specification">
+      <table class="spec-table">
+        <tbody>
+          <tr *ngFor="let key of detailKeys">
+            <td>{{ key }}</td>
+            <td>:</td>
+            <td>{{ details[key] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </p-tabPanel>
+
+  <p-tabPanel header="Reviews">
+    <div class="reviews-container">
+      <div *ngFor="let review of product.reviews" class="review-card">
+        <div class="review-header">
+          <span class="review-rating">
+            <p-rating
+              [(ngModel)]="review.rating"
+              [readonly]="true"
+              [cancel]="false"
+            ></p-rating>
+          </span>
+          <span class="review-date">{{ review.date | date }}</span>
+        </div>
+        <p class="review-content">{{ review.content }}</p>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>

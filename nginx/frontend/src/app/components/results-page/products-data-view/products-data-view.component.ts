@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../../services/search.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-products-data-view',
@@ -24,7 +25,11 @@ import { DropdownModule } from 'primeng/dropdown';
   ],
 })
 export class ProductsDataViewComponent {
-  constructor(public searchService: SearchService) {}
+  constructor(
+    protected searchService: SearchService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
   @Input() products!: any[];
   @Input() selectedSortOption!: string | undefined;
   @Output() sortOptionSelected = new EventEmitter<string>();
@@ -53,5 +58,11 @@ export class ProductsDataViewComponent {
     if (this.selectedSortOption) {
       this.sortOptionSelected.emit(this.selectedSortOption);
     }
+  }
+
+  onProductClicked(productId: number) {
+    this.router.navigate(['/details', productId]);
+    // console.log('product clicked', productId);
+    // Add your code here to handle the product click event
   }
 }

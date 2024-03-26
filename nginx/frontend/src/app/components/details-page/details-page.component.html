@@ -1,0 +1,19 @@
+<div class="page-container" style="justify-content: center">
+  <!-- Loading if data not ready -->
+  <ng-template [ngIf]="productService.loading">
+    <div class="loading-container">
+      <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+  </ng-template>
+
+  <!--The whole details page-->
+  <ng-template [ngIf]="!productService.loading">
+    <!--Product Main details 'Photos & Description & Prices in brief'-->
+
+    <app-product-details [product]="detailedProduct"></app-product-details>
+    <!--Product Tabs "Detailed Descriptions & Specifications"-->
+    <div class="page-container">
+      <app-product-tabs [product]="detailedProduct"></app-product-tabs>
+    </div>
+  </ng-template>
+</div>

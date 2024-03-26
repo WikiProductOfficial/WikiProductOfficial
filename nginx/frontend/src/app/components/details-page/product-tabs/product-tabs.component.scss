@@ -1,0 +1,100 @@
+:host ::ng-deep .p-tabview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav {
+  justify-content: center;
+  display: flex;
+  width: 100%;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li {
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  background: none;
+  display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-panels {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: none;
+}
+.description,
+.specification {
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.spec-table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.spec-table th,
+.spec-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.spec-table tr:last-child td {
+  border-bottom: none;
+}
+.reviews-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.review-card {
+  flex: 0 0 calc(33.33% - 1rem); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.review-rating,
+.review-date {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.review-content {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 1024px) {
+  .review-card {
+    flex: 0 0 calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .review-card {
+    flex: 0 0 calc(100% - 1rem);
+  }
+}

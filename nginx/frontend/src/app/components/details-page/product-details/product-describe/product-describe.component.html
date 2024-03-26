@@ -1,0 +1,28 @@
+<!--The whole details section-->
+<div
+  class="description-text"
+  style="max-width: 100%; text-align: left; align-content: center"
+>
+  <!--Product Name-->
+  <h2>{{ product.name }}</h2>
+  <!--Reviews using stars-->
+  <div style="display: flex; align-items: center">
+    <h3>Rating:</h3>
+    <div style="display: flex; align-items: center">
+      <p-rating
+        [(ngModel)]="rateValue"
+        [readonly]="true"
+        [cancel]="false"
+        class="description-text"
+      ></p-rating>
+      <span class="description-text">{{ rateValue }}</span>
+    </div>
+  </div>
+  <!--Features using list-->
+  <div>
+    <!-- <h3>Summarized_reviews:</h3>
+    <p>
+      {{ product.summary }}
+    </p> -->
+  </div>
+</div>

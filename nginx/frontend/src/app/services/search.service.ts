@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Filters } from '../models/filters';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ export class SearchService {
   getProducts(
     query: string,
     page: string,
-    sort: string | undefined
+    sort: string | undefined,
+    fillers: Filters
   ): Observable<any> {
     this.loading = true;
     let url = `${environment.backendUrl}/search/?`;
@@ -28,6 +30,18 @@ export class SearchService {
 
     if (sort) {
       url += `sort=${sort}&`;
+    }
+
+    if (fillers.minPrice) {
+      url += `min_price=${fillers.minPrice}&`;
+    }
+
+    if (fillers.maxPrice) {
+      url += `max_price=${fillers.maxPrice}&`;
+    }
+
+    if (fillers.stores) {
+      url += `stores=${fillers.stores}&`;
     }
 
     return this.http.get<any>(url).pipe(

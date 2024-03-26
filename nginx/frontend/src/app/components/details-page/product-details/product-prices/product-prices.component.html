@@ -1,0 +1,48 @@
+<!--The whole providers prices tab view-->
+<div class="card">
+  <p-tabView>
+    <!--for each provider, create a tab-->
+    <p-tabPanel [header]="'Cheapest'">
+      <div class="provider-info">
+        <div
+          class="top-section"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div>
+            <!--Provider price-->
+            <h2 class="price" style="margin: 0">Price: {{ product.price }}</h2>
+            <!--provider company name-->
+            <p class="company-name" style="margin: 0">
+              Company: {{ product.urls[0].name }}
+            </p>
+          </div>
+          <!--a logo of the provider-->
+          <!-- <img
+            [src]="
+              'https://apac-production-wp.s3.ap-southeast-2.amazonaws.com/app/uploads/2017/08/19083003/logo-placeholder-1.png'
+            "
+            alt="Provider Image"
+            style="width: 100px; height: auto"
+          /> -->
+        </div>
+
+        <div
+          class="buttons-section"
+          style="margin-top: 20px; display: flex; gap: 40px"
+        >
+          <!--button to visit product website from the provider-->
+          <p-button
+            (click)="visit(product.urls[0].link)"
+            label="Visit Website"
+          ></p-button>
+          <!--a button to save the product to wishlist-->
+          <p-button label="Add to Wishlist"></p-button>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>
