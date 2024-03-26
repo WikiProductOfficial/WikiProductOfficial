@@ -22,22 +22,7 @@ export class ProductTabsComponent implements OnInit {
   }
 
   private parseProductDetails(): void {
-    const detailsString = this.product.details;
-
-    this.details = this.convertDetailsStringToObject(detailsString);
+    this.details = this.product.details;
     this.detailKeys = Object.keys(this.details);
-  }
-
-  private convertDetailsStringToObject(detailsString: string): any {
-    const object: any = {};
-
-    const keyValuePairs = detailsString.replace(/['{}]/g, '').split(', ');
-    keyValuePairs.forEach((pair) => {
-      const [key, value] = pair.split(/:(.+)/);
-      if (key && value) {
-        object[key.trim()] = value.trim();
-      }
-    });
-    return object;
   }
 }
