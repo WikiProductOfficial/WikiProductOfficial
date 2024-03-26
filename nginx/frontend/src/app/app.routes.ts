@@ -8,6 +8,5 @@ export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'results', component: ResultsPageComponent },
   { path: 'details/:id', component: DetailsPageComponent },
-  { path: '**', component: NotfoundComponent },
-
+  // { path: '**', component: NotfoundComponent },
 ];
