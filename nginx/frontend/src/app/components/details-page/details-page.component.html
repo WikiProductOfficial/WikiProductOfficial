@@ -1,4 +1,4 @@
-<div class="page-container" style="padding-left: 20px; padding-right: 20px">
+<div class="page-container" style="justify-content: center">
   <!-- Loading if data not ready -->
   <ng-template [ngIf]="productService.loading">
     <div class="loading-container">
@@ -15,11 +15,5 @@
     <div class="page-container">
       <app-product-tabs [product]="detailedProduct"></app-product-tabs>
     </div>
-
-    <!-- Related or similar products
-    <app-related-products
-      [relatedProducts]="detailedProduct.related_products"
-      style="margin: auto"
-    ></app-related-products> -->
   </ng-template>
 </div>

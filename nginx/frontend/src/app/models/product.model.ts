@@ -28,7 +28,7 @@ export class Product {
   price: number;
   rating: number;
   review_count: number;
-  summarized_reviews: string | null;
+  summary: string | null;
 
   constructor(data: any) {
     this.item_id = data.item_id;
@@ -41,6 +41,6 @@ export class Product {
     this.price = data.price;
     this.rating = data.rating;
     this.review_count = data.review_count;
-    this.summarized_reviews = data.summarized_reviews;
+    this.summary = data.summarized_reviews;
   }
 }

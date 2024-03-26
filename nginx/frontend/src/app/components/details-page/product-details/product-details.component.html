@@ -1,15 +1,11 @@
-<!-- Flex container for galleria and description -->
-<div
-  class="flex flex-column md:flex-row justify-content-center align-items-center gap-4"
->
-  <!--Product gallery-->
-  <app-product-gallery [images]="product.images"></app-product-gallery>
+<div class="flex-container">
+  <div class="gallery-container">
+    <app-product-gallery [images]="product.images"></app-product-gallery>
+  </div>
 
-  <!-- Product description container -->
-  <div class="description-text">
-    <!--Product describe 'right side text'-->
+  <div class="description-container">
     <app-product-describe [product]="product"></app-product-describe>
-    <!--product price from providers show as tab view-->
+
     <app-product-prices [product]="product"></app-product-prices>
   </div>
 </div>

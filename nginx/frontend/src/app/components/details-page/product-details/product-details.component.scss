@@ -1,16 +1,50 @@
+.description-text {
+  font-size: 1rem;
+}
+
 @media (max-width: 1024px) {
-  .description-text {
-    font-size: 0.9rem;
+  .flex {
+    flex-direction: column;
   }
 
-  .page-container > div {
+  .description-text {
+    font-size: 0.9rem;
     width: 100%;
-    min-width: 0;
+  }
+
+  app-product-gallery {
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
   .description-text {
     font-size: 0.8rem;
+  }
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.gallery-container {
+  flex: 1;
+}
+
+.description-container {
+  flex: 2;
+}
+
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column;
+  }
+
+  .gallery-container,
+  .description-container {
+    flex: none;
+    width: 100%;
   }
 }
