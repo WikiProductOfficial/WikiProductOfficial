@@ -26,7 +26,8 @@ import { scan } from 'rxjs/operators';
 })
 export class ChatDialogComponent implements OnInit {
   messages: Observable<Message[]> = new Observable<Message[]>();
-  formValue!: string;
+  formValue: string = '';
+  isEmpty: boolean = true;
 
   constructor(private chat: ChatbotService) {}
 
@@ -36,8 +37,15 @@ export class ChatDialogComponent implements OnInit {
       .pipe(scan((acc, value) => acc.concat(value)));
   }
 
+  updateIsEmpty() {
+    this.isEmpty = this.formValue === '';
+  }
+
   sendMessage() {
-    this.chat.converse(this.formValue);
-    this.formValue = '';
+    if (!this.isEmpty) {
+      this.chat.converse(this.formValue);
+      this.formValue = '';
+      this.isEmpty = false;
+    }
   }
 }

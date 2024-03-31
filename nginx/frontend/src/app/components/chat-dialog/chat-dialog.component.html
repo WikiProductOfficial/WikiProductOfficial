@@ -1,26 +1,37 @@
 <div class="chat-container flex flex-column justify-content-between">
-  <div class="chat-header text-center p-3">Chatbot</div>
+  <div class="chat-header text-center text-xl p-1">Chatbot</div>
   <div class="message-container flex flex-column">
-    <div
-      class="message"
-      *ngFor="let message of messages | async"
-      [ngClass]="{
-        from: message.sentBy === 'bot',
-        to: message.sentBy === 'user'
-      }"
-    >
-      {{ message.content }}
-    </div>
+    <ng-container *ngFor="let message of messages | async">
+      <div
+        class="message shadow-2"
+        [ngClass]="{
+          from: message.sentBy === 'bot',
+          to: message.sentBy === 'user'
+        }"
+      >
+        <div>{{ message.content }}</div>
+        <ng-container *ngIf="message.imageUrl">
+          <img [src]="message.imageUrl" alt="Image" class="message-image" />
+        </ng-container>
+        <ng-container *ngIf="message.linkUrl">
+          <a [href]="message.linkUrl" target="_blank" class="message-link">{{
+            message.linkText
+          }}</a>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 
-  <div class="flex justify-content-center">
+  <div class="flex justify-content-center input-container">
     <p-inputGroup>
       <input
-        class="transparent-field"
+        class="p-inputtext-sm"
+        [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
         type="text"
         pInputText
         placeholder="Type a message..."
         [(ngModel)]="formValue"
+        (ngModelChange)="updateIsEmpty()"
         (keyup.enter)="sendMessage()"
       />
       <button
@@ -29,6 +40,7 @@
         pButton
         icon="pi pi-send"
         class="p-button"
+        [disabled]="isEmpty"
       ></button>
     </p-inputGroup>
   </div>
