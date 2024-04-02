@@ -15,6 +15,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
 import { Router, RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { CurrencyService } from '../../services/currency.service';
 
 @Component({
   selector: 'app-navbar',
@@ -28,6 +30,7 @@ import { Router, RouterModule } from '@angular/router';
     TooltipModule,
     RouterModule,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -42,11 +45,15 @@ export class NavbarComponent implements OnInit {
     query: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
+  countries = ['SAR', 'USD'];
+  selectedCountry = this.countries[0];
+
   constructor(
     private themeService: ThemeService,
     private cookieService: CookieService,
     private categoriesService: CategoriesService,
-    private router: Router
+    private router: Router,
+    protected currencyService: CurrencyService
   ) {
     effect(() => {
       this.cookieService.set('theme', JSON.stringify(this.isDarkTheme()));
