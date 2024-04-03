@@ -80,13 +80,6 @@ class ItemBelongsTo(models.Model):
         db_table = 'item_belongs_to'
         unique_together = (('item', 'category'),)
 
-class Location(models.Model):
-    map_url = models.CharField(max_length=255, primary_key=True)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, db_column='Store_ID')
-
-    class Meta:
-        db_table = 'locations'
-
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, db_column='Item_ID', related_name='reviews')
