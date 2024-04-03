@@ -1,9 +1,21 @@
 <div class="chat-container flex flex-column justify-content-between">
-  <div class="chat-header text-center text-xl p-1">Chatbot</div>
+  <!-- Header -->
+  <div class="chat-header flex justify-content-between align-items-center p-1">
+    <div class="text-sm md:text-lg flex-grow-1 text-center">Chatbot</div>
+    <div>
+      <button
+        type="button"
+        pButton
+        icon="pi pi-angle-down"
+        class="p-button p-button-sm exit-btn"
+      ></button>
+    </div>
+  </div>
+  <!-- Messages Contetnt -->
   <div class="message-container flex flex-column">
     <ng-container *ngFor="let message of messages | async">
       <div
-        class="message shadow-2"
+        class="message shadow-2 text-xs"
         [ngClass]="{
           from: message.sentBy === 'bot',
           to: message.sentBy === 'user'
@@ -21,16 +33,17 @@
       </div>
     </ng-container>
   </div>
-
+  <!-- Input from user -->
   <div class="flex justify-content-center input-container">
     <p-inputGroup>
       <input
-        class="p-inputtext-sm"
+        class="p-inputtext-sm input-field"
         [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
         type="text"
         pInputText
         placeholder="Type a message..."
         [(ngModel)]="formValue"
+        [disabled]="isLoading"
         (ngModelChange)="updateIsEmpty()"
         (keyup.enter)="sendMessage()"
       />
@@ -38,10 +51,17 @@
         type="button"
         (click)="sendMessage()"
         pButton
-        icon="pi pi-send"
-        class="p-button"
+        class="p-button send-btn"
         [disabled]="isEmpty"
-      ></button>
+      >
+        <span
+          class="pi text-center text-sm md:text-lg"
+          [ngClass]="{
+            'pi-send': !isLoading,
+            'pi-spin pi-spinner': isLoading
+          }"
+        ></span>
+      </button>
     </p-inputGroup>
   </div>
 </div>

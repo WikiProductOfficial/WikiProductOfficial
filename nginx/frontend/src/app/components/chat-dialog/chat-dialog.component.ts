@@ -8,7 +8,7 @@ import { Message } from '../../models/message.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
-import { scan } from 'rxjs/operators';
+import { map, scan } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-dialog',
@@ -28,6 +28,7 @@ export class ChatDialogComponent implements OnInit {
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
   isEmpty: boolean = true;
+  isLoading: boolean = false;
 
   constructor(private chat: ChatbotService) {}
 
@@ -41,11 +42,25 @@ export class ChatDialogComponent implements OnInit {
     this.isEmpty = this.formValue === '';
   }
 
+  checkResponse() {
+    this.messages
+      .pipe(map((messages) => messages[messages.length - 1]))
+      .subscribe((lastMessage) => {
+        if (lastMessage.sentBy === 'bot') {
+          this.isLoading = false;
+        } else {
+          this.isLoading = true;
+        }
+      });
+    return this.isLoading;
+  }
+
   sendMessage() {
     if (!this.isEmpty) {
       this.chat.converse(this.formValue);
       this.formValue = '';
-      this.isEmpty = false;
+      this.isEmpty = true;
+      this.checkResponse();
     }
   }
 }

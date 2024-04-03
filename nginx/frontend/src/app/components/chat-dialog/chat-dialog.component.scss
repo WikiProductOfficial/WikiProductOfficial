@@ -1,10 +1,11 @@
 .chat-container {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 300px;
+  bottom: 2%;
+  right: 1%;
+  width: 30%;
+  max-width: 18.75em;
   background-color: var(--surface-200);
-  border: 1px solid #ccc;
+  border: 1px solid var(--surface-300);
   border-radius: 5px;
   z-index: 100;
 }
@@ -13,23 +14,30 @@
   background-color: var(--primary-color);
   color: var(--surface-0);
   border-radius: 5px 5px 0 0;
+  height: 10%;
+  max-height: 2.5em;
+}
+
+.exit-btn {
+  height: 20%;
+  max-height: 1em;
 }
 
 .message-container {
-  height: 250px;
-  overflow-y: auto;
+  height: 16em;
+  overflow-y: scroll;
 }
 
 .message {
   max-width: 70%;
   word-wrap: break-word;
-  margin: 8px 4px;
+  margin: 4px 6px;
   padding: 6px 8px;
 }
 
 .message-image {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 12.5em;
   display: block;
   margin: auto;
 }
@@ -37,7 +45,17 @@
 .input-container {
   margin-top: 10px;
   height: 10%;
-  max-height: 35px;
+  max-height: 1.8em;
+}
+
+.input-field {
+}
+
+.send-btn {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .from {
