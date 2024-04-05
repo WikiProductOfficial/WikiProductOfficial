@@ -8,43 +8,78 @@
     <div
       class="text-center col-12 flex align-items-center justify-content-center fadein animation-duration-1000"
     >
-      <section>
-        <div class="p-card-title mb-2">
+      <div *ngIf="!isFirstMessage" class="slogan-container" [@fadeoutup]>
+        <div class="p-card-title">
           <span class="wiki font-bold text-5xl md:text-7xl">Wiki</span
           ><span class="product font-bold text-5xl md:text-7xl">Product</span>
         </div>
         <div class="text-xl lg:text-2xl font-bold mb-4">
           Journey Through the World of Products - Discover, Learn, and Explore!
         </div>
-        <div class="flex justify-content-center">
-          <!-- TODO: Implement search query function -->
-          <p-inputGroup class="col-10">
+        <div class="text-xl lg:text-xl font-bold mb-2 mt-5">
+          Chat with ProductBot
+        </div>
+      </div>
+      <section>
+        <!-- chatbot -->
+        <div class="message-container flex flex-column mt-2 align-items-center">
+          <ng-container *ngFor="let message of messages | async">
+            <div
+              class="message shadow-2"
+              [ngClass]="{
+                from: message.sentBy === 'bot',
+                to: message.sentBy === 'user'
+              }"
+            >
+              <div>{{ message.content }}</div>
+              <ng-container *ngIf="message.imageUrl">
+                <img
+                  [src]="message.imageUrl"
+                  alt="Image"
+                  class="message-image"
+                />
+              </ng-container>
+              <ng-container *ngIf="message.linkUrl">
+                <a
+                  [href]="message.linkUrl"
+                  target="_blank"
+                  class="message-link"
+                  >{{ message.linkText }}</a
+                >
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="flex justify-content-center input-container">
+          <p-inputGroup>
             <input
-              class="transparent-field"
+              class="p-inputtext-sm input-field"
+              [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
               type="text"
               pInputText
-              placeholder="Search"
+              placeholder="Type a message..."
+              [(ngModel)]="formValue"
+              [disabled]="isLoading"
+              (ngModelChange)="updateIsEmpty()"
+              (keyup.enter)="sendMessage()"
             />
             <button
               type="button"
+              (click)="sendMessage()"
               pButton
-              icon="pi pi-search"
-              class="p-button"
-            ></button>
+              class="p-button send-btn"
+              [disabled]="isEmpty"
+            >
+              <span
+                class="pi text-center text-sm md:text-lg"
+                [ngClass]="{
+                  'pi-send': !isLoading,
+                  'pi-spin pi-spinner': isLoading
+                }"
+              ></span>
+            </button>
           </p-inputGroup>
-        </div>
-        <div class="text-xl lg:text-xl font-bold mb-2 mt-5">
-          Or Chat with ProductBot
-        </div>
-        <button class="p-ripple p-element p-button p-component">
-          <span class="pi pi-comment p-button-icon p-button-icon-right"></span>
-          <span class="p-button-label ng-star-inserted">Ask ProductBot</span>
-        </button>
-        <div class="flex flex-column justify-content-center mt-5">
-          <i
-            class="pi pi-angle-down animate-flicker"
-            style="font-size: 2rem"
-          ></i>
         </div>
       </section>
     </div>

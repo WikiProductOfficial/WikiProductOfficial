@@ -64,6 +64,68 @@
   border: 1px solid var(--surface-d);
 }
 
+.slogan-container {
+  position: absolute;
+}
+//chatbot
+
+.chat-container {
+  background-color: var(--surface-200);
+  border: 1px solid var(--surface-300);
+  border-radius: 5px;
+  z-index: 100;
+}
+
+.message-container {
+  height: 36em;
+  width: 50em;
+  overflow-y: scroll;
+}
+
+.message {
+  max-width: 70%;
+  word-wrap: break-word;
+  margin: 4px 6px;
+  padding: 6px 8px;
+}
+
+.message-image {
+  max-width: 100%;
+  max-height: 12.5em;
+  display: block;
+  margin: auto;
+}
+
+.input-container {
+  margin-top: 10px;
+  height: 20%;
+  max-height: 10em;
+}
+
+.input-field {
+}
+
+.send-btn {
+  width: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.from {
+  align-self: flex-start;
+  background-color: var(--surface-0);
+  border-radius: 10px 10px 10px 0;
+}
+
+.to {
+  align-self: flex-end;
+  background-color: var(--primary-color);
+  color: var(--surface-0);
+  border-radius: 10px 10px 0 10px;
+}
+
+
 @media (max-width: 1024px) {
   .blob {
     width: 40%;
