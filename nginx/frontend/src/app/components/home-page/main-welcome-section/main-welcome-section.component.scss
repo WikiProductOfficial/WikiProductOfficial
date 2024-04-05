@@ -77,8 +77,10 @@
 }
 
 .message-container {
-  height: 36em;
-  width: 50em;
+  height: 70vh;
+  width: 80vw;
+  max-height: 40em;
+  max-width: 50em;
   overflow-y: scroll;
 }
 
@@ -124,7 +126,6 @@
   color: var(--surface-0);
   border-radius: 10px 10px 0 10px;
 }
-
 
 @media (max-width: 1024px) {
   .blob {
