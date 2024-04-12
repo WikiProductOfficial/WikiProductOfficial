@@ -4,6 +4,9 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 import { CookieService } from 'ngx-cookie-service';
+import { TreeModule } from 'primeng/tree';
+import { take } from 'rxjs/operators';
+
 import {
   FormControl,
   FormGroup,
@@ -15,12 +18,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
 import { Router, RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { CurrencyService } from '../../services/currency.service';
+import { TreeNode } from 'primeng/api/treenode';
+import { SearchService } from '../../services/search.service';
+import { Filters } from '../../models/filters';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     SidebarModule,
+    TreeModule,
     ButtonModule,
     CommonModule,
     FormsModule,
@@ -28,6 +37,7 @@ import { Router, RouterModule } from '@angular/router';
     TooltipModule,
     RouterModule,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -42,11 +52,17 @@ export class NavbarComponent implements OnInit {
     query: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
+  countries = ['SAR', 'USD'];
+  selectedCountry = this.countries[0];
+  treeNodes: TreeNode[] = [];
+
   constructor(
     private themeService: ThemeService,
     private cookieService: CookieService,
     private categoriesService: CategoriesService,
-    private router: Router
+    private router: Router,
+    protected currencyService: CurrencyService,
+    private searchService: SearchService
   ) {
     effect(() => {
       this.cookieService.set('theme', JSON.stringify(this.isDarkTheme()));
@@ -54,8 +70,13 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.categoriesService.getCategories().subscribe((data) => {
-      this.categories = data;
+    this.categoriesService.getCategories().subscribe({
+      next: (data) => {
+        this.treeNodes = this.createTreeNodes(data);
+      },
+      error: (error) => {
+        console.error('Failed to load categories:', error);
+      },
     });
     this.checkScreenSize();
   }
@@ -87,5 +108,51 @@ export class NavbarComponent implements OnInit {
       });
       this.searchForm.reset();
     }
+  }
+
+  createTreeNodes(data: any[]): TreeNode[] {
+    const nodes: { [key: number]: TreeNode } = {};
+
+    data.forEach((item: any) => {
+      nodes[item.category_id] = {
+        label: item.category,
+        data: item.category_id,
+        children: [],
+      };
+    });
+
+    data.forEach((item: any) => {
+      if (item.parent) {
+        nodes[item.parent].children!.push(nodes[item.category_id]);
+      }
+    });
+
+    return data
+      .filter((item: any) => item.parent === null)
+      .map((item: any) => nodes[item.category_id]);
+  }
+
+  onCategorySelect(event: any): void {
+    const query = event.node.label;
+    const defaultPage = '1';
+    const defaultSort = undefined;
+    const defaultFilters: Filters = {};
+
+    this.searchService
+      .getProducts(query, defaultPage, defaultSort, defaultFilters)
+      .pipe(take(1))
+      .subscribe({
+        next: (data) => {
+
+          this.router.navigate(['/results'], { queryParams: { q: query } });
+        },
+        error: (error) => {
+
+          console.error('Search failed:', error);
+        },
+        complete: () => {
+
+        },
+      });
   }
 }

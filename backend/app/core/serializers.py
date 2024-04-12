@@ -42,13 +42,6 @@ class ItemBelongsToSerializer(serializers.ModelSerializer):
         model = models.ItemBelongsTo
         fields = "__all__"
 
-class LocationSerializer(serializers.ModelSerializer):
-    store = serializers.SlugRelatedField(slug_field='name', read_only=True)
-
-    class Meta:
-        model = models.Location
-        fields = "__all__"
-
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Store

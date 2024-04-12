@@ -76,9 +76,9 @@
             <div
               class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
             >
-              <span class="text-2xl font-semibold">{{
-                "$" + product.price
-              }}</span>
+              <span class="text-2xl font-semibold">
+                {{ product.price | currencyConversion }}</span
+              >
               <button
                 pButton
                 icon="pi pi-shopping-cart"
@@ -94,7 +94,11 @@
   <!-- Grid template -->
   <ng-template let-product pTemplate="grid" let-products>
     <div class="grid grid-nogutter">
-      <div *ngFor="let product of products" class="col-6 md:col-4 lg:col-3">
+      <div
+        *ngFor="let product of products"
+        class="col-6 md:col-4 lg:col-3"
+        (click)="onProductClicked(product.item_id)"
+      >
         <div
           class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl m-1 md:m-2"
         >
@@ -122,7 +126,7 @@
               [cancel]="false"
             ></p-rating>
             <p class="currency-limit md:text-md lg:text-xl mt-1">
-              ${{ product.price }}
+              {{ product.price | currencyConversion }}
             </p>
           </div>
         </div>

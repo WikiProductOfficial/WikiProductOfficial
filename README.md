@@ -36,5 +36,22 @@ To build your containers for production, run:
     - Server: [http://localhost]([url](http://localhost))
 
 
+## Loading  Sample Data
+> [!NOTE]
+> Note: The data can be loaded in ranges as it will be shown below.
+* Modifying the following line depending weather it is in development or deployment
+  
+    ``python manage.py runscript load --script-args "start" "end"``
+   * Where the "start" & "end" are integers that represent a range of entries to add which are multiple of hundereds. For example, **"0"** & **"10"** signifies the range from **0** to **1000** ***"exclusive"***
+* Moreover, to load the whole data, write the following line instead or remove the arguments:
+
+    ``python manage.py runscript load``
+
+### Development Environment
+* The changes will be done in the **"docker-compose.yaml"** file in the root directory
+
+### Production Environment
+* The changes will be done in the **"backend/scripts/run.sh"** file
+
 > [!NOTE]
 > Note: If the website does not work despite any fixes, try hard reloading the website by holding the refresh button --> Hard Reload (i.e. clear cache)

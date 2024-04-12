@@ -11,12 +11,8 @@ import { FiltersComponent } from './filters/filters.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { SearchService } from '../../services/search.service';
 import { ButtonModule } from 'primeng/button';
+import { Filters } from '../../models/filters';
 
-interface FilteredProducts {
-  minPrice?: number;
-  maxPrice?: number;
-  stores?: number[];
-}
 @Component({
   selector: 'app-results-page',
   standalone: true,
@@ -35,44 +31,40 @@ export class ResultsPageComponent implements OnInit {
   query: WritableSignal<string> = signal('');
   page: WritableSignal<string> = signal('1');
   sort: WritableSignal<string | undefined> = signal(undefined);
-
-  // Results of the query
+  filters: WritableSignal<Filters> = signal({});
   results: any;
   maxPages!: number;
   // filler component inputs and outputs
   isFiltersVisible: boolean = false;
-  filteredProducts: FilteredProducts | undefined;
   onVisibilityChange(isVisible: boolean) {
     this.isFiltersVisible = isVisible;
   }
 
-  onProductFilterChange(filteredProducts: FilteredProducts) {
-    // Construct the query parameters string
-    let queryParams = '';
-
-    if (filteredProducts.minPrice !== undefined) {
-      queryParams += `minPrice=${filteredProducts.minPrice}&`;
+  onProductFilterChange(filteredProducts: any) {
+    //Remove old filters
+    this.filters.set({});
+    // Add new filters
+    if (filteredProducts.minPrice) {
+      this.filters().minPrice = filteredProducts.minPrice;
     }
-
-    if (filteredProducts.maxPrice !== undefined) {
-      queryParams += `maxPrice=${filteredProducts.maxPrice}&`;
+    if (filteredProducts.maxPrice) {
+      this.filters().maxPrice = filteredProducts.maxPrice;
     }
-
-    if (
-      filteredProducts.stores !== undefined &&
-      filteredProducts.stores.length > 0
-    ) {
-      queryParams += `stores=${filteredProducts.stores.join(',')}&`;
+    if (filteredProducts.stores) {
+      const storesString = filteredProducts.stores.join(',');
+      this.filters().stores = storesString;
     }
-
-    if (queryParams.endsWith('&')) {
-      queryParams = queryParams.slice(0, -1);
-    }
-
     // Navigate to the same route with query parameters
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: queryParams ? { filter: queryParams } : {},
+      queryParams: {
+        q: this.query(),
+        page: this.page(),
+        sort: this.sort(),
+        minPrice: this.filters().minPrice,
+        maxPrice: this.filters().maxPrice,
+        stores: this.filters().stores,
+      },
       queryParamsHandling: 'merge',
     });
   }
@@ -94,11 +86,11 @@ export class ResultsPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-  onSortOptionSelected(event: any) {
-    this.sort.set(event);
+  onSortOptionSelected(sortOption: string) {
+    this.sort.set(sortOption);
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { sort: event },
+      queryParams: { sort: this.sort() },
       queryParamsHandling: 'merge',
     });
   }
@@ -107,9 +99,10 @@ export class ResultsPageComponent implements OnInit {
       this.query.set(params.get('q') || '');
       this.page.set(params.get('page') || '1');
       this.sort.set(params.get('sort') || undefined);
+      // TODO: Parse the filters from the query params.
 
       this.searchService
-        .getProducts(this.query(), this.page(), this.sort())
+        .getProducts(this.query(), this.page(), this.sort(), this.filters())
         .subscribe((data) => {
           this.results = data.results;
           this.maxPages = data.max_pages;
