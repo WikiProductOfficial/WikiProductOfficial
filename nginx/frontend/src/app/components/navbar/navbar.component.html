@@ -95,14 +95,10 @@
     </p-dropdown>
 
     <h3>Categories</h3>
-    <div class="flex flex-column">
-      @for (category of categories; track $index) {
-      <p-button
-        [label]="category.category"
-        [text]="true"
-        severity="secondary"
-      ></p-button>
-      }
-    </div>
+    <p-tree
+      [value]="treeNodes"
+      selectionMode="single"
+      (onNodeSelect)="onCategorySelect($event)"
+    ></p-tree>
   </div>
 </p-sidebar>
