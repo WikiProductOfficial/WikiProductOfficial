@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -12,6 +12,8 @@ import { Message } from '../../../models/message.model';
 import { ChatbotService } from '../../../services/chatbot.service';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, animate, style } from '@angular/animations';
+import { RatingModule } from 'primeng/rating';
+
 
 @Component({
   selector: 'app-main-welcome-section',
@@ -25,6 +27,7 @@ import { trigger, transition, animate, style } from '@angular/animations';
     DividerModule,
     CommonModule,
     FormsModule,
+    RatingModule
   ],
   templateUrl: './main-welcome-section.component.html',
   styleUrl: './main-welcome-section.component.scss',
@@ -39,7 +42,7 @@ import { trigger, transition, animate, style } from '@angular/animations';
     ]),
   ],
 })
-export class MainWelcomeSectionComponent implements OnInit {
+export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
   isEmpty: boolean = true;
@@ -52,6 +55,10 @@ export class MainWelcomeSectionComponent implements OnInit {
     this.messages = this.chat.conversation
       .asObservable()
       .pipe(scan((acc, value) => acc.concat(value)));
+  }
+
+  ngOnDestroy() {
+    this.chat.clearConversation();
   }
 
   openBotPopUp(): void {
@@ -90,13 +97,17 @@ export class MainWelcomeSectionComponent implements OnInit {
     this.messages
       .pipe(map((messages) => messages[messages.length - 1]))
       .subscribe((lastMessage) => {
+        if (lastMessage.imageUrl || lastMessage.linkUrl || lastMessage.price) {
+          lastMessage.isProductMessage = true;
+        } else {
+          lastMessage.isProductMessage = false;
+        }
         if (lastMessage.sentBy === 'bot') {
           this.isLoading = false;
         } else {
           this.isLoading = true;
         }
       });
-    return this.isLoading;
   }
 
   sendMessage() {

@@ -27,7 +27,7 @@
         </ng-container>
         <ng-container *ngIf="message.linkUrl">
           <a [href]="message.linkUrl" target="_blank" class="message-link">{{
-            message.linkText
+            message.title
           }}</a>
         </ng-container>
       </div>
@@ -65,5 +65,3 @@
     </p-inputGroup>
   </div>
 </div>
-
-
