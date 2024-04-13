@@ -1,27 +1,43 @@
-.chat-container {
+.dialog-btn {
   position: fixed;
   bottom: 2%;
   right: 1%;
-  width: 30%;
-  max-width: 18.75em;
+}
+
+::ng-deep .p-dialog-header {
+  padding: 4px;
+  background-color: var(--primary-color);
+  color: var(--surface-0);
+  font-size: 0.1rem;
+}
+
+::ng-deep .p-dialog-header-icon {
+  color: var(--surface-0);
+}
+
+::ng-deep .p-dialog-content {
+  padding: 0;
+}
+
+.chat-container {
+  width: 100%;
   background-color: var(--surface-200);
   border: 1px solid var(--surface-300);
-  border-radius: 5px;
   z-index: 100;
 }
 
-.chat-header {
-  background-color: var(--primary-color);
-  color: var(--surface-0);
-  border-radius: 5px 5px 0 0;
-  height: 10%;
-  max-height: 2.5em;
-}
+// .chat-header {
+//   background-color: var(--primary-color);
+//   color: var(--surface-0);
+//   border-radius: 5px 5px 0 0;
+//   height: 10%;
+//   max-height: 2.5em;
+// }
 
-.exit-btn {
-  height: 20%;
-  max-height: 1em;
-}
+// .exit-btn {
+//   height: 20%;
+//   max-height: 1em;
+// }
 
 .message-container {
   height: 16em;

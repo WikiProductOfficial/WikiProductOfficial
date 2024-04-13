@@ -1,67 +1,71 @@
-<div class="chat-container flex flex-column justify-content-between">
-  <!-- Header -->
-  <div class="chat-header flex justify-content-between align-items-center p-1">
-    <div class="text-sm md:text-lg flex-grow-1 text-center">Chatbot</div>
-    <div>
-      <button
-        type="button"
-        pButton
-        icon="pi pi-angle-down"
-        class="p-button p-button-sm exit-btn"
-      ></button>
+<button
+  pButton
+  class="dialog-btn"
+  (click)="showDialog()"
+  icon="pi pi-external-link"
+  *ngIf="!displayChatbotDialog"
+></button>
+
+<p-dialog
+  header="Chatbot"
+  [breakpoints]="{ '960px': '25vw', '600px': '30vw', '480px': '100vw' }"
+  [style]="{ width: '20vw' }"
+  [(visible)]="displayChatbotDialog"
+  [position]="'bottomright'"
+>
+  <div class="chat-container flex flex-column justify-content-between">
+    <!-- Messages Contetnt -->
+    <div class="message-container flex flex-column">
+      <ng-container *ngFor="let message of messages | async">
+        <div
+          class="message shadow-2 text-xs"
+          [ngClass]="{
+            from: message.sentBy === 'bot',
+            to: message.sentBy === 'user'
+          }"
+        >
+          <div>{{ message.content }}</div>
+          <ng-container *ngIf="message.imageUrl">
+            <img [src]="message.imageUrl" alt="Image" class="message-image" />
+          </ng-container>
+          <ng-container *ngIf="message.linkUrl">
+            <a [href]="message.linkUrl" target="_blank" class="message-link">{{
+              message.title
+            }}</a>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <!-- Input from user -->
+    <div class="flex justify-content-center input-container">
+      <p-inputGroup>
+        <input
+          class="p-inputtext-sm input-field"
+          [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
+          type="text"
+          pInputText
+          placeholder="Type a message..."
+          [(ngModel)]="formValue"
+          [disabled]="isLoading"
+          (ngModelChange)="updateIsEmpty()"
+          (keyup.enter)="sendMessage()"
+        />
+        <button
+          type="button"
+          (click)="sendMessage()"
+          pButton
+          class="p-button send-btn"
+          [disabled]="isEmpty"
+        >
+          <span
+            class="pi text-center text-sm md:text-lg"
+            [ngClass]="{
+              'pi-send': !isLoading,
+              'pi-spin pi-spinner': isLoading
+            }"
+          ></span>
+        </button>
+      </p-inputGroup>
     </div>
   </div>
-  <!-- Messages Contetnt -->
-  <div class="message-container flex flex-column">
-    <ng-container *ngFor="let message of messages | async">
-      <div
-        class="message shadow-2 text-xs"
-        [ngClass]="{
-          from: message.sentBy === 'bot',
-          to: message.sentBy === 'user'
-        }"
-      >
-        <div>{{ message.content }}</div>
-        <ng-container *ngIf="message.imageUrl">
-          <img [src]="message.imageUrl" alt="Image" class="message-image" />
-        </ng-container>
-        <ng-container *ngIf="message.linkUrl">
-          <a [href]="message.linkUrl" target="_blank" class="message-link">{{
-            message.title
-          }}</a>
-        </ng-container>
-      </div>
-    </ng-container>
-  </div>
-  <!-- Input from user -->
-  <div class="flex justify-content-center input-container">
-    <p-inputGroup>
-      <input
-        class="p-inputtext-sm input-field"
-        [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
-        type="text"
-        pInputText
-        placeholder="Type a message..."
-        [(ngModel)]="formValue"
-        [disabled]="isLoading"
-        (ngModelChange)="updateIsEmpty()"
-        (keyup.enter)="sendMessage()"
-      />
-      <button
-        type="button"
-        (click)="sendMessage()"
-        pButton
-        class="p-button send-btn"
-        [disabled]="isEmpty"
-      >
-        <span
-          class="pi text-center text-sm md:text-lg"
-          [ngClass]="{
-            'pi-send': !isLoading,
-            'pi-spin pi-spinner': isLoading
-          }"
-        ></span>
-      </button>
-    </p-inputGroup>
-  </div>
-</div>
+</p-dialog>
