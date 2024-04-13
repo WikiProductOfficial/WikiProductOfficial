@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'core',
+    'LLM',
     'django_extensions',
 ]
 

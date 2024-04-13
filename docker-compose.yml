@@ -27,6 +27,7 @@ services:
       - DJANGO_SU_NAME=${DJANGO_SU_NAME}
       - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - "8000:8000"
     depends_on:
