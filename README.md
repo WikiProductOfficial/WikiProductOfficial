@@ -46,6 +46,9 @@ To build your containers for production, run:
 * Moreover, to load the whole data, write the following line instead or remove the arguments:
 
     ``python manage.py runscript load``
+### Download Dataset
+* Go to teams and download the dataset
+* Add the dataset into the **"backend/app/scripts"** folder
 
 ### Development Environment
 * The changes will be done in the **"docker-compose.yaml"** file in the root directory
