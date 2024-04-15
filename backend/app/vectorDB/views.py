@@ -1,6 +1,6 @@
 # Django imports
 from django.shortcuts import render, redirect
-# from django.http import JsonResponse
+import os
 
 # Django REST Framework imports
 from rest_framework.decorators import api_view
@@ -19,8 +19,8 @@ CHROMA_SETTINGS = Settings(
 )
 
 CHROMA_CLIENT = chromadb.HttpClient(
-    host='chromadb',  # Replace with 'localhost' for development
-    port=8000,
+    host=os.environ.get('CHROMA_HOST_NAME'),  # Replace with 'localhost' for development
+    port=os.environ.get('CHROMA_HOST_PORT'),
     settings=CHROMA_SETTINGS
     )
 

@@ -6,11 +6,12 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "python manage.py wait_for_db &&
+      sh -c "sleep 5 &&
+             python manage.py wait_for_db &&
              python manage.py makemigrations &&
              python manage.py migrate &&
              python manage.py createsu &&
-            #  python manage.py runscript load --script-args 0 10 &&
+             python manage.py runscript load --script-args 0 10 &&
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
@@ -27,13 +28,19 @@ services:
       - DJANGO_SU_NAME=${DJANGO_SU_NAME}
       - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
+      - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
+      - CHROMA_HOST_NAME=${CHROMA_HOST_NAME}
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - chromadb
+      db:
+        condition: service_started
+      chromadb:
+        condition: service_started
+        restart: true
     networks:
       - internal-net
+    restart: always
 
   frontend:
     image: frontend-dev
@@ -67,13 +74,10 @@ services:
       - chroma_data:/index_data 
     ports:
       - '8989:8989'
+    environment:
+      - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
     networks:
       - internal-net
-    healthcheck:
-        test: ["CMD", "curl", "-f", "http://localhost:8989"]
-        interval: 30s
-        timeout: 10s
-        retries: 5
 
 networks:
   internal-net:
