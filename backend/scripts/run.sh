@@ -12,6 +12,6 @@ python manage.py collectstatic --noinput
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsu
-python manage.py runscript load --script-args 0 10
+python manage.py runscript load --script-args 0 1
 
-uwsgi --socket :8000 --workers 4 --master --enable-threads --module app.wsgi
+uwsgi --socket :8000 --workers 4 --master --enable-threads -b 32768 --module app.wsgi
