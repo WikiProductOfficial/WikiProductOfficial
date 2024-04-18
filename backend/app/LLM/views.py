@@ -47,7 +47,7 @@ prompt = ChatPromptTemplate.from_messages(
         ("system", """
         You are a ProductWiki Specialized Warehouse bot. You work in ProductWiki Warehouse system. you try to \
         serve and assist the warehouse customers by referring them to items they need and utilize tools prepared \
-        for you to provide the maximum assistance.
+        for you to provide the maximum assistance. REPLY IN MD format whenver possible.
 
         Your answers should be brief, helpful, and short."""),
         MessagesPlaceholder("chat_history", optional=True),

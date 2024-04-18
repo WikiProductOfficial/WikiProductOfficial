@@ -1,5 +1,6 @@
 import requests
 from langchain.tools import tool
+import os
 
 """
 STEPS FOR CREATING A TOOL FOR THE LLM TO USE:
@@ -18,20 +19,31 @@ def sum(x: int, y: int) -> int:
     return x + y
 """
 
+base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else "http://frontend:80"
+
+
+@tool
+def test_connection() -> str:
+    """Use this tool to test the connectivity. Mention the status code"""
+    res = requests.get(f"https://google.com/")
+    print("DEBUGGING IS:" + str(os.environ.get('DEBUG')))
+    return f"Status code: {res.status_code}, the base url is: {base_url}"
+
 @tool
 def get_item_by_id(item_id: int) -> dict:
     """Use this tool to look up items using the id, the attribute is the data received, default is name."""
-    print("BEFORE")
-    res = requests.get(f"http://localhost:80/api/items/{item_id}/")
-    print("AFTER")
-    print(res)
+    res = requests.get(f"{base_url}/api/items/{item_id}/")
     return res.json()
+
+# TODO: RETURN OUR WEBSITE DETAILED ITEM URL
+# TODO: Finish POSTER
+# BUG: deploy problem is internal, some localhost issues. Because it can connect to the outside networks
 
 @tool
 def search_items(search_query: str) -> dict:
     """Use this tool Search items by the name and get the most relevant items."""
-    res = requests.get(f"http://localhost:80/api/search/?query={search_query}")
+    res = requests.get(f"{base_url}/api/search/?query={search_query}")
     return res.json()
 
 # Add your tool to the collection
-tools = [get_item_by_id, search_items]
+tools = [test_connection, get_item_by_id, search_items]
