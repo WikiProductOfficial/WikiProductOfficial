@@ -9,3 +9,8 @@ django-extensions
 pandas
 python-dateutil
 chromadb
+langchain
+langchainhub
+openai
+tiktoken
+langchain-openai

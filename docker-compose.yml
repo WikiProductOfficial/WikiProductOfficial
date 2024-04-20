@@ -11,7 +11,7 @@ services:
              python manage.py makemigrations &&
              python manage.py migrate &&
              python manage.py createsu &&
-             python manage.py runscript load --script-args 0 10 &&
+             python manage.py runscript load --script-args 0 1 &&
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
@@ -30,6 +30,7 @@ services:
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
       - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
       - CHROMA_HOST_NAME=${CHROMA_HOST_NAME}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     ports:
       - "8000:8000"
     depends_on:
