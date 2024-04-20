@@ -46,6 +46,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       - db
+      - chromadb
     networks:
       - frontend
       - backend
@@ -65,6 +66,7 @@ services:
   
   chromadb:
     image: ghcr.io/chroma-core/chroma:latest
+    container_name: vectorDB
     restart: always
     volumes:
       - chroma_data:/index_data 
