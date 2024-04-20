@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { RatingModule } from 'primeng/rating';
 
-
 @Component({
   selector: 'app-main-welcome-section',
   standalone: true,
@@ -27,7 +26,7 @@ import { RatingModule } from 'primeng/rating';
     DividerModule,
     CommonModule,
     FormsModule,
-    RatingModule
+    RatingModule,
   ],
   templateUrl: './main-welcome-section.component.html',
   styleUrl: './main-welcome-section.component.scss',
@@ -51,6 +50,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
 
   constructor(private chat: ChatbotService) {}
   ngOnInit(): void {
+    this.chat.clearConversation();
     this.animateBlobs();
     this.messages = this.chat.conversation
       .asObservable()

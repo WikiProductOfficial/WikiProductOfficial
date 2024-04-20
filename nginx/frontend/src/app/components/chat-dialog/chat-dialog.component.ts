@@ -1,5 +1,5 @@
 import { ChatbotService } from './../../services/chatbot.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { map, scan } from 'rxjs/operators';
 import { DialogModule } from 'primeng/dialog';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-chat-dialog',
@@ -22,11 +23,12 @@ import { DialogModule } from 'primeng/dialog';
     InputGroupAddonModule,
     ButtonModule,
     DialogModule,
+    RatingModule,
   ],
   templateUrl: './chat-dialog.component.html',
   styleUrl: './chat-dialog.component.scss',
 })
-export class ChatDialogComponent implements OnInit {
+export class ChatDialogComponent implements OnInit, OnDestroy {
   displayChatbotDialog: boolean = false;
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
@@ -39,6 +41,10 @@ export class ChatDialogComponent implements OnInit {
     this.messages = this.chat.conversation
       .asObservable()
       .pipe(scan((acc, value) => acc.concat(value)));
+  }
+
+  ngOnDestroy() {
+    this.chat.clearConversation();
   }
 
   showDialog() {

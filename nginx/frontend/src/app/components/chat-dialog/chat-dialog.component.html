@@ -1,14 +1,18 @@
 <button
   pButton
   class="dialog-btn"
+  icon="pi pi-comment"
   (click)="showDialog()"
-  icon="pi pi-external-link"
   *ngIf="!displayChatbotDialog"
 ></button>
 
 <p-dialog
   header="Chatbot"
-  [breakpoints]="{ '960px': '25vw', '600px': '30vw', '480px': '100vw' }"
+  [breakpoints]="{
+    '960px': '25vw',
+    '600px': '30vw',
+    '480px': '100vw'
+  }"
   [style]="{ width: '20vw' }"
   [(visible)]="displayChatbotDialog"
   [position]="'bottomright'"
@@ -25,14 +29,36 @@
           }"
         >
           <div>{{ message.content }}</div>
-          <ng-container *ngIf="message.imageUrl">
-            <img [src]="message.imageUrl" alt="Image" class="message-image" />
-          </ng-container>
-          <ng-container *ngIf="message.linkUrl">
-            <a [href]="message.linkUrl" target="_blank" class="message-link">{{
-              message.title
-            }}</a>
-          </ng-container>
+          <!-- show product card if the message contains a product -->
+          <div *ngIf="message.imageUrl">
+            <div
+              class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl mt-2 mb-2"
+            >
+              <div
+                class="image-container w-full bg-white flex justify-content-center align-items-center p-1 border-round-lg mb-1"
+              >
+                <img [src]="message.imageUrl" class="product-img" />
+              </div>
+
+              <div class="align-content-start w-full flex flex-column px-2">
+                <div class="flex align-content-end flex-wrap">
+                  <h3 class="text-limit md:text-xs lg:text-sm m-0">
+                    {{ message.title }}
+                  </h3>
+                </div>
+                <p-rating
+                  class="mt-1"
+                  [ngModel]="message.rating"
+                  [readonly]="true"
+                  [cancel]="false"
+                ></p-rating>
+                <p class="currency-limit md:text-xs lg:text-sm mt-1">
+                  ${{ message.price }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div>{{ message.summary }}</div>
         </div>
       </ng-container>
     </div>

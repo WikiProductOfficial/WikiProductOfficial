@@ -2,6 +2,7 @@
   position: fixed;
   bottom: 2%;
   right: 1%;
+  z-index: 1000;
 }
 
 ::ng-deep .p-dialog-header {
@@ -40,7 +41,7 @@
 // }
 
 .message-container {
-  height: 16em;
+  height: 30vh;
   overflow-y: scroll;
 }
 
@@ -51,11 +52,29 @@
   padding: 6px 8px;
 }
 
-.message-image {
-  max-width: 100%;
-  max-height: 12.5em;
-  display: block;
-  margin: auto;
+.text-limit {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.currency-limit {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 15ch;
+}
+
+.product-img {
+  max-width: 12.5em;
+  width: 100%;
+  object-fit: contain;
+}
+
+::ng-deep .p-rating-item svg {
+  width: 0.75rem;
 }
 
 .input-container {
