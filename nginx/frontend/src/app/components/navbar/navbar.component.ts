@@ -133,26 +133,8 @@ export class NavbarComponent implements OnInit {
   }
 
   onCategorySelect(event: any): void {
-    const query = event.node.label;
-    const defaultPage = '1';
-    const defaultSort = undefined;
-    const defaultFilters: Filters = {};
-
-    this.searchService
-      .getProducts(query, defaultPage, defaultSort, defaultFilters)
-      .pipe(take(1))
-      .subscribe({
-        next: (data) => {
-
-          this.router.navigate(['/results'], { queryParams: { q: query } });
-        },
-        error: (error) => {
-
-          console.error('Search failed:', error);
-        },
-        complete: () => {
-
-        },
-      });
+    this.router.navigate(['/results'], {
+      queryParams: { category: event.node.data },
+    });
   }
 }
