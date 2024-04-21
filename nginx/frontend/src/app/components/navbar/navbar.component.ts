@@ -136,5 +136,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/results'], {
       queryParams: { category: event.node.data },
     });
+    this.sidebarVisible = false;
   }
 }
