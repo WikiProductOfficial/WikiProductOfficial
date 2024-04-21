@@ -66,7 +66,7 @@ services:
   
   chromadb:
     image: ghcr.io/chroma-core/chroma:latest
-    container_name: vectorDB
+    container_name: chromadb
     restart: always
     volumes:
       - chroma_data:/index_data 
