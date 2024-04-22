@@ -15,7 +15,8 @@ export class SearchService {
     query: string,
     page: string,
     sort: string | undefined,
-    fillers: Filters
+    fillers: Filters,
+    categoryId?: string
   ): Observable<any> {
     this.loading = true;
     let url = `${environment.backendUrl}/search/?`;
@@ -42,6 +43,10 @@ export class SearchService {
 
     if (fillers.stores) {
       url += `stores=${fillers.stores}&`;
+    }
+
+    if (categoryId) {
+      url += `category=${categoryId}&`;
     }
 
     return this.http.get<any>(url).pipe(

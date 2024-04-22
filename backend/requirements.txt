@@ -8,3 +8,8 @@ drf_yasg
 django-extensions
 pandas
 python-dateutil
+langchain
+langchainhub
+openai
+tiktoken
+langchain-openai
