@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../models/message.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatbotService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   conversation = new BehaviorSubject<Message[]>([]);
 
@@ -23,7 +25,7 @@ export class ChatbotService {
 
     //MOCK
     setTimeout(() => {
-      if (msg === 'give me Device to study with') {
+      if (msg === 'tt') {
         botMessage = new Message(
           "Here's what i've found!",
           'bot',

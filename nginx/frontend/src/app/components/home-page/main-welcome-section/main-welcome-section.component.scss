@@ -83,7 +83,7 @@
 }
 
 .message {
-  max-width: 50%;
+  max-width: 70%;
   word-wrap: break-word;
   margin: 4px 6px;
   padding: 6px 8px;
@@ -110,6 +110,8 @@
 }
 
 .input-container {
+  border: 1px solid var(--surface-300);
+  border-radius: 20px;
   margin-top: 4px;
   height: 20%;
   max-height: 12em;
@@ -118,15 +120,30 @@
 
 .input-field {
   height: 4em;
-  padding-right: 3em;
+  width: 100%;
+  word-wrap: break-word;
   border-radius: 20px;
+  border: none !important;
+}
+
+::ng-deep .p-inputtext:enabled:hover {
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.p-inputtext:focus:not(:hover) {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
 }
 
 .send-btn {
   width: 4%;
-  height: 80%;
+  height: 75%;
   top: 6px;
-  right: 8px;
+  right: 10px;
   z-index: 100;
   border-radius: 12px;
   display: flex;

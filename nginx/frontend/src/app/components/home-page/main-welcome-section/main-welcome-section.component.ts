@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -42,6 +48,11 @@ import { RatingModule } from 'primeng/rating';
   ],
 })
 export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
+  private posX: number = 0;
+  private posY: number = 0;
+  private speed: number = 0.2;
+
+  @ViewChild('messageContainer') messageContainer!: ElementRef;
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
   isEmpty: boolean = true;
@@ -55,18 +66,33 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     this.messages = this.chat.conversation
       .asObservable()
       .pipe(scan((acc, value) => acc.concat(value)));
+
+    this.subscribeToNewMessages();
   }
 
   ngOnDestroy() {
     this.chat.clearConversation();
   }
 
-  openBotPopUp(): void {
-    window.location.href = 'https://bard.google.com/';
+  subscribeToNewMessages() {
+    this.messages.subscribe((messages) => {
+      const initialMessageCount = this.chat.conversation.value.length;
+      const currentMessageCount = messages.length;
+      console.log(currentMessageCount + ' ' + initialMessageCount);
+      if (currentMessageCount > initialMessageCount) {
+        setTimeout(() => {
+          this.scrollMessageContainerToBottom();
+        }, 100);
+      }
+    });
   }
-  private posX: number = 0;
-  private posY: number = 0;
-  private speed: number = 0.2;
+
+  private scrollMessageContainerToBottom() {
+    this.messageContainer.nativeElement.scrollTo({
+      top: this.messageContainer.nativeElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
 
   animateBlobs() {
     const blobsEls = document.querySelectorAll('.blob');
@@ -89,6 +115,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   }
 
   //Chatbot operaitons
+
   updateIsEmpty() {
     this.isEmpty = this.formValue === '';
   }
