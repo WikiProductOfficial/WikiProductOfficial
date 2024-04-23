@@ -4,6 +4,9 @@ import numpy as np
 from core import models
 from dateutil.parser import parse
 
+# import chromadb
+import vectorDB.chromadb as chromadb
+
 def handle_category(category_path):
     """Handle category creation or update based on the category path."""
     if "/" in str(category_path):
@@ -39,6 +42,9 @@ def run(*args):
     df['stars'] = df['stars'].fillna(np.nan).replace([np.nan], [None]) # Replace NaN with Null
     df['summary'] = df['summary'].fillna(np.nan).replace([np.nan], [None]) # Replace NaN with Null
     df['details'] = df['details'].fillna(np.nan).replace([np.nan], [{}]) # Replace NaN with empty dictionary
+    
+    # Getting the chromadb items collection
+    items_collection = chromadb.get_items_collection()
     
     # Filter rows based on provided arguments
     if len(args) == 2:
@@ -97,6 +103,14 @@ def run(*args):
         
         # Insert reviews, if any
         insert_reviews(row["reviews"], item)
+        
+        # Insert item to chromadb
+        items_collection.upsert(
+            ids= str(item[0].item_id),
+            embeddings= row["embedding"],
+            documents= row['summary'],
+            metadatas= row["details"],
+        )
     
     print("Loading finished")
 
