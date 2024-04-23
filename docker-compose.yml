@@ -6,7 +6,7 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "sleep 5 &&
+      sh -c "sleep 3 &&
              python manage.py wait_for_db &&
              python manage.py makemigrations &&
              python manage.py migrate &&
@@ -72,11 +72,14 @@ services:
   chromadb:
     image: ghcr.io/chroma-core/chroma:latest
     volumes:
-      - chroma_data:/index_data 
-    ports:
-      - '8989:8989'
+      - chroma-data:/chroma/chroma
     environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
       - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
+      - CHROMA_TIMEOUT_KEEP_ALIVE=${CHROMA_TIMEOUT_KEEP_ALIVE}
+    ports:
+      - '${CHROMA_HOST_PORT}:${CHROMA_HOST_PORT}'
     networks:
       - internal-net
 
@@ -84,5 +87,6 @@ networks:
   internal-net:
 
 volumes:
-  chroma_data: 
+  chroma-data:
+    driver: local
   postgres-data:
