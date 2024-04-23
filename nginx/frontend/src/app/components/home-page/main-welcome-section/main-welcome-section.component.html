@@ -42,7 +42,13 @@
                   to: message.sentBy === 'user'
                 }"
               >
-                <div>{{ message.content }}</div>
+                <div *ngIf="!isMarkdown(message.content)">
+                  {{ message.content }}
+                </div>
+                <div
+                  *ngIf="isMarkdown(message.content)"
+                  [innerHTML]="formatMessage(message)"
+                ></div>
                 <!-- show product card if the message contains a product -->
                 <div *ngIf="message.isProductMessage">
                   <div

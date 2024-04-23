@@ -78,7 +78,6 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     this.messages.subscribe((messages) => {
       const initialMessageCount = this.chat.conversation.value.length;
       const currentMessageCount = messages.length;
-      console.log(currentMessageCount + ' ' + initialMessageCount);
       if (currentMessageCount > initialMessageCount) {
         setTimeout(() => {
           this.scrollMessageContainerToBottom();
@@ -115,6 +114,28 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   }
 
   //Chatbot operaitons
+
+  isMarkdown(content: string): boolean {
+    return (
+      content.includes('*') || content.includes('_') || content.includes('##')
+    );
+  }
+
+  formatMessage(message: Message): string {
+    let content = message.content;
+    if (message.sentBy === 'bot') {
+      content = content.replace(/\n/g, '<br>');
+
+      content = content
+        .split('\n')
+        .map((line) => `<li>${line}</li>`)
+        .join('');
+
+      content = `<ul>${content}</ul>`;
+    }
+
+    return content;
+  }
 
   updateIsEmpty() {
     this.isEmpty = this.formValue === '';
