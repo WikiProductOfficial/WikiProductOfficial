@@ -34,6 +34,7 @@ export class ResultsPageComponent implements OnInit {
   filters: WritableSignal<Filters> = signal({});
   results: any;
   maxPages!: number;
+  category: WritableSignal<string> = signal('');
   // filler component inputs and outputs
   isFiltersVisible: boolean = false;
   onVisibilityChange(isVisible: boolean) {
@@ -99,10 +100,17 @@ export class ResultsPageComponent implements OnInit {
       this.query.set(params.get('q') || '');
       this.page.set(params.get('page') || '1');
       this.sort.set(params.get('sort') || undefined);
+      this.category.set(params.get('category') || '');
       // TODO: Parse the filters from the query params.
 
       this.searchService
-        .getProducts(this.query(), this.page(), this.sort(), this.filters())
+        .getProducts(
+          this.query(),
+          this.page(),
+          this.sort(),
+          this.filters(),
+          this.category()
+        )
         .subscribe((data) => {
           this.results = data.results;
           this.maxPages = data.max_pages;
