@@ -12,6 +12,10 @@ from drf_yasg import openapi
 # Chromadb imports
 from .chromadb import get_items_collection, get_client
 
+# import item model & serializer
+from core import models
+from core import serializers
+
 # CONSTANTS
 CHROMA_CLIENT= get_client()
 ITEM_COLLECTION = get_items_collection()
@@ -70,7 +74,7 @@ def peek(request):
 def similar_by_id(request):
     try:
         id = request.query_params.get('id', '')  # Get the id query parameter
-        n = int(request.query_params.get('n', 10))  # Get the n query parameter
+        n = int(request.query_params.get('n', 10)) + 1  # Get the n query parameter
         if id:
             result= get_similar(id=id, n=n)
             return Response({
@@ -132,6 +136,14 @@ def get_item(id):
     )
     return item
 
+# Getting items in bulk using ids list
+def get_items(ids):
+    if ids:
+        return serializers.ItemSerializer(
+            list(models.Item.objects.in_bulk(ids).values()),
+            many= True
+            ).data
+
 def get_similar(id=0, text="", n=10):
     if id and text:
         result= Response({
@@ -143,12 +155,16 @@ def get_similar(id=0, text="", n=10):
             n_results= n,
             include= [], # to return just the item IDs
         )
+        ids = [int(i) for i in result["ids"][0]]
+        result = get_items(ids[1:]) # Getting the items
     elif text:
         result= ITEM_COLLECTION.query(
             query_texts= text,
             n_results= n,
-            include=["documents"], # to return just the item IDs
+            include=[], # to return just the item IDs
         )
+        ids = [int(i) for i in result["ids"][0]]
+        result = get_items(ids) # Getting the items
     else:
         result= Response({
             "message": "choose one method"
