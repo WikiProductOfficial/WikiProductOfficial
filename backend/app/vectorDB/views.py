@@ -10,7 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # Chromadb imports
-from .chromadb import get_items_collection, get_client
+from .models import get_items_collection, get_client
 
 # import item model & serializer
 from core import models

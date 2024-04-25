@@ -9,6 +9,7 @@ django-extensions
 pandas
 python-dateutil
 chromadb
+sentence-transformers
 langchain
 langchainhub
 openai
