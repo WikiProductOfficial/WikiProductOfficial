@@ -19,21 +19,12 @@ import { ChatbotService } from '../../../services/chatbot.service';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { RatingModule } from 'primeng/rating';
+import { CurrencyConversionPipe } from '../../../pipes/currency-conversion.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-welcome-section',
   standalone: true,
-  imports: [
-    CardModule,
-    ButtonModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    DividerModule,
-    CommonModule,
-    FormsModule,
-    RatingModule,
-  ],
   templateUrl: './main-welcome-section.component.html',
   styleUrl: './main-welcome-section.component.scss',
   animations: [
@@ -46,6 +37,18 @@ import { RatingModule } from 'primeng/rating';
       ]),
     ]),
   ],
+  imports: [
+    CardModule,
+    ButtonModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    DividerModule,
+    CommonModule,
+    FormsModule,
+    RatingModule,
+    CurrencyConversionPipe,
+  ],
 })
 export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   private posX: number = 0;
@@ -57,9 +60,14 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   formValue: string = '';
   isEmpty: boolean = true;
   isLoading: boolean = false;
+  dotsCount: number = 1;
   isFirstMessage: boolean = false;
 
-  constructor(private chat: ChatbotService) {}
+  //Mock number of products
+  // Define an array with four elements
+  productMessages: any[] = [1, 2];
+
+  constructor(private chat: ChatbotService, private router: Router) {}
   ngOnInit(): void {
     this.chat.clearConversation();
     this.animateBlobs();
@@ -68,10 +76,17 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       .pipe(scan((acc, value) => acc.concat(value)));
 
     this.subscribeToNewMessages();
+    this.updateDotsCount();
   }
 
   ngOnDestroy() {
     this.chat.clearConversation();
+  }
+
+  updateDotsCount() {
+    setInterval(() => {
+      this.dotsCount = (this.dotsCount % 3) + 1;
+    }, 1000);
   }
 
   subscribeToNewMessages() {
@@ -145,7 +160,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     this.messages
       .pipe(map((messages) => messages[messages.length - 1]))
       .subscribe((lastMessage) => {
-        if (lastMessage.imageUrl || lastMessage.linkUrl || lastMessage.price) {
+        if (lastMessage.ProductList) {
           lastMessage.isProductMessage = true;
         } else {
           lastMessage.isProductMessage = false;
@@ -166,5 +181,9 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       this.isFirstMessage = true;
       this.checkResponse();
     }
+  }
+
+  onProductClicked(productId: number) {
+    this.router.navigate(['/details', productId]);
   }
 }

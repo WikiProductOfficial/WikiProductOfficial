@@ -19,7 +19,7 @@
 >
   <div class="chat-container flex flex-column justify-content-between">
     <!-- Messages Contetnt -->
-    <div class="message-container flex flex-column">
+    <div class="message-container flex flex-column" #messageContainer>
       <ng-container *ngFor="let message of messages | async">
         <div
           class="message shadow-2 text-xs"
@@ -30,44 +30,55 @@
         >
           <div>{{ message.content }}</div>
           <!-- show product card if the message contains a product -->
-          <div *ngIf="message.imageUrl">
+          <div class="grid" *ngIf="message.isProductMessage">
             <div
-              class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl mt-2 mb-2"
+              *ngFor="let productMessage of message.ProductList"
+              class="product-message-container col"
+              (click)="onProductClicked(productMessage.item_id)"
             >
               <div
-                class="image-container w-full bg-white flex justify-content-center align-items-center p-1 border-round-lg mb-1"
+                class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl mt-2 mb-2"
               >
-                <img [src]="message.imageUrl" class="product-img" />
-              </div>
-
-              <div class="align-content-start w-full flex flex-column px-2">
-                <div class="flex align-content-end flex-wrap">
-                  <h3 class="text-limit md:text-xs lg:text-sm m-0">
-                    {{ message.title }}
-                  </h3>
+                <div
+                  class="image-container w-full bg-white flex justify-content-center align-items-center p-1 border-round-lg mb-1"
+                >
+                  <img
+                    [src]="productMessage.images[0].image_url"
+                    class="product-img"
+                  />
                 </div>
-                <p-rating
-                  class="mt-1"
-                  [ngModel]="message.rating"
-                  [readonly]="true"
-                  [cancel]="false"
-                ></p-rating>
-                <p class="currency-limit md:text-xs lg:text-sm mt-1">
-                  ${{ message.price }}
-                </p>
+
+                <div class="align-content-start w-full flex flex-column px-2">
+                  <div class="flex align-content-end flex-wrap">
+                    <h3 class="text-limit md:text-xs lg:text-sm m-0">
+                      {{ productMessage.name }}
+                    </h3>
+                  </div>
+                  <p-rating
+                    class="mt-1"
+                    [ngModel]="productMessage.rating"
+                    [readonly]="true"
+                    [cancel]="false"
+                  ></p-rating>
+                  <p class="currency-limit md:text-xs lg:text-sm mt-1">
+                    {{ productMessage.price | currencyConversion }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
           <div>{{ message.summary }}</div>
         </div>
       </ng-container>
+      <div *ngIf="isLoading" class="message from font-bold shadow-2">
+        {{ "· ".repeat(dotsCount) }}
+      </div>
     </div>
     <!-- Input from user -->
     <div class="flex justify-content-center input-container">
       <p-inputGroup>
         <input
           class="p-inputtext-sm input-field"
-          [ngClass]="{ 'ng-invalid ng-dirty': isEmpty }"
           type="text"
           pInputText
           placeholder="Type a message..."

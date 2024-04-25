@@ -1,5 +1,11 @@
 import { ChatbotService } from './../../services/chatbot.service';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -11,10 +17,14 @@ import { ButtonModule } from 'primeng/button';
 import { map, scan } from 'rxjs/operators';
 import { DialogModule } from 'primeng/dialog';
 import { RatingModule } from 'primeng/rating';
+import { CurrencyConversionPipe } from '../../pipes/currency-conversion.pipe';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-dialog',
   standalone: true,
+  templateUrl: './chat-dialog.component.html',
+  styleUrl: './chat-dialog.component.scss',
   imports: [
     InputTextModule,
     CommonModule,
@@ -24,27 +34,59 @@ import { RatingModule } from 'primeng/rating';
     ButtonModule,
     DialogModule,
     RatingModule,
+    CurrencyConversionPipe,
   ],
-  templateUrl: './chat-dialog.component.html',
-  styleUrl: './chat-dialog.component.scss',
 })
 export class ChatDialogComponent implements OnInit, OnDestroy {
+  @ViewChild('messageContainer') messageContainer!: ElementRef;
   displayChatbotDialog: boolean = false;
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
   isEmpty: boolean = true;
+  dotsCount: number = 1;
   isLoading: boolean = false;
 
-  constructor(private chat: ChatbotService) {}
+  //Mock number of products
+  // Define an array with four elements
+  productMessages: any[] = [1, 2, 3, 4];
+
+  constructor(private chat: ChatbotService, private router: Router) {}
 
   ngOnInit() {
     this.messages = this.chat.conversation
       .asObservable()
       .pipe(scan((acc, value) => acc.concat(value)));
+    this.subscribeToNewMessages();
+    this.updateDotsCount();
   }
 
   ngOnDestroy() {
     this.chat.clearConversation();
+  }
+
+  updateDotsCount() {
+    setInterval(() => {
+      this.dotsCount = (this.dotsCount % 3) + 1;
+    }, 1000);
+  }
+
+  subscribeToNewMessages() {
+    this.messages.subscribe((messages) => {
+      const initialMessageCount = this.chat.conversation.value.length;
+      const currentMessageCount = messages.length;
+      if (currentMessageCount > initialMessageCount) {
+        setTimeout(() => {
+          this.scrollMessageContainerToBottom();
+        }, 100);
+      }
+    });
+  }
+
+  private scrollMessageContainerToBottom() {
+    this.messageContainer.nativeElement.scrollTo({
+      top: this.messageContainer.nativeElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
   showDialog() {
@@ -63,13 +105,17 @@ export class ChatDialogComponent implements OnInit, OnDestroy {
     this.messages
       .pipe(map((messages) => messages[messages.length - 1]))
       .subscribe((lastMessage) => {
+        if (lastMessage.ProductList) {
+          lastMessage.isProductMessage = true;
+        } else {
+          lastMessage.isProductMessage = false;
+        }
         if (lastMessage.sentBy === 'bot') {
           this.isLoading = false;
         } else {
           this.isLoading = true;
         }
       });
-    return this.isLoading;
   }
 
   sendMessage() {
@@ -79,5 +125,9 @@ export class ChatDialogComponent implements OnInit, OnDestroy {
       this.isEmpty = true;
       this.checkResponse();
     }
+  }
+
+  onProductClicked(productId: number) {
+    this.router.navigate(['/details', productId]);
   }
 }
