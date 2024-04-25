@@ -9,11 +9,17 @@ from chromadb.utils import embedding_functions
 CHROMA_SETTINGS = Settings(
     allow_reset=True,
     anonymized_telemetry=False,
+    chroma_client_auth_credentials= os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
+    chroma_client_auth_provider= os.environ.get("CHROMA_CLIENT_AUTHN_PROVIDER"),
 )
 
 CHROMA_CLIENT = chromadb.HttpClient(
     host=os.environ.get('CHROMA_HOST_NAME'),  # Replace with 'localhost' for development
     port=os.environ.get('CHROMA_HOST_PORT'),
+    # ssl= True,
+    headers= {
+        os.environ.get("CHROMA_AUTH_TOKEN_TRANSPORT_HEADER"):os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
+    },
     settings=CHROMA_SETTINGS
 )
 
