@@ -1,53 +1,74 @@
 # threading for thread safety in singleton pattern
-import threading
+from threading import Lock
 
 # os for env variables
 import os
 
 # chromadb imports
 import chromadb
-from chromadb.config import Settings
+from app.settings import CHROMA_CLIENT
 from chromadb.utils import embedding_functions
+
+# Meta Class
+class SingletonMeta(type):
+    """
+    This is a thread-safe implementation of Singleton.
+    """
+
+    _instances = {}
+
+    _lock: Lock = Lock()
+    """
+    We now have a lock object that will be used to synchronize threads during
+    first access to the Singleton.
+    """
+
+    def __call__(cls, *args, **kwargs):
+        """
+        Possible changes to the value of the `__init__` argument do not affect
+        the returned instance.
+        """
+        # Now, imagine that the program has just been launched. Since there's no
+        # Singleton instance yet, multiple threads can simultaneously pass the
+        # previous conditional and reach this point almost at the same time. The
+        # first of them will acquire lock and will proceed further, while the
+        # rest will wait here.
+        with cls._lock:
+            # The first thread to acquire the lock, reaches this conditional,
+            # goes inside and creates the Singleton instance. Once it leaves the
+            # lock block, a thread that might have been waiting for the lock
+            # release may then enter this section. But since the Singleton field
+            # is already initialized, the thread won't create a new object.
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+        return cls._instances[cls]
+
 
 
 # A singleton class for ChromaDB to make sure there is one instance of the class
-class ChromaDB:
+class ChromaDB(metaclass=SingletonMeta):
     # Private variables
-    __instance= None
-    __lock = threading.Lock()
+    # __instance= None
+    # __lock = threading.Lock()
     __collections= {}
     
     # Private constants
     __CHROMA_CLIENT= None
     
     # Constructor
-    def __new__(cls):
-        if cls.__instance is None:
-            with cls.__lock:
-                if cls.__instance is None:
-                    # constructing an new instance of the class
-                    cls.__instance = super(ChromaDB, cls).__new__(cls)
-                    
-                    # constructing a new instance of the constants
-                    cls.__CHROMA_SETTINGS = Settings(
-                        allow_reset=True,
-                        anonymized_telemetry=False,
-                        chroma_client_auth_credentials= os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
-                        chroma_client_auth_provider= os.environ.get("CHROMA_CLIENT_AUTHN_PROVIDER"),
-                    )
-                    cls.__CHROMA_CLIENT = CHROMA_CLIENT = chromadb.HttpClient(
-                        host=os.environ.get('CHROMA_HOST_NAME'),  # Replace with 'localhost' for development
-                        port=os.environ.get('CHROMA_HOST_PORT'),
-                        headers= {
-                            os.environ.get("CHROMA_AUTH_TOKEN_TRANSPORT_HEADER"):os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
-                        },
-                        settings= cls.__CHROMA_SETTINGS
-                    )
-                    
-                    # Creating collections
-                    cls.__create_collections(cls)
+    def __init__(self) -> None:
+        self.__CHROMA_CLIENT = CHROMA_CLIENT
+        self.__create_collections()
+    # def __new__(cls):
+    #     if cls.__instance is None:
+    #         with cls.__lock:
+    #             if cls.__instance is None and cls.__CHROMA_CLIENT is None:
+    #                 cls.__CHROMA_CLIENT(cls)
+    #                 # Creating collections
+    #                 cls.__create_collections(cls)
         
-        return cls.__instance
+    #     return cls.__instance
     
     # Public Functions
     # Getting the client (Need on instance of it)
@@ -56,18 +77,17 @@ class ChromaDB:
     
     # Getting the items collection
     def get_items_collection(self):
-        print(self.__collections["items"])
         return self.__collections["items"]
     
     
     # Private Functions
     # Creating the collections
     def __create_collections(self) -> None:
-        self.__create_items_collection(self)
+        self.__create_items_collection()
     
     # Creating the items collection
     def __create_items_collection(self):
-        embedding_function= self.__get_embedding_function(self)
+        embedding_function= self.__get_embedding_function()
         collection = self.__CHROMA_CLIENT.get_or_create_collection(
             name="items",
             metadata={"hnsw:space": "cosine"},
@@ -90,19 +110,15 @@ class ChromaDB:
         
         # Choosing which approach to go through
         elif option == 1:
-            temp=self.__get_embedding_service(model)
-            embedding= temp
-            print(f"Embedding_function 1: {embedding}")
+            embedding= self.__get_embedding_service(model)
         else:
             embedding= embedding_functions.DefaultEmbeddingFunction()
-            print(f"Embedding_function 2: {embedding}")
         
-        print(f"Embedding_function:{embedding}")
         return embedding
 
 
     # Getting other services embedding function
-    def __get_embedding_service(model_name:str):
+    def __get_embedding_service(self, model_name:str):
         embedding_service= int(os.environ.get("EMBEDDING_SERVICE"))
         
         if embedding_service == 0:

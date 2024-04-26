@@ -6,8 +6,7 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "sleep 3 &&
-             python manage.py wait_for_db &&
+      sh -c "python manage.py wait_for_db &&
              python manage.py makemigrations &&
              python manage.py migrate &&
              python manage.py createsu &&
@@ -45,6 +44,7 @@ services:
         condition: service_started
       chromadb:
         condition: service_healthy
+        restart: true
     networks:
       - internal-net
     restart: always
@@ -95,7 +95,7 @@ services:
       test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/${CHROMA_HOST_PORT}" ]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 2
 
 networks:
   internal-net:

@@ -52,8 +52,11 @@ services:
       - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
-      - db
-      - chromadb
+      db:
+        condition: service_started
+      chromadb:
+        condition: service_healthy
+        restart: true
     networks:
       - frontend
       - backend
@@ -87,6 +90,11 @@ services:
       - CHROMA_AUTH_TOKEN_TRANSPORT_HEADER=${CHROMA_AUTH_TOKEN_TRANSPORT_HEADER}
     networks:
       - backend
+    healthcheck:
+      test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/${CHROMA_HOST_PORT}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 2
 
 networks:
   frontend:
