@@ -44,7 +44,7 @@ services:
       db:
         condition: service_started
       chromadb:
-        condition: service_started
+        condition: service_healthy
     networks:
       - internal-net
     restart: always
@@ -91,6 +91,11 @@ services:
       - '${CHROMA_HOST_PORT}:${CHROMA_HOST_PORT}'
     networks:
       - internal-net
+    healthcheck:
+      test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/${CHROMA_HOST_PORT}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   internal-net:

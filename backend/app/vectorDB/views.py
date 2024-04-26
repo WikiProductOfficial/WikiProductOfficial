@@ -10,15 +10,18 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # Chromadb imports
-from .models import get_items_collection, get_client
+from vectorDB.chroma_db import ChromaDB
 
 # import item model & serializer
 from core import models
 from core import serializers
 
+# instantiating ChromaDB
+chromadb = ChromaDB()
+
 # CONSTANTS
-CHROMA_CLIENT= get_client()
-ITEM_COLLECTION = get_items_collection()
+CHROMA_CLIENT= chromadb.get_client()
+ITEM_COLLECTION = chromadb.get_items_collection()
 
 @api_view(['GET'])
 def heartbeat(request):

@@ -4,8 +4,11 @@ import numpy as np
 from core import models
 from dateutil.parser import parse
 
-# import util to use chromadb
-import vectorDB.models as chromadb
+# import chromadb singelton class
+from vectorDB.chroma_db import ChromaDB
+
+# instantiating ChromaDB
+chromadb = ChromaDB()
 
 def handle_category(category_path):
     """Handle category creation or update based on the category path."""
