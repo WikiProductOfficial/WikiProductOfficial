@@ -1,5 +1,5 @@
 <div class="page-container flex">
-  <div class="hidden lg:col-2 lg:block">
+  <div class="lg:col-2 lg:block">
     <app-filters
       [visible]="isFiltersVisible"
       (visibilityChange)="onVisibilityChange($event)"
@@ -8,9 +8,11 @@
   </div>
   <div class="flex flex-column col-12 lg:col-10">
     <app-products-data-view
+      [title]="query()"
       [products]="results"
       [selectedSortOption]="sort()"
       (sortOptionSelected)="onSortOptionSelected($event)"
+      (showFiltersClicked)="onShowFiltersClicked($event)"
     ></app-products-data-view>
     <p-paginator
       styleClass="m-2"
