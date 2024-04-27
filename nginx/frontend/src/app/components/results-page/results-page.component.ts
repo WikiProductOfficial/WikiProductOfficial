@@ -12,6 +12,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { SearchService } from '../../services/search.service';
 import { ButtonModule } from 'primeng/button';
 import { Filters } from '../../models/filters';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-results-page',
@@ -34,8 +35,16 @@ export class ResultsPageComponent implements OnInit {
   filters: WritableSignal<Filters> = signal({});
   results: any;
   maxPages!: number;
+  category: WritableSignal<string> = signal('');
   // filler component inputs and outputs
   isFiltersVisible: boolean = false;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private searchService: SearchService,
+    protected categoriesService: CategoriesService
+  ) {}
   onVisibilityChange(isVisible: boolean) {
     this.isFiltersVisible = isVisible;
   }
@@ -69,11 +78,6 @@ export class ResultsPageComponent implements OnInit {
     });
   }
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private searchService: SearchService
-  ) {}
   onPageChange(event: any) {
     this.page.set(event.page + 1);
     window.scrollTo({
@@ -85,6 +89,9 @@ export class ResultsPageComponent implements OnInit {
       queryParams: { page: this.page() },
       queryParamsHandling: 'merge',
     });
+  }
+  onShowFiltersClicked(event: any) {
+    this.isFiltersVisible = true;
   }
   onSortOptionSelected(sortOption: string) {
     this.sort.set(sortOption);
@@ -99,10 +106,17 @@ export class ResultsPageComponent implements OnInit {
       this.query.set(params.get('q') || '');
       this.page.set(params.get('page') || '1');
       this.sort.set(params.get('sort') || undefined);
+      this.category.set(params.get('category') || '');
       // TODO: Parse the filters from the query params.
 
       this.searchService
-        .getProducts(this.query(), this.page(), this.sort(), this.filters())
+        .getProducts(
+          this.query(),
+          this.page(),
+          this.sort(),
+          this.filters(),
+          this.category()
+        )
         .subscribe((data) => {
           this.results = data.results;
           this.maxPages = data.max_pages;

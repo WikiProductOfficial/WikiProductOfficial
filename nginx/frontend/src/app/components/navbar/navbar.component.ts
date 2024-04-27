@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 import { CookieService } from 'ngx-cookie-service';
+import { TreeModule } from 'primeng/tree';
 import {
   FormControl,
   FormGroup,
@@ -15,12 +16,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { CategoriesService } from '../../services/categories.service';
 import { Router, RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { CurrencyService } from '../../services/currency.service';
+import { TreeNode } from 'primeng/api/treenode';
+import { ScreenService } from '../../services/screen.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
     SidebarModule,
+    TreeModule,
     ButtonModule,
     CommonModule,
     FormsModule,
@@ -28,6 +34,7 @@ import { Router, RouterModule } from '@angular/router';
     TooltipModule,
     RouterModule,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
@@ -35,18 +42,23 @@ import { Router, RouterModule } from '@angular/router';
 export class NavbarComponent implements OnInit {
   sidebarVisible: boolean = false;
   navbarScrolled: boolean = false;
-  isLargeScreen: boolean = false;
   categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
   searchForm = new FormGroup({
     query: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
+  countries = ['SAR', 'USD'];
+  selectedCountry = this.countries[0];
+  treeNodes: TreeNode[] = [];
+
   constructor(
     private themeService: ThemeService,
     private cookieService: CookieService,
     private categoriesService: CategoriesService,
-    private router: Router
+    protected router: Router,
+    protected currencyService: CurrencyService,
+    protected screenService: ScreenService
   ) {
     effect(() => {
       this.cookieService.set('theme', JSON.stringify(this.isDarkTheme()));
@@ -54,8 +66,13 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.categoriesService.getCategories().subscribe((data) => {
-      this.categories = data;
+    this.categoriesService.getCategories().subscribe({
+      next: (data) => {
+        this.treeNodes = this.createTreeNodes(data);
+      },
+      error: (error) => {
+        console.error('Failed to load categories:', error);
+      },
     });
     this.checkScreenSize();
   }
@@ -75,7 +92,7 @@ export class NavbarComponent implements OnInit {
   }
 
   checkScreenSize() {
-    this.isLargeScreen = window.innerWidth >= 1024;
+    this.screenService.isLargeScreen = window.innerWidth >= 1024;
   }
   scrollTo(element: HTMLElement): void {
     element.scrollIntoView({ behavior: 'smooth' });
@@ -87,5 +104,34 @@ export class NavbarComponent implements OnInit {
       });
       this.searchForm.reset();
     }
+  }
+
+  createTreeNodes(data: any[]): TreeNode[] {
+    const nodes: { [key: number]: TreeNode } = {};
+
+    data.forEach((item: any) => {
+      nodes[item.category_id] = {
+        label: item.category,
+        data: item.category_id,
+        children: [],
+      };
+    });
+
+    data.forEach((item: any) => {
+      if (item.parent) {
+        nodes[item.parent].children!.push(nodes[item.category_id]);
+      }
+    });
+
+    return data
+      .filter((item: any) => item.parent === null)
+      .map((item: any) => nodes[item.category_id]);
+  }
+
+  onCategorySelect(event: any): void {
+    this.router.navigate(['/results'], {
+      queryParams: { category: event.node.data },
+    });
+    this.sidebarVisible = false;
   }
 }

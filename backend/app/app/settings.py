@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
-
+import chromadb
+from chromadb.config import Settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +16,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'backend', 'frontend']
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'core',
+    'LLM',
+    'vectorDB',
     'django_extensions',
 ]
 
@@ -163,3 +166,19 @@ STATIC_ROOT = '/vol/web/static'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHROMA_SETTINGS = Settings(
+    allow_reset=True,
+    anonymized_telemetry=False,
+    chroma_client_auth_credentials= os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
+    chroma_client_auth_provider= os.environ.get("CHROMA_CLIENT_AUTHN_PROVIDER"),
+)
+
+CHROMA_CLIENT = chromadb.HttpClient(
+    host= os.environ.get('CHROMA_HOST_NAME'),  # Replace with 'localhost' for development
+    port= os.environ.get('CHROMA_HOST_PORT'),
+    headers= {
+        os.environ.get("CHROMA_AUTH_TOKEN_TRANSPORT_HEADER"):os.environ.get("CHROMA_SERVER_AUTHN_CREDENTIALS"),
+    },
+    settings= CHROMA_SETTINGS
+)

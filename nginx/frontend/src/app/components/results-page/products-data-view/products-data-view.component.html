@@ -7,34 +7,58 @@
 >
   <ng-template pTemplate="header">
     <!-- TODO:Search Title -->
-    <div class="flex justify-content-end gap-2">
-      <!-- Sortby options dropdown -->
-      <span class="p-float-label">
-        <p-dropdown
-          [options]="sortOptions"
-          [(ngModel)]="selectedSortOption"
-          (onChange)="onSortOptionChange()"
-          placeholder="Sort By"
-        >
-          <ng-template let-option pTemplate="selectedItem">
-            @if (option){
-            <div class="flex align-items-center gap-2">
-              <i [class]="option.icon"></i>
-              <div>{{ option.label }}</div>
-            </div>
-            }
-          </ng-template>
-          <ng-template let-option pTemplate="item">
-            <div class="flex align-items-center gap-2">
-              <i [class]="option.icon"></i>
-              <div>{{ option.label }}</div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-        <label for="float-label">Sort By</label>
-      </span>
-      <!-- dataView Layout Options -->
-      <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+    <div
+      class="flex md:flex-row flex-column align-items-center justify-content-between"
+    >
+      <!-- Search Title -->
+      <div class="flex flex-row align-items-center gap-2">
+        <i
+          style="font-size: 1.25rem"
+          class="pi pi-search transparent-button-icon"
+        ></i>
+        <h2 class="text-white">Searching for "{{ title }}"</h2>
+      </div>
+
+      <div class="flex justify-content-end gap-2">
+        <!-- Sortby options dropdown -->
+        <span class="p-float-label">
+          <p-dropdown
+            [options]="sortOptions"
+            [(ngModel)]="selectedSortOption"
+            (onChange)="onSortOptionChange()"
+            placeholder="Sort By"
+          >
+            <ng-template let-option pTemplate="selectedItem">
+              @if (option){
+              <div class="flex align-items-center gap-2 p-button-outlined">
+                <i [class]="option.icon"></i>
+                <div>{{ option.label }}</div>
+              </div>
+              }
+            </ng-template>
+            <ng-template let-option pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <i [class]="option.icon"></i>
+                <div>{{ option.label }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <label for="float-label">Sort By</label>
+        </span>
+        <!-- showfilters button -->
+        @if(!screenService.isLargeScreen){
+        <button
+          pButton
+          id="filters-button"
+          icon="pi pi-filter"
+          class="p-button-outlined p-button-rounded p-button-secondary"
+          (click)="onShowFiltersClicked()"
+        ></button>
+        }
+
+        <!-- dataView Layout Options -->
+        <!-- <p-dataViewLayoutOptions></p-dataViewLayoutOptions> -->
+      </div>
     </div>
   </ng-template>
   <ng-template let-product pTemplate="list" let-products>
@@ -68,7 +92,7 @@
               <div class="flex align-items-center gap-3">
                 <span class="flex align-items-center gap-2">
                   <i class="pi pi-tag"></i>
-                  <span class="font-semibold">Cars</span>
+                  <span class="font-semibold">product.cat</span>
                 </span>
                 <!-- <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product)"></p-tag> -->
               </div>
@@ -76,9 +100,9 @@
             <div
               class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
             >
-              <span class="text-2xl font-semibold">{{
-                "$" + product.price
-              }}</span>
+              <span class="text-2xl font-semibold">
+                {{ product.price | currencyConversion }}</span
+              >
               <button
                 pButton
                 icon="pi pi-shopping-cart"
@@ -126,7 +150,7 @@
               [cancel]="false"
             ></p-rating>
             <p class="currency-limit md:text-md lg:text-xl mt-1">
-              ${{ product.price }}
+              {{ product.price | currencyConversion }}
             </p>
           </div>
         </div>

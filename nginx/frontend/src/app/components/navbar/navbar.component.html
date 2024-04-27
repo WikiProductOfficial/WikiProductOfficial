@@ -25,11 +25,12 @@
         </span>
       </form>
     </ng-template>
-    @if (isLargeScreen){
+    @if (screenService.isLargeScreen){
     <ng-container *ngTemplateOutlet="searchBar"></ng-container>
     }
     <!-- Wishlist button -->
     <button
+      (click)="router.navigate(['/wishlist'])"
       class="p-ripple p-element p-button p-component p-button-icon-only transparent-button"
       [pTooltip]="tooltipContent"
       tooltipPosition="bottom"
@@ -68,18 +69,37 @@
 <!-- navigation sidebar -->
 <p-sidebar [(visible)]="sidebarVisible">
   <div class="py-3">
-    @if (!isLargeScreen){
+    @if (!screenService.isLargeScreen){
     <ng-container *ngTemplateOutlet="searchBar"></ng-container>
     }
+    <h3>Currency</h3>
+
+    <p-dropdown
+      [options]="countries"
+      [(ngModel)]="currencyService.userCurrency"
+    >
+      <ng-template let-option pTemplate="selectedItem">
+        @if (option){
+        <div class="flex align-items-center gap-2">
+          <!-- TODO: add icon for country -->
+
+          <div>{{ option }}</div>
+        </div>
+        }
+      </ng-template>
+      <ng-template let-option pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <!-- TODO: add icon for country -->
+          <div>{{ option }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+
     <h3>Categories</h3>
-    <div class="flex flex-column">
-      @for (category of categories; track $index) {
-      <p-button
-        [label]="category.category"
-        [text]="true"
-        severity="secondary"
-      ></p-button>
-      }
-    </div>
+    <p-tree
+      [value]="treeNodes"
+      selectionMode="single"
+      (onNodeSelect)="onCategorySelect($event)"
+    ></p-tree>
   </div>
 </p-sidebar>

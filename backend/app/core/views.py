@@ -20,19 +20,8 @@ import operator
 
 #Library imports
 import math
-
-# @api_view(['POST'])
-# def search(request):
-#     ### Inital build  of the search function to test it - feel free to changed
-#     data = JSONParser().parse(request)
-#     query = data.get('query', '')
-#     if query:
-#         items = models.Item.objects.filter(name__icontains=query)[:50] 
-#         serializer = serializers.ItemSerializer(items, many=True)
-#         return Response(serializer.data)
-#     else:
-#         return Response({'message': 'No query provided'}, status=400)
-
+from datetime import datetime
+import random
 
 
 # GET Search
@@ -172,12 +161,10 @@ def search(request):
     except models.Category.DoesNotExist:
         return Response({'message': 'Invalid category ID'}, status=400)
     except:
-        return Response({'message': "Something went wrong"}, status=400)
+        return Response({'message': ""}, status=400)
     # # For Debugging or Development
     # except Exception as e:
     #     return Response({'error_message': str(e)}, status=400)
-
-
 
 
 # API endpoint to get all items
@@ -210,9 +197,14 @@ def get_categories(request):
 # API endpoint to get popular
 @api_view(['GET'])
 def get_popular_items(request):
-    categories = models.Category.objects.all()
-    serialized_categories = serializers.CategorySerializer(categories, many=True)
-    return Response(serialized_categories.data)
+    items = models.Item.objects.order_by("-review_count")[:100]
+    seed = int(format(datetime.today(), '%j'))
+    
+    random.seed(seed)
+    popular_items = random.sample(list(items), 12)
+    
+    serialized = serializers.ItemSerializer(popular_items, many=True)
+    return Response(serialized.data)
 
 
 # API endpoint to get wishlist items
@@ -249,7 +241,6 @@ def get_stores(request):
     stores = models.Store.objects.all().order_by("store_id")
     serialized_stores = serializers.StoreSerializer(stores, many=True)
     return Response(serialized_stores.data)
-
 
 
 # Methods to be used by the api endpoints
