@@ -14,3 +14,4 @@ langchainhub
 openai
 tiktoken
 langchain-openai
+markdown
