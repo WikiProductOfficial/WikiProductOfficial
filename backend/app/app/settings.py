@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'core',
     'LLM',
+    'vectorDB',
     'django_extensions',
 ]
 

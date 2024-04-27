@@ -16,7 +16,10 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 import os
 import time
 import requests
-from .llm_tools import tools 
+import markdown
+import json
+from .llm_tools import tools, shopping_cart
+
 
 def ask_model(query: str):
     for chunk in agent_executor.stream({"input": query}):
@@ -24,14 +27,15 @@ def ask_model(query: str):
         if "actions" in chunk:
             for action in chunk["actions"]:
                 print (f"Calling Tool: `{action.tool}` with input `{action.tool_input}`")
+                    
         # Observation
         elif "steps" in chunk:
             for step in chunk["steps"]:
                 print (f"Tool Result: `{step.observation}`")
+                
         # Final result
         elif "output" in chunk:
-            #print(f"Final Output: {chunk["output"]}")
-            yield chunk["output"]
+            return chunk["output"]
 
 # Initializing Agent
 llm = ChatOpenAI(
@@ -47,7 +51,11 @@ prompt = ChatPromptTemplate.from_messages(
         ("system", """
         You are a ProductWiki Specialized Warehouse bot. You work in ProductWiki Warehouse system. you try to \
         serve and assist the warehouse customers by referring them to items they need and utilize tools prepared \
-        for you to provide the maximum assistance. REPLY IN MD format whenver possible.
+        for you to provide the maximum assistance. Here are general RULES YOU HAVE TO FOLLOW:
+        - REPLY IN MD format whenver possible.
+        - When you get details of an item, only respond in what the user actually needs in 2 paragraphs at maximum. \
+            if there is more than 1 item, talk generally about items and what the user needs.
+
 
         Your answers should be brief, helpful, and short."""),
         MessagesPlaceholder("chat_history", optional=True),
@@ -60,6 +68,7 @@ agent = create_openai_tools_agent(
     llm, tools, prompt
 )
 
+# TODO Set seperate memories using session_id
 memory = ConversationSummaryBufferMemory(   # Memory to save previous messages
     return_messages=True,
     llm=llm,
@@ -85,5 +94,13 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=
 def query(request):
     query = request.data.get('query')
     
-    response = StreamingHttpResponse(ask_model(query), content_type='text/plain')
+    shopping_cart.clear()
+    result = ask_model(query)
+    
+    res = {
+        'items': shopping_cart,
+        'response': markdown.markdown(result)
+    }
+    
+    response = StreamingHttpResponse(json.dumps(res), content_type='text/plain')
     return response
