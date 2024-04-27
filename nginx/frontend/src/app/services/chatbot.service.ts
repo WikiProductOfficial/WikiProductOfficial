@@ -33,7 +33,7 @@ export class ChatbotService {
     setTimeout(async () => {
       if (msg === 'tt') {
         // Example array of product IDs received from JSON
-        const productIDs: number[] = [12, 34, 56]; 
+        const productIDs: number[] = [120, 3441, 5631];
 
         // Clear the productList before fetching new products
         this.productList = [];
@@ -79,6 +79,12 @@ export class ChatbotService {
       responseType: 'text',
       observe: 'body',
     });
+  }
+
+  getResponse1(message: string): Observable<any> {
+    let url = 'http://localhost:8000/api/llm/query/';
+    let body = { query: message };
+    return this.http.post(url, body);
   }
 
   async fetchProduct(productId: number) {

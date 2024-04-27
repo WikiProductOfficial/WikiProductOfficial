@@ -90,7 +90,12 @@
 }
 
 .product-message-container {
+  display: flex;
+}
 
+.product-message-container .cursor-pointer {
+  flex: 1;
+  margin: 0;
 }
 
 .text-limit {

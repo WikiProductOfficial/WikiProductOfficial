@@ -133,3 +133,4 @@ dmypy.json
 # System folders
 /database/
 /static/
+.DS_Store

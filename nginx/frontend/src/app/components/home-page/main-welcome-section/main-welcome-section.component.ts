@@ -13,7 +13,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { DividerModule } from 'primeng/divider';
-import { Observable, map, scan } from 'rxjs';
+import { Observable, map, scan, tap } from 'rxjs';
 import { Message } from '../../../models/message.model';
 import { ChatbotService } from '../../../services/chatbot.service';
 import { FormsModule } from '@angular/forms';
@@ -51,10 +51,6 @@ import { Router } from '@angular/router';
   ],
 })
 export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
-  private posX: number = 0;
-  private posY: number = 0;
-  private speed: number = 0.2;
-
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
@@ -63,11 +59,12 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   dotsCount: number = 1;
   isFirstMessage: boolean = false;
 
-  //Mock number of products
-  // Define an array with four elements
-  productMessages: any[] = [1, 2];
+  private posX: number = 0;
+  private posY: number = 0;
+  private speed: number = 0.2;
 
   constructor(private chat: ChatbotService, private router: Router) {}
+
   ngOnInit(): void {
     this.chat.clearConversation();
     this.animateBlobs();
@@ -81,31 +78,6 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.chat.clearConversation();
-  }
-
-  updateDotsCount() {
-    setInterval(() => {
-      this.dotsCount = (this.dotsCount % 3) + 1;
-    }, 1000);
-  }
-
-  subscribeToNewMessages() {
-    this.messages.subscribe((messages) => {
-      const initialMessageCount = this.chat.conversation.value.length;
-      const currentMessageCount = messages.length;
-      if (currentMessageCount > initialMessageCount) {
-        setTimeout(() => {
-          this.scrollMessageContainerToBottom();
-        }, 100);
-      }
-    });
-  }
-
-  private scrollMessageContainerToBottom() {
-    this.messageContainer.nativeElement.scrollTo({
-      top: this.messageContainer.nativeElement.scrollHeight,
-      behavior: 'smooth',
-    });
   }
 
   animateBlobs() {
@@ -128,7 +100,32 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     // Assuming a viewport of 800x600 for simplicity
   }
 
+  updateDotsCount() {
+    setInterval(() => {
+      this.dotsCount = (this.dotsCount % 3) + 1;
+    }, 1000);
+  }
+
   //Chatbot operaitons
+
+  subscribeToNewMessages() {
+    this.messages.subscribe((messages) => {
+      const initialMessageCount = this.chat.conversation.value.length;
+      const currentMessageCount = messages.length;
+      if (currentMessageCount > initialMessageCount) {
+        setTimeout(() => {
+          this.scrollMessageContainerToBottom();
+        }, 100);
+      }
+    });
+  }
+
+  private scrollMessageContainerToBottom() {
+    this.messageContainer.nativeElement.scrollTo({
+      top: this.messageContainer.nativeElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
 
   isMarkdown(content: string): boolean {
     return (
@@ -158,19 +155,14 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
 
   checkResponse() {
     this.messages
-      .pipe(map((messages) => messages[messages.length - 1]))
-      .subscribe((lastMessage) => {
-        if (lastMessage.ProductList) {
-          lastMessage.isProductMessage = true;
-        } else {
-          lastMessage.isProductMessage = false;
-        }
-        if (lastMessage.sentBy === 'bot') {
-          this.isLoading = false;
-        } else {
-          this.isLoading = true;
-        }
-      });
+      .pipe(
+        map((messages) => messages[messages.length - 1]),
+        tap((lastMessage) => {
+          lastMessage.isProductMessage = !!lastMessage.ProductList;
+          this.isLoading = lastMessage.sentBy !== 'bot';
+        })
+      )
+      .subscribe();
   }
 
   sendMessage() {

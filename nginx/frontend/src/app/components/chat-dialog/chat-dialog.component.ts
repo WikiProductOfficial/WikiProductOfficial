@@ -14,7 +14,7 @@ import { Message } from '../../models/message.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
-import { map, scan } from 'rxjs/operators';
+import { map, scan, tap } from 'rxjs/operators';
 import { DialogModule } from 'primeng/dialog';
 import { RatingModule } from 'primeng/rating';
 import { CurrencyConversionPipe } from '../../pipes/currency-conversion.pipe';
@@ -47,8 +47,6 @@ export class ChatDialogComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
 
   //Mock number of products
-  // Define an array with four elements
-  productMessages: any[] = [1, 2, 3, 4];
 
   constructor(private chat: ChatbotService, private router: Router) {}
 
@@ -103,19 +101,14 @@ export class ChatDialogComponent implements OnInit, OnDestroy {
 
   checkResponse() {
     this.messages
-      .pipe(map((messages) => messages[messages.length - 1]))
-      .subscribe((lastMessage) => {
-        if (lastMessage.ProductList) {
-          lastMessage.isProductMessage = true;
-        } else {
-          lastMessage.isProductMessage = false;
-        }
-        if (lastMessage.sentBy === 'bot') {
-          this.isLoading = false;
-        } else {
-          this.isLoading = true;
-        }
-      });
+      .pipe(
+        map((messages) => messages[messages.length - 1]),
+        tap((lastMessage) => {
+          lastMessage.isProductMessage = !!lastMessage.ProductList;
+          this.isLoading = lastMessage.sentBy !== 'bot';
+        })
+      )
+      .subscribe();
   }
 
   sendMessage() {
