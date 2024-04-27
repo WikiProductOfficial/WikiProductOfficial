@@ -93,8 +93,8 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=
 @api_view(['POST'])
 def query(request):
     query = request.data.get('query')
-    
-    print(request.session._session_key)
+
+    print(f"Session Key: {request.session.session_key}")
     
     shopping_cart.clear()
     result = ask_model(query)
