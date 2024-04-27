@@ -19,7 +19,7 @@ def sum(x: int, y: int) -> int:
     return x + y
 """
 
-base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else "http://frontend:80"
+base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else f"http://{os.environ.get('DEPLOY_URL')}:80"
 shopping_cart = [] # Add items to shopping cart instead of giving to model to properly view it in front-end
 
 @tool

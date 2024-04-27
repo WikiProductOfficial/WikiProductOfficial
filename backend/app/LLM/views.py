@@ -94,6 +94,8 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=
 def query(request):
     query = request.data.get('query')
     
+    print(request.session._session_key)
+    
     shopping_cart.clear()
     result = ask_model(query)
     
