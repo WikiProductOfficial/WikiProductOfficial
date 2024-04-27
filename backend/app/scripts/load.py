@@ -36,7 +36,7 @@ def insert_reviews(reviews_list, item):
 def run(*args):
     start = time.time()
     
-    df = pd.read_pickle("./scripts/clean_warehouse.pkl")
+    df = pd.read_pickle("./scripts/sample_warehouse.pkl")
     
     # Filling NaN values
     df['reviews'] = df['reviews'].fillna('') # Replace NaN with empty string because when in the use it becomes a float type
@@ -112,7 +112,7 @@ def run(*args):
             ids= str(item[0].item_id),
             embeddings= row["embedding"],
             documents= row['summary'],
-            metadatas= row["details"],
+            # metadatas= row["details"], # TODO: For now, we wil add this for the comparison of items
         )
     
     print("Loading finished")
