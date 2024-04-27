@@ -6,7 +6,8 @@ services:
     build:
       context: ./backend
     command: >
-      sh -c "python manage.py wait_for_db &&
+      sh -c "sleep 5 &
+             python manage.py wait_for_db &&
              python manage.py makemigrations &&
              python manage.py migrate &&
              python manage.py createsu &&
@@ -16,7 +17,7 @@ services:
       - ./backend/app:/backend/app
     environment:
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=1
+      - DEBUG=${DEBUG}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
       - DB_HOST=db
@@ -40,11 +41,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      db:
-        condition: service_started
-      chromadb:
-        condition: service_healthy
-        restart: true
+      - db
+      - chromadb
     networks:
       - internal-net
     restart: always
@@ -91,11 +89,6 @@ services:
       - '${CHROMA_HOST_PORT}:${CHROMA_HOST_PORT}'
     networks:
       - internal-net
-    healthcheck:
-      test: [ "CMD", "/bin/bash", "-c", "cat < /dev/null > /dev/tcp/localhost/${CHROMA_HOST_PORT}" ]
-      interval: 30s
-      timeout: 10s
-      retries: 2
 
 networks:
   internal-net:
