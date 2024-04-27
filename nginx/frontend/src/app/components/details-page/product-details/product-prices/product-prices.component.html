@@ -42,7 +42,20 @@
             label="Visit Website"
           ></p-button>
           <!--a button to save the product to wishlist-->
-          <p-button label="Add to Wishlist"></p-button>
+          @if (!wishlistService.wishlist.has(product.item_id)){
+          <p-button
+            (onClick)="addToWishlist()"
+            [outlined]="true"
+            label="Add to Wishlist"
+          ></p-button>
+          } @else{
+          <p-button
+            (onClick)="removeFromWishlist()"
+            [outlined]="true"
+            severity="danger"
+            label="Remove from Wishlist"
+          ></p-button>
+          }
         </div>
       </div>
     </p-tabPanel>

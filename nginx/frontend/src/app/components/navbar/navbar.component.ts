@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 import { CookieService } from 'ngx-cookie-service';
 import { TreeModule } from 'primeng/tree';
-import { take } from 'rxjs/operators';
-
 import {
   FormControl,
   FormGroup,
@@ -21,8 +19,7 @@ import { Router, RouterModule } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { CurrencyService } from '../../services/currency.service';
 import { TreeNode } from 'primeng/api/treenode';
-import { SearchService } from '../../services/search.service';
-import { Filters } from '../../models/filters';
+import { ScreenService } from '../../services/screen.service';
 
 @Component({
   selector: 'app-navbar',
@@ -45,7 +42,6 @@ import { Filters } from '../../models/filters';
 export class NavbarComponent implements OnInit {
   sidebarVisible: boolean = false;
   navbarScrolled: boolean = false;
-  isLargeScreen: boolean = false;
   categories!: any[];
   isDarkTheme = signal(this.cookieService.get('theme') === 'true');
   searchForm = new FormGroup({
@@ -60,9 +56,9 @@ export class NavbarComponent implements OnInit {
     private themeService: ThemeService,
     private cookieService: CookieService,
     private categoriesService: CategoriesService,
-    private router: Router,
+    protected router: Router,
     protected currencyService: CurrencyService,
-    private searchService: SearchService
+    protected screenService: ScreenService
   ) {
     effect(() => {
       this.cookieService.set('theme', JSON.stringify(this.isDarkTheme()));
@@ -96,7 +92,7 @@ export class NavbarComponent implements OnInit {
   }
 
   checkScreenSize() {
-    this.isLargeScreen = window.innerWidth >= 1024;
+    this.screenService.isLargeScreen = window.innerWidth >= 1024;
   }
   scrollTo(element: HTMLElement): void {
     element.scrollIntoView({ behavior: 'smooth' });

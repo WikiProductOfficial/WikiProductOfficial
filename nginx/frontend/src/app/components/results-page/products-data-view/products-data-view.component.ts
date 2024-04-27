@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyConversionPipe } from '../../../pipes/currency-conversion.pipe';
 import { CurrencyService } from '../../../services/currency.service';
+import { ScreenService } from '../../../services/screen.service';
 
 @Component({
   selector: 'app-products-data-view',
@@ -33,11 +34,15 @@ export class ProductsDataViewComponent {
     protected searchService: SearchService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    protected currencyService: CurrencyService
+    protected currencyService: CurrencyService,
+    protected screenService: ScreenService
   ) {}
+  @Input() title!: string;
   @Input() products!: any[];
   @Input() selectedSortOption!: string | undefined;
   @Output() sortOptionSelected = new EventEmitter<string>();
+  @Output() showFiltersClicked = new EventEmitter<boolean>();
+
   layout: 'list' | 'grid' = 'grid';
 
   sortOptions = [
@@ -65,8 +70,10 @@ export class ProductsDataViewComponent {
       this.sortOptionSelected.emit(this.selectedSortOption);
     }
   }
-
   onProductClicked(productId: number) {
     this.router.navigate(['/details', productId]);
+  }
+  onShowFiltersClicked() {
+    this.showFiltersClicked.emit(true);
   }
 }
