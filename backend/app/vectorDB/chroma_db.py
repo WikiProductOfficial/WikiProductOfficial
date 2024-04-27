@@ -5,7 +5,6 @@ from threading import Lock
 import os
 
 # chromadb imports
-import chromadb
 from app.settings import CHROMA_CLIENT
 from chromadb.utils import embedding_functions
 
@@ -60,15 +59,6 @@ class ChromaDB(metaclass=SingletonMeta):
     def __init__(self) -> None:
         self.__CHROMA_CLIENT = CHROMA_CLIENT
         self.__create_collections()
-    # def __new__(cls):
-    #     if cls.__instance is None:
-    #         with cls.__lock:
-    #             if cls.__instance is None and cls.__CHROMA_CLIENT is None:
-    #                 cls.__CHROMA_CLIENT(cls)
-    #                 # Creating collections
-    #                 cls.__create_collections(cls)
-        
-    #     return cls.__instance
     
     # Public Functions
     # Getting the client (Need on instance of it)
