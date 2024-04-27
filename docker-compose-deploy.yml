@@ -29,6 +29,7 @@ services:
     volumes:
       - static-data:/vol/web
     environment:
+      - DEPLOY_URL=${DEPLOY_URL}
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=0
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
