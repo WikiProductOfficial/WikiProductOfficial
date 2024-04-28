@@ -125,6 +125,7 @@
   height: 20%;
   max-height: 12em;
   position: relative;
+  background-color: var(--transparent);
 }
 
 .input-field {
@@ -133,6 +134,7 @@
   word-wrap: break-word;
   border-radius: 20px;
   border: none !important;
+  background-color: transparent;
 }
 
 ::ng-deep .p-inputtext:enabled:hover {

@@ -22,23 +22,10 @@
 
 .chat-container {
   width: 100%;
-  background-color: var(--surface-200);
+  background-color: var(--surface-e);
   border: 1px solid var(--surface-300);
   z-index: 100;
 }
-
-// .chat-header {
-//   background-color: var(--primary-color);
-//   color: var(--surface-0);
-//   border-radius: 5px 5px 0 0;
-//   height: 10%;
-//   max-height: 2.5em;
-// }
-
-// .exit-btn {
-//   height: 20%;
-//   max-height: 1em;
-// }
 
 .message-container {
   height: 30vh;
@@ -93,6 +80,7 @@
 }
 
 .input-field {
+  background-color: var(--transparent);
 }
 
 .send-btn {
