@@ -29,8 +29,8 @@ services:
     volumes:
       - static-data:/vol/web
     environment:
+      - DEPLOY_URL=${DEPLOY_URL}
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=0
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
       - DB_HOST=db
@@ -41,9 +41,19 @@ services:
       - DJANGO_SU_NAME=${DJANGO_SU_NAME}
       - DJANGO_SU_EMAIL=${DJANGO_SU_EMAIL}
       - DJANGO_SU_PASSWORD=${DJANGO_SU_PASSWORD}
+      - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
+      - CHROMA_HOST_NAME=${CHROMA_HOST_NAME}
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=${CHROMA_SERVER_AUTHN_CREDENTIALS}
+      - CHROMA_CLIENT_AUTHN_PROVIDER=${CHROMA_CLIENT_AUTHN_PROVIDER}
+      - CHROMA_AUTH_TOKEN_TRANSPORT_HEADER=${CHROMA_AUTH_TOKEN_TRANSPORT_HEADER}
+      - EMBEDDING_OPTION=${EMBEDDING_OPTION}
+      - EMBEDDING_MODEL_NAME=${EMBEDDING_MODEL_NAME}
+      - EMBEDDING_SERVICE=${EMBEDDING_SERVICE}
+      - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     depends_on:
       - db
+      - chromadb
     networks:
       - frontend
       - backend
@@ -60,6 +70,23 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS}
     networks:
       - backend
+  
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: chromadb
+    restart: always
+    volumes:
+      - chroma-data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+      - CHROMA_HOST_PORT=${CHROMA_HOST_PORT}
+      - CHROMA_TIMEOUT_KEEP_ALIVE=${CHROMA_TIMEOUT_KEEP_ALIVE}
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=${CHROMA_SERVER_AUTHN_CREDENTIALS}
+      - CHROMA_SERVER_AUTHN_PROVIDER=${CHROMA_SERVER_AUTHN_PROVIDER}
+      - CHROMA_AUTH_TOKEN_TRANSPORT_HEADER=${CHROMA_AUTH_TOKEN_TRANSPORT_HEADER}
+    networks:
+      - backend
 
 networks:
   frontend:
@@ -68,3 +95,5 @@ networks:
 volumes:
   postgres-data:
   static-data:
+  chroma-data:
+    driver: local

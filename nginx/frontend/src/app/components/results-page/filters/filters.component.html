@@ -1,15 +1,15 @@
-@if (isLargeScreen){
+@if (screenService.isLargeScreen){
 <!--Whole filter section-->
 <div class="container">
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </div>
-} @else if (!isLargeScreen) {
+} @else if (!screenService.isLargeScreen) {
 <p-dialog
   header="Header"
   [(visible)]="visible"
+  [draggable]="false"
   [style]="{ width: '50vw' }"
   (visibleChange)="this.visibilityChange.emit(this.visible)"
-  [maximizable]="true"
   [modal]="true"
   class="justify-content-center"
 >

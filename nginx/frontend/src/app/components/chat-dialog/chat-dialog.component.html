@@ -28,7 +28,14 @@
             to: message.sentBy === 'user'
           }"
         >
-          <div>{{ message.content }}</div>
+          <div
+            class="text-xs md:text-sm"
+            *ngIf="message.sentBy == 'bot'"
+            [innerHTML]="message.content"
+          ></div>
+          <div class="text-xs md:text-sm" *ngIf="!(message.sentBy == 'bot')">
+            {{ message.content }}
+          </div>
           <!-- show product card if the message contains a product -->
           <div class="grid" *ngIf="message.isProductMessage">
             <div

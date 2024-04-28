@@ -45,20 +45,20 @@
               >
                 <div
                   class="text-md md:text-lg"
-                  *ngIf="!isMarkdown(message.content)"
+                  *ngIf="message.sentBy == 'bot'"
+                  [innerHTML]="message.content"
+                ></div>
+                <div
+                  class="text-md md:text-lg"
+                  *ngIf="!(message.sentBy == 'bot')"
                 >
                   {{ message.content }}
                 </div>
-                <div
-                  class="text-sm md:text-md"
-                  *ngIf="isMarkdown(message.content)"
-                  [innerHTML]="formatMessage(message)"
-                ></div>
                 <!-- show product card if the message contains a product -->
                 <div class="grid" *ngIf="message.isProductMessage">
                   <div
                     *ngFor="let productMessage of message.ProductList"
-                    class="product-message-container col-6"
+                    class="product-message-container col-12 md:col-6 lg:col-4"
                     (click)="onProductClicked(productMessage.item_id)"
                   >
                     <div

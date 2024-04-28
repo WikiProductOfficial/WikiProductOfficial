@@ -19,8 +19,8 @@ def sum(x: int, y: int) -> int:
     return x + y
 """
 
-base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else "http://frontend:80"
-
+base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else f"http://{os.environ.get('DEPLOY_URL')}:80"
+shopping_cart = [] # Add items to shopping cart instead of giving to model to properly view it in front-end
 
 @tool
 def test_connection() -> str:
@@ -30,20 +30,34 @@ def test_connection() -> str:
     return f"Status code: {res.status_code}, the base url is: {base_url}"
 
 @tool
-def get_item_by_id(item_id: int) -> dict:
-    """Use this tool to look up items using the id, the attribute is the data received, default is name."""
+def get_item_by_id(item_id: int) -> str:
+    """Use this tool to look up items using the id."""
     res = requests.get(f"{base_url}/api/items/{item_id}/")
+    
+    shopping_cart.append(res.json()['item_id'])
     return res.json()
-
-# TODO: RETURN OUR WEBSITE DETAILED ITEM URL
-# TODO: Finish POSTER
-# BUG: deploy problem is internal, some localhost issues. Because it can connect to the outside networks
 
 @tool
-def search_items(search_query: str) -> dict:
-    """Use this tool Search items by the name and get the most relevant items."""
-    res = requests.get(f"{base_url}/api/search/?query={search_query}")
-    return res.json()
+def get_similar_by_id(item_id: int) -> list:
+    """Use this tool to get the top 10 similar items to the item_id you input."""
+    
+    res = requests.get(f"{base_url}/api/vector/similar_by_id/?id={item_id}")
+    shopping_cart.extend([item['item_id'] for item in res.json()['result']])
+
+    return res.json()['result']
+
+@tool
+def search_items(search_query: str) -> list:
+    """
+    This Tool searches for items given a search query which is anything that may lead to an item, \
+        whether it is description, relevant items, or a name. Then, returns the top 10 matches.
+    This should be your most used tool as it serves most cases.
+    """
+    res = requests.get(f"{base_url}/api/vector/similar_by_text/?query={search_query}")
+    
+    shopping_cart.extend([item['item_id'] for item in res.json()['result']])
+    
+    return res.json()['result']
 
 # Add your tool to the collection
-tools = [test_connection, get_item_by_id, search_items]
+tools = [test_connection, get_item_by_id, get_similar_by_id, search_items]

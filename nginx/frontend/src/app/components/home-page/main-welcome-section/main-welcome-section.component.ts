@@ -127,28 +127,6 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  isMarkdown(content: string): boolean {
-    return (
-      content.includes('*') || content.includes('_') || content.includes('##')
-    );
-  }
-
-  formatMessage(message: Message): string {
-    let content = message.content;
-    if (message.sentBy === 'bot') {
-      content = content.replace(/\n/g, '<br>');
-
-      content = content
-        .split('\n')
-        .map((line) => `<li>${line}</li>`)
-        .join('');
-
-      content = `<ul>${content}</ul>`;
-    }
-
-    return content;
-  }
-
   updateIsEmpty() {
     this.isEmpty = this.formValue === '';
   }

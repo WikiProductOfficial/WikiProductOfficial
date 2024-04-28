@@ -28,7 +28,7 @@ jobs:
         node-version: 20
 
     - name: Sleep to ensure everything is loaded
-      run: sleep 5
+      run: sleep 300
 
     - name: Install Newman (Postman CLI)
       run: npm install -g newman

@@ -12,6 +12,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { SearchService } from '../../services/search.service';
 import { ButtonModule } from 'primeng/button';
 import { Filters } from '../../models/filters';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-results-page',
@@ -37,6 +38,13 @@ export class ResultsPageComponent implements OnInit {
   category: WritableSignal<string> = signal('');
   // filler component inputs and outputs
   isFiltersVisible: boolean = false;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private searchService: SearchService,
+    protected categoriesService: CategoriesService
+  ) {}
   onVisibilityChange(isVisible: boolean) {
     this.isFiltersVisible = isVisible;
   }
@@ -70,11 +78,6 @@ export class ResultsPageComponent implements OnInit {
     });
   }
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private searchService: SearchService
-  ) {}
   onPageChange(event: any) {
     this.page.set(event.page + 1);
     window.scrollTo({
@@ -86,6 +89,9 @@ export class ResultsPageComponent implements OnInit {
       queryParams: { page: this.page() },
       queryParamsHandling: 'merge',
     });
+  }
+  onShowFiltersClicked(event: any) {
+    this.isFiltersVisible = true;
   }
   onSortOptionSelected(sortOption: string) {
     this.sort.set(sortOption);
