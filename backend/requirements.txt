@@ -14,4 +14,5 @@ langchainhub
 openai
 tiktoken
 langchain-openai
+langchain-postgres
 markdown
