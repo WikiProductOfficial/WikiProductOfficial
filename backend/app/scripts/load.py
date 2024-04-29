@@ -51,71 +51,72 @@ def run(*args):
     
     # Filter rows based on provided arguments
     if len(args) == 2:
+        # TODO: make error pruned
         start_index = int(args[0]) * 100
-        end_index = int(args[1]) * 100
+        end_index = min(int(args[1]) * 100, len(df))
         df = df.iloc[start_index:end_index]
     
-    for _, row in df.iterrows():
-        # print(row) # For Debugging
+    # for _, row in df.iterrows():
+    #     # print(row) # For Debugging
         
-        # Handle the category and its hierarchy
-        category = handle_category(row['category'])
+    #     # Handle the category and its hierarchy
+    #     category = handle_category(row['category'])
         
-        # Handle store creation or update
-        store= models.Store.objects.update_or_create(
-            name=row["store"], 
-            store_url=row['store_url']
-        )
+    #     # Handle store creation or update
+    #     store= models.Store.objects.update_or_create(
+    #         name=row["store"], 
+    #         store_url=row['store_url']
+    #     )
         
         
-        # Handle item creation or update
-        item = models.Item.objects.update_or_create(
-            name=row["name"], 
-            urls=[{
-                # "id":  store[0].store_id,
-                "name": str(row["store"]), 
-                "link" : str(row["url"])
-            }],
-            details= row["details"], # Default {}
-            description= str(row["description"])[:5000], # Truncate to first 5000 characters
-            price=row["price"],
-            rating = row["stars"], # Default None
-            review_count = row["star_count"], # Default 0
-            summary= row['summary']
-        )
+    #     # Handle item creation or update
+    #     item = models.Item.objects.update_or_create(
+    #         name=row["name"], 
+    #         urls=[{
+    #             # "id":  store[0].store_id,
+    #             "name": str(row["store"]), 
+    #             "link" : str(row["url"])
+    #         }],
+    #         details= row["details"], # Default {}
+    #         description= str(row["description"])[:5000], # Truncate to first 5000 characters
+    #         price=row["price"],
+    #         rating = row["stars"], # Default None
+    #         review_count = row["star_count"], # Default 0
+    #         summary= row['summary']
+    #     )
         
-        # Handle image creation or update
-        models.Image.objects.update_or_create(
-            item=item[0],
-            image_name=row["name"],
-            image_url=row["image_url"]
-        )
+    #     # Handle image creation or update
+    #     models.Image.objects.update_or_create(
+    #         item=item[0],
+    #         image_name=row["name"],
+    #         image_url=row["image_url"]
+    #     )
         
-        # Associate the item with a category
-        models.ItemBelongsTo.objects.update_or_create(
-            item=item[0],
-            category=category[0]
-        )
+    #     # Associate the item with a category
+    #     models.ItemBelongsTo.objects.update_or_create(
+    #         item=item[0],
+    #         category=category[0]
+    #     )
         
-        # Record item history
-        models.ItemsHistory.objects.update_or_create(
-            item=item[0], 
-            store=store[0], 
-            price=row["price"]
-        )
+    #     # Record item history
+    #     models.ItemsHistory.objects.update_or_create(
+    #         item=item[0], 
+    #         store=store[0], 
+    #         price=row["price"]
+    #     )
         
-        # Insert reviews, if any
-        insert_reviews(row["reviews"], item)
+    #     # Insert reviews, if any
+    #     insert_reviews(row["reviews"], item)
         
-        # Insert item to chromadb
-        items_collection.upsert(
-            ids= str(item[0].item_id),
-            embeddings= row["embedding"],
-            documents= row['summary'],
-            # metadatas= row["details"], # TODO: For now, we wil add this for the comparison of items
-        )
+    #     # Insert item to chromadb
+    #     items_collection.upsert(
+    #         ids= str(item[0].item_id),
+    #         embeddings= row["embedding"],
+    #         documents= row['summary'],
+    #         # metadatas= row["details"], # TODO: For now, we wil add this for the comparison of items
+    #     )
     
-    print("Loading finished")
+    # print("Loading finished")
 
     end = time.time()
     print(f"Time taken: {end-start} seconds")
