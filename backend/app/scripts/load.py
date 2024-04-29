@@ -51,8 +51,9 @@ def run(*args):
     
     # Filter rows based on provided arguments
     if len(args) == 2:
-        start_index = int(args[0]) * 100
-        end_index = int(args[1]) * 100
+        # TODO: make error pruned
+        start_index = max(int(args[0]) * 100, 0)
+        end_index = min(int(args[1]) * 100, len(df))
         df = df.iloc[start_index:end_index]
     
     for _, row in df.iterrows():
@@ -112,7 +113,7 @@ def run(*args):
             ids= str(item[0].item_id),
             embeddings= row["embedding"],
             documents= row['summary'],
-            metadatas= row["details"],
+            # metadatas= row["details"], # TODO: For now, we wil add this for the comparison of items
         )
     
     print("Loading finished")

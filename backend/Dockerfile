@@ -7,6 +7,7 @@ WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y postgresql-client build-essential libpq-dev && \
+    apt-get install git-lfs && \
     python -m venv /py && \
     /py/bin/pip install --upgrade pip
 

@@ -93,21 +93,15 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory, verbose=
 @api_view(['POST'])
 def query(request):
     query = request.data.get('query')
-    
-    print(request.session._session_key)
+
+    print(f"Session Key: {request.session.session_key}")
     
     shopping_cart.clear()
     result = ask_model(query)
     
-
-    result = markdown.markdown(result)
-
-    if result.startswith('<p>'):
-        result = result.replace('<p>', '', 1)[:-4]
-
     res = {
         'items': shopping_cart,
-        'response': result
+        'response': markdown.markdown(result)
     }
     
     response = StreamingHttpResponse(json.dumps(res), content_type='text/plain')

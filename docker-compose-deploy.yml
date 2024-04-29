@@ -51,6 +51,9 @@ services:
       - EMBEDDING_SERVICE=${EMBEDDING_SERVICE}
       - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DOWNLOAD_URL=${DOWNLOAD_URL}
+      - LOAD_START=${LOAD_START}
+      - LOAD_END=${LOAD_END}
     depends_on:
       - db
       - chromadb
