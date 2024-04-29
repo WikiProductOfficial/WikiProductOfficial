@@ -44,12 +44,12 @@
                 }"
               >
                 <div
-                  class="text-md md:text-lg"
+                  class="text-xs md:text-sm lg:text-lg"
                   *ngIf="message.sentBy == 'bot'"
                   [innerHTML]="message.content"
                 ></div>
                 <div
-                  class="text-md md:text-lg"
+                  class="text-xs md:text-sm lg:text-lg"
                   *ngIf="!(message.sentBy == 'bot')"
                 >
                   {{ message.content }}

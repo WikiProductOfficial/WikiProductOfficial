@@ -99,9 +99,15 @@ def query(request):
     shopping_cart.clear()
     result = ask_model(query)
     
+
+    result = markdown.markdown(result)
+
+    if result.startswith('<p>'):
+        result = result.replace('<p>', '', 1)[:-4]
+
     res = {
         'items': shopping_cart,
-        'response': markdown.markdown(result)
+        'response': result
     }
     
     response = StreamingHttpResponse(json.dumps(res), content_type='text/plain')
