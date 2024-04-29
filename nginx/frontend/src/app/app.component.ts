@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FormsModule } from '@angular/forms';
+import { ChatDialogComponent } from './components/chat-dialog/chat-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     FooterComponent,
     FormsModule,
+    ChatDialogComponent
   ],
 })
 export class AppComponent {

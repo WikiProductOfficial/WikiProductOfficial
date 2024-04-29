@@ -6,41 +6,138 @@
     class="grid grid-nogutter col-12 justify-content-center text-800"
   >
     <div
-      class="text-center col-12 flex align-items-center justify-content-center fadein animation-duration-1000"
+      class="col-12 flex align-items-center justify-content-center fadein animation-duration-1000"
     >
-      <section>
-        <div class="p-card-title mb-2">
+      <div
+        *ngIf="!isFirstMessage"
+        class="slogan-container text-center"
+        [@fadeoutup]
+      >
+        <div class="p-card-title">
           <span class="wiki font-bold text-5xl md:text-7xl">Wiki</span
           ><span class="product font-bold text-5xl md:text-7xl">Product</span>
         </div>
         <div class="text-xl lg:text-2xl font-bold mb-4">
           Journey Through the World of Products - Discover, Learn, and Explore!
         </div>
-        <div class="flex justify-content-center">
-          <!-- TODO: Implement search query function -->
-          <p-inputGroup class="col-10">
+        <div class="text-xl lg:text-xl font-bold mb-2 mt-5">
+          Chat with ProductBot
+        </div>
+      </div>
+      <section>
+        <!-- chatbot -->
+        <div
+          class="chat-container mt-4"
+          [ngClass]="{ 'transparent-field': isFirstMessage }"
+        >
+          <div
+            class="message-container flex flex-column mt-2 p-4"
+            #messageContainer
+          >
+            <ng-container *ngFor="let message of messages | async">
+              <div
+                *ngIf="isFirstMessage"
+                class="message shadow-2"
+                [ngClass]="{
+                  from: message.sentBy === 'bot',
+                  to: message.sentBy === 'user'
+                }"
+              >
+                <div
+                  class="text-xs md:text-sm lg:text-lg"
+                  *ngIf="message.sentBy == 'bot'"
+                  [innerHTML]="message.content"
+                ></div>
+                <div
+                  class="text-xs md:text-sm lg:text-lg"
+                  *ngIf="!(message.sentBy == 'bot')"
+                >
+                  {{ message.content }}
+                </div>
+                <!-- show product card if the message contains a product -->
+                <div class="grid" *ngIf="message.isProductMessage">
+                  <div
+                    *ngFor="let productMessage of message.ProductList"
+                    class="product-message-container col-12 md:col-6 lg:col-4"
+                    (click)="onProductClicked(productMessage.item_id)"
+                  >
+                    <div
+                      class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl mt-2 mb-2"
+                    >
+                      <div
+                        class="image-container w-full bg-white flex justify-content-center align-items-center p-3 border-round-lg mb-3"
+                      >
+                        <img
+                          [src]="productMessage.images[0].image_url"
+                          class="product-img"
+                        />
+                      </div>
+
+                      <div
+                        class="align-content-start w-full flex flex-column px-2"
+                      >
+                        <div class="flex align-content-end flex-wrap">
+                          <h3 class="text-limit md:text-md lg:text-lg m-0">
+                            {{ productMessage.name }}
+                          </h3>
+                        </div>
+                        <p-rating
+                          class="mt-2"
+                          [ngModel]="productMessage.rating"
+                          [readonly]="true"
+                          [cancel]="false"
+                        ></p-rating>
+                        <p class="currency-limit md:text-md lg:text-xl mt-1">
+                          {{ productMessage.price | currencyConversion }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="md:text-md lg:text-lg">{{ message.summary }}</div>
+              </div>
+            </ng-container>
+            <div
+              *ngIf="isLoading"
+              class="message from text-2xl font-bold shadow-2"
+              [ngClass]="{
+                'fadein animation-duration-2000 animation-iteration-infinite':
+                  dotsCount === 1
+              }"
+            >
+              {{ " · ".repeat(dotsCount) }}
+            </div>
+          </div>
+          <!-- User input -->
+          <div class="flex justify-content-center input-container">
             <input
-              class="transparent-field"
+              class="p-inputtext-sm input-field"
               type="text"
               pInputText
-              placeholder="Search"
+              placeholder="Type a message..."
+              [(ngModel)]="formValue"
+              [disabled]="isLoading"
+              (ngModelChange)="updateIsEmpty()"
+              (keyup.enter)="sendMessage()"
             />
             <button
               type="button"
+              (click)="sendMessage()"
               pButton
-              icon="pi pi-search"
-              class="p-button"
-            ></button>
-          </p-inputGroup>
+              class="p-button send-btn"
+              [disabled]="isEmpty"
+            >
+              <span
+                class="pi text-center text-lg md:text-xl"
+                [ngClass]="{
+                  'pi-send': !isLoading,
+                  'pi-spin pi-spinner': isLoading
+                }"
+              ></span>
+            </button>
+          </div>
         </div>
-        <div class="text-xl lg:text-xl font-bold mb-2 mt-5">
-          Or Chat with ProductBot
-        </div>
-        <button class="p-ripple p-element p-button p-component">
-          <span class="pi pi-comment p-button-icon p-button-icon-right"></span>
-          <span class="p-button-label ng-star-inserted">Ask ProductBot</span>
-        </button>
-        <div class="flex flex-column justify-content-center mt-5">
+        <div class="text-center flex flex-column justify-content-center mt-2">
           <i
             class="pi pi-angle-down animate-flicker"
             style="font-size: 2rem"

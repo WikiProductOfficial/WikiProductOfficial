@@ -1,0 +1,123 @@
+.dialog-btn {
+  position: fixed;
+  bottom: 2%;
+  right: 1%;
+  z-index: 1000;
+}
+
+::ng-deep .p-dialog {
+  height: 60vh;
+}
+
+::ng-deep .p-dialog-header {
+  padding: 4px;
+  background-color: var(--primary-color);
+  color: var(--surface-0);
+  font-size: 0.1rem;
+}
+
+::ng-deep .p-dialog-header-icon {
+  color: var(--surface-0);
+}
+
+::ng-deep .p-dialog-content {
+  padding: 0;
+}
+
+.chat-container {
+  width: 100%;
+  background-color: var(--surface-e);
+  border: 1px solid var(--surface-300);
+  z-index: 100;
+}
+
+.message-container {
+  height: 48.8vh;
+  overflow-y: scroll;
+}
+
+.message {
+  max-width: 70%;
+  word-wrap: break-word;
+  margin: 4px 6px;
+  padding: 6px 8px;
+}
+.from {
+  align-self: flex-start;
+  background-color: var(--surface-0);
+  border-radius: 10px 10px 10px 0;
+  padding: 6px 6px 12px 10px;
+}
+
+.to {
+  align-self: flex-end;
+  background-color: var(--primary-color);
+  color: var(--surface-0);
+  border-radius: 10px 10px 0 10px;
+}
+
+.product-message-container {
+  display: flex;
+}
+
+.product-message-container .cursor-pointer {
+  flex: 1;
+  margin: 0;
+}
+
+.text-limit {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.currency-limit {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 15ch;
+}
+
+.product-img {
+  max-width: 12.5em;
+  width: 100%;
+  object-fit: contain;
+}
+
+::ng-deep .p-rating-item svg {
+  width: 0.75rem;
+}
+
+.input-container {
+  margin-top: 10px;
+  height: 100%;
+  max-height: 2.5em;
+  border: 1px solid var(--surface-300);
+  border-radius: 5px;
+}
+
+.input-field {
+  background-color: var(--transparent);
+  border: none !important;
+}
+
+::ng-deep .p-inputtext:enabled:hover {
+  outline: none;
+  outline-offset: 0;
+  box-shadow: none;
+  border-color: transparent;
+}
+.p-inputtext:focus:not(:hover) {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.send-btn {
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
