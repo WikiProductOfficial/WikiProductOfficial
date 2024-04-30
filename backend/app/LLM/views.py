@@ -18,6 +18,7 @@ from langchain.memory import ChatMessageHistory
 from langchain_community.chat_message_histories import (
     PostgresChatMessageHistory,
 )
+from django.views.decorators.csrf import csrf_exempt
 import os
 import time
 import requests
@@ -115,6 +116,7 @@ def initialize_agent(session_id):
     return completed_agent
 
 # Views
+@csrf_exempt
 @swagger_auto_schema(
     method='post',
     request_body=openapi.Schema(
