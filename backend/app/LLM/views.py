@@ -28,6 +28,7 @@ import uuid
 from .llm_tools import tools, shopping_cart
 
 
+
 # Setup database connection data
 DB_HOST = os.environ.get('DB_HOST')
 DB_NAME = os.environ.get('DB_NAME')

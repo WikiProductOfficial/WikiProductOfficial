@@ -59,6 +59,7 @@ def search_items(search_query: str, n_items=5) -> list:
     
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
     # TODO: Send the shopping cart alone to save time
+    # TODO: FIRAS's FEATURED ITEMS TO BE ONLY > 3 Stars
     
     return res.json()['result']
 
