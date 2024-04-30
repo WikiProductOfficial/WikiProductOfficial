@@ -10,10 +10,8 @@ export class CurrencyConversionPipe implements PipeTransform {
   constructor(private currencyService: CurrencyService) {}
 
   transform(value: number): string {
-    return (
-      this.currencyService.convertToUserCurrency(value) +
-      ' ' +
-      this.currencyService.userCurrency
-    );
+    const convertedValue = this.currencyService.convertToUserCurrency(value);
+    const formattedValue = convertedValue.toFixed(2);
+    return formattedValue + ' ' + this.currencyService.userCurrency;
   }
 }

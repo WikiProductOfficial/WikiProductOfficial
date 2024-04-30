@@ -8,6 +8,8 @@ import { DialogModule } from 'primeng/dialog';
 import { StoreService } from '../../../services/store.service';
 import { Store } from '../../../models/store.model';
 import { ScreenService } from '../../../services/screen.service';
+import { CurrencyService } from '../../../services/currency.service';
+import { Filters } from '../../../models/filters';
 
 interface FilteredProducts {
   minPrice?: number;
@@ -39,25 +41,51 @@ export class FiltersComponent implements OnInit {
   // set initial values
   @Input() stores: Store[] = [];
   @Input() selectedStores: Store[] = [];
+  @Input() filters!: Filters;
   @Input() minPrice: number | undefined = undefined;
   @Input() maxPrice: number | undefined = undefined;
 
   constructor(
     private storeService: StoreService,
-    protected screenService: ScreenService
+    protected screenService: ScreenService,
+    protected currencyService: CurrencyService
   ) {}
 
   ngOnInit() {
     // get stores
     this.storeService.getStores().subscribe((stores: Store[]) => {
       this.stores = stores;
+      //match current filter(stores need to be inside subscribtion), if there is any.
+      if (this.filters) {
+        var idsArray =
+          this.filters.stores?.split(',').map(function (item) {
+            return parseInt(item);
+          }) ?? [];
+        this.selectedStores = stores.filter(function (obj) {
+          return idsArray.includes(obj.store_id);
+        });
+        console.log(this.selectedStores);
+      }
     });
+    //match current filter(prices), if there is any.
+    if (this.filters) {
+      this.minPrice = this.currencyService.convertToUserCurrency(
+        this.filters.minPrice ?? 0
+      );
+      this.maxPrice = this.currencyService.convertToUserCurrency(
+        this.filters.maxPrice ?? 0
+      );
+    }
   }
   onApply() {
     // init query
     const filteredProducts: FilteredProducts = {};
-    filteredProducts.minPrice = this.minPrice;
-    filteredProducts.maxPrice = this.maxPrice;
+    filteredProducts.minPrice = this.currencyService.convertToDollar(
+      this.minPrice ?? 0
+    );
+    filteredProducts.maxPrice = this.currencyService.convertToDollar(
+      this.maxPrice ?? 0
+    );
     // Add selected stores filter if any stores are selected
     if (this.selectedStores && this.selectedStores.length > 0) {
       filteredProducts.stores = this.selectedStores.map(

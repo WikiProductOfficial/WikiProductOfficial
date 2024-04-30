@@ -66,6 +66,7 @@ export class ProductsDataViewComponent {
   ];
 
   onSortOptionChange() {
+    console.log(this.products[0].rating);
     if (this.selectedSortOption) {
       this.sortOptionSelected.emit(this.selectedSortOption);
     }

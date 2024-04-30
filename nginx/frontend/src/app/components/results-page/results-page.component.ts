@@ -108,6 +108,11 @@ export class ResultsPageComponent implements OnInit {
       this.sort.set(params.get('sort') || undefined);
       this.category.set(params.get('category') || '');
       // TODO: Parse the filters from the query params.
+      this.filters.set({
+        minPrice: parseFloat(params.get('minPrice') || '0'),
+        maxPrice: parseFloat(params.get('maxPrice') || '0'),
+        stores: params.get('stores') ?? '',
+      });
 
       this.searchService
         .getProducts(

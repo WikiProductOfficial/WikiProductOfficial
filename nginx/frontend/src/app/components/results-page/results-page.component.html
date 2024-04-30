@@ -2,6 +2,7 @@
   <div class="lg:col-2 lg:block">
     <app-filters
       [visible]="isFiltersVisible"
+      [filters]="filters()"
       (visibilityChange)="onVisibilityChange($event)"
       (filteredProductsChange)="onProductFilterChange($event)"
     ></app-filters>

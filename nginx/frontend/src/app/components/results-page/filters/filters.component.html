@@ -29,7 +29,7 @@
           [showButtons]="true"
           inputId="stacked"
           mode="currency"
-          currency="SAR"
+          [currency]="currencyService.userCurrency"
           [step]="5"
         >
         </p-inputNumber>
@@ -41,7 +41,7 @@
           [showButtons]="true"
           inputId="stacked"
           mode="currency"
-          currency="SAR"
+          [currency]="currencyService.userCurrency"
           [step]="5"
         >
         </p-inputNumber>
