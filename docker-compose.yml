@@ -11,6 +11,7 @@ services:
             python manage.py makemigrations &&
             python manage.py migrate &&
             python manage.py createsu &&
+            wget -nc '$DOWNLOAD_URL' -O '../app/scripts/clean_warehouse.pkl' &&
             python manage.py runscript load --script-args 0 1 &&
             python manage.py runserver 0.0.0.0:8000"
     volumes:
@@ -38,6 +39,7 @@ services:
       - EMBEDDING_SERVICE=${EMBEDDING_SERVICE}
       - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DOWNLOAD_URL=${DOWNLOAD_URL}
     ports:
       - "8000:8000"
     depends_on:
