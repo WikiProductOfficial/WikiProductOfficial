@@ -11,8 +11,8 @@ services:
             python manage.py makemigrations &&
             python manage.py migrate &&
             python manage.py createsu &&
-            wget -nc '$DOWNLOAD_URL' -O '../app/scripts/clean_warehouse.pkl' &&
-            python manage.py runscript load --script-args 0 1 &&
+            wget '$DOWNLOAD_URL' -O '../app/scripts/clean_warehouse.pkl' &&
+            python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END" &&
             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
@@ -40,6 +40,8 @@ services:
       - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DOWNLOAD_URL=${DOWNLOAD_URL}
+      - LOAD_START=${LOAD_START}
+      - LOAD_END=${LOAD_END}
     ports:
       - "8000:8000"
     depends_on:
