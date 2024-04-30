@@ -58,7 +58,7 @@ def search_items(search_query: str, n_items=5) -> list:
     res = requests.get(f"{base_url}/api/vector/similar_by_text/?query={search_query}&n={n_items}")
     
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
-    # Send the shopping cart alone to save time
+    # TODO: Send the shopping cart alone to save time
     
     return res.json()['result']
 
