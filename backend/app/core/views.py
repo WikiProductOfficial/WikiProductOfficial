@@ -11,15 +11,14 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # Local application imports
-from . import models, serializers
+from . import models, serializers, search
 
 # Imports for querying
-from django.db.models import Q, Max
+from django.db.models import Q
 from functools import reduce
 import operator
 
 #Library imports
-import math
 from datetime import datetime
 import random
 
@@ -92,7 +91,7 @@ import random
     ]
 )
 @api_view(['GET'])
-def search(request):
+def search_items(request):
     try:
         PER_PAGE = 12 # Number of results per page "CONSTANT"
         
@@ -114,7 +113,7 @@ def search(request):
         items = None
         if category_id:
             # Searching the a category with its children
-            category = models.Category.objects.get(category_id=category_id)
+            category = models.Category.objects.get(pk=category_id)
             items = models.Item.objects.filter(itembelongsto__category__in=category.get_descendants(include_self=True))
             
             # # For Debugging the category and its children
@@ -135,20 +134,20 @@ def search(request):
                 items = items.filter(condition)
             else:
                 items = models.Item.objects.filter(condition)
-            
+        
         # Correcting the max price if needed
-        max_price= max_price_corrector(items=items, min_price=min_price, max_price=max_price)
+        max_price= search.max_price_corrector(items=items, min_price=min_price, max_price=max_price)
         
         # Filtering by price range
-        items= price_range_filtering(items=items, min_price=min_price, max_price=max_price)
+        items= search.price_range_filtering(items=items, min_price=min_price, max_price=max_price)
         # Sort by
-        items= sorting_filter(items=items, sort=sort)
+        items= search.sorting_filter(items=items, sort=sort)
         
         # Filtering by stores
-        items= store_filtering(items=items, stores=stores)
+        items= search.store_filtering(items=items, stores=stores)
         
         # Result
-        return search_result(
+        return search.search_result(
             items=items,
             page=page,
             PER_PAGE= PER_PAGE,
@@ -159,13 +158,12 @@ def search(request):
             )
             
     except models.Category.DoesNotExist:
-        return Response({'message': 'Invalid category ID'}, status=400)
+        return Response({'message': 'Invalid category ID'}, status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response({'message': ""}, status=400)
-    # # For Debugging or Development
+        return Response({'message': ""}, status=status.HTTP_400_BAD_REQUEST)
+    # For Debugging or Development
     # except Exception as e:
-    #     return Response({'error_message': str(e)}, status=400)
-
+    #     return Response({'error_message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # API endpoint to get all items
 @api_view(['GET'])
@@ -173,7 +171,6 @@ def get_items(request):
     items = models.Item.objects.all().order_by("item_id")[:50]
     serialized_items = serializers.ItemSerializer(items, many=True)
     return Response(serialized_items.data)
-
 
 # API endpoint to get one item
 @api_view(['GET'])
@@ -186,14 +183,6 @@ def get_item(request, item_id):
     serialized_item = serializers.ItemSerializer(item)
     return Response(serialized_item.data)
 
-
-# API endpoint to get all categories
-@api_view(['GET'])
-def get_categories(request):
-    categories = models.Category.objects.all().order_by('category_id')
-    serialized_categories = serializers.CategorySerializer(categories, many=True)
-    return Response(serialized_categories.data)
-
 # API endpoint to get popular
 @api_view(['GET'])
 def get_popular_items(request):
@@ -205,7 +194,6 @@ def get_popular_items(request):
     
     serialized = serializers.ItemSerializer(popular_items, many=True)
     return Response(serialized.data)
-
 
 # API endpoint to get wishlist items
 @swagger_auto_schema(
@@ -221,7 +209,6 @@ def get_popular_items(request):
         required=['wishlist']
     )
 )
-
 @api_view(['POST'])
 def get_wishlist(request):
     wishlist_ids = request.data.get('wishlist', [])
@@ -235,6 +222,43 @@ def get_wishlist(request):
     else:
         return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
 
+# API endpoint to get all categories
+@api_view(['GET'])
+def get_categories(request):
+    categories = models.Category.objects.all().order_by('category_id')
+    serialized_categories = serializers.CategorySerializer(categories, many=True)
+    return Response(serialized_categories.data)
+
+# API endpoint to get a category
+@swagger_auto_schema(
+    method='get',  # Ensure this matches the HTTP method in @api_view
+    manual_parameters=[
+        openapi.Parameter(
+            name='category',
+            in_=openapi.IN_QUERY,
+            description='Category ID to get',
+            type=openapi.TYPE_INTEGER,
+            required=False,
+        ),
+    ]
+)
+@api_view(['GET'])
+def get_category(request):
+    try:
+        category_id = request.query_params.get('category', None) # Get the  Category id from URL Parameter (None if not provided)
+        if category_id:
+            category = models.Category.objects.get(pk=category_id)
+            serialized_category = serializers.CategorySerializer(category)
+            return Response(serialized_category.data)
+        
+        return Response({
+                "message": "category id is not included"
+            }, status= status.HTTP_400_BAD_REQUEST)
+    except:
+        return Response({
+            "message": "There is no such category"
+        }, status= status.HTTP_404_NOT_FOUND)
+
 # API endpoint to get all stores
 @api_view(['GET'])
 def get_stores(request):
@@ -242,63 +266,3 @@ def get_stores(request):
     serialized_stores = serializers.StoreSerializer(stores, many=True)
     return Response(serialized_stores.data)
 
-
-# Methods to be used by the api endpoints
-
-# Sort Filtering Method
-def sorting_filter(items, sort):
-    ORDER_BY_CONST= {"pa": "price",
-                    "pd": "-price", 
-                    "na": "name",
-                    "nd": "-name",
-                    "ra": "rating",
-                    "rd": "-rating"}
-    if sort:
-        # Sort by
-        if sort in ORDER_BY_CONST.keys():
-            items= items.order_by(ORDER_BY_CONST[sort])
-            return items
-        else:
-            raise Exception("Invalid value for sort parameter.")
-    
-    return items.order_by("item_id")
-
-# Store Filtering Method
-def store_filtering(items, stores):
-    if stores:
-        stores = [int(store_id) for store_id in stores.split(',') if store_id.isdigit()]
-        items = items.filter(itemshistory__store__in=stores)
-        return items
-    return items
-
-# Correcting Max price
-def max_price_corrector(items,min_price,max_price):
-    if not max_price or max_price<= min_price:
-        max_price = float(items.aggregate(Max("price"))["price__max"])
-        return max_price
-    return max_price
-
-# Price range  Filtering Method
-def price_range_filtering(items, min_price, max_price):
-    # Filtering by price range
-    items= items.filter(price__range=(min_price,max_price))
-    
-    return items
-
-# Preparing the Search Result Method
-def search_result(items, page, PER_PAGE, start, end, min_price, max_price):
-    max_pages = math.ceil(items.count()/PER_PAGE) #  Calculate how many pages there can be
-    
-    # check if the page does not exceed the maximum allowed value
-    if page <= max_pages and items.count() > 0:
-        serializer = serializers.ItemSerializer(items[start:end], many=True)
-        return Response({
-            "results": serializer.data, 
-            "max_pages": max_pages,
-            "min_price": min_price,
-            "max_price": max_price,
-            })
-    elif items.count() <= 0:
-        return Response({'message': "There is no such items"}, status=400)
-    else:
-        return Response({'message': "The page number exceeds the max"}, status=400)

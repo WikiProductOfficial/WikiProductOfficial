@@ -167,6 +167,7 @@ STATIC_ROOT = '/vol/web/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Chroma Client Settings
 CHROMA_SETTINGS = Settings(
     allow_reset=True,
     anonymized_telemetry=False,
