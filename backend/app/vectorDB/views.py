@@ -144,7 +144,7 @@ def get_items(ids):
     if ids:
         return serializers.ItemSerializer(
             list(models.Item.objects.in_bulk(ids).values()),
-            many= True
+            many= True,
             ).data
 
 def get_similar(id=0, text="", n=10):

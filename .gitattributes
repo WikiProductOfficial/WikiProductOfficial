@@ -1,6 +1,4 @@
 # Set line endings to LF, even on Windows, to eliminate CRLF LF incompatibility.
 *.sh text eol=lf
-
 # LFS
-# *.pkl filter=lfs diff=lfs merge=lfs -text
-backend/scripts/clean_warehouse.pkl filter=lfs diff=lfs merge=lfs -text
+*clean_warehouse.pkl filter=lfs diff=lfs merge=lfs -text

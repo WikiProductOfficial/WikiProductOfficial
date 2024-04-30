@@ -42,22 +42,23 @@ def get_item_by_id(item_id: int) -> str:
 @tool
 def get_similar_by_id(item_id: int) -> list:
     """Use this tool to get the top 10 similar items to the item_id you input."""
-    
+
     res = requests.get(f"{base_url}/api/vector/similar_by_id/?id={item_id}")
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
 
     return res.json()['result']
 
 @tool
-def search_items(search_query: str) -> list:
+def search_items(search_query: str, n_items=5) -> list:
     """
     This Tool searches for items given a search query which is anything that may lead to an item, \
-        whether it is description, relevant items, or a name. Then, returns the top 10 matches.
+        whether it is description, relevant items, or a name. Then, returns the top n_items matches.
     This should be your most used tool as it serves most cases.
     """
-    res = requests.get(f"{base_url}/api/vector/similar_by_text/?query={search_query}")
+    res = requests.get(f"{base_url}/api/vector/similar_by_text/?query={search_query}&n={n_items}")
     
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
+    # TODO: Send the shopping cart alone to save time
     
     return res.json()['result']
 
