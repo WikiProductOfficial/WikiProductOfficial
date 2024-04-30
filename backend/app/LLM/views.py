@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import HttpResponse, StreamingHttpResponse, JsonResponse
 from langchain import hub
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain.prompts import ChatPromptTemplate
@@ -25,24 +25,38 @@ import markdown
 import json
 import uuid
 from .llm_tools import tools, shopping_cart
-# from django.db import connection
-from django.conf import settings
+
+
+# Setup database connection data
+DB_HOST = os.environ.get('DB_HOST')
+DB_NAME = os.environ.get('DB_NAME')
+DB_USER = os.environ.get('DB_USER')
+DB_PASS = os.environ.get('DB_PASS')
+DB_PORT = os.environ.get('DB_PORT')
+
+# Constructing the connection URL
+connection = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 def ask_model(agent, query, session_id):
+    
+    return agent.invoke({"input": query}, config={"configurable": {"session_id": session_id}})['output']
+    
     for chunk in agent.stream({"input": query}, config={"configurable": {"session_id": session_id}}):
-        # Agent Action
-        if "actions" in chunk:
-            for action in chunk["actions"]:
-                print (f"Calling Tool: `{action.tool}` with input `{action.tool_input}`")
+        # # Agent Action
+        # if "actions" in chunk:
+        #     for action in chunk["actions"]:
+        #         print (f"Calling Tool: `{action.tool}` with input `{action.tool_input}`")
                     
-        # Observation
-        elif "steps" in chunk:
-            for step in chunk["steps"]:
-                print (f"Tool Result: `{step.observation}`")
-                
+        # # Observation
+        # elif "steps" in chunk:
+        #     for step in chunk["steps"]:
+        #         print (f"Tool Result: `{step.observation}`")
+        # Average response time using: help me choose a red car is 8.5 seconds
+        
+        # Using Invoke instead of Stream: 
         # Final result
-        elif "output" in chunk:
+        if "output" in chunk:
             return chunk["output"]
 
 
@@ -79,46 +93,15 @@ def initialize_agent(session_id):
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-    # Retrieve PostgreSQL connection settings from Django settings
-    # DATABASES = settings.DATABASES
-    # db_settings = DATABASES['default']
-
-    # # Connect to the PostgreSQL database
-    # connection = psycopg2.connect(
-    #     dbname=db_settings['NAME'],
-    #     user=db_settings['USER'],
-    #     password=db_settings['PASSWORD'],
-    #     host=db_settings['HOST'],
-    #     port=db_settings['PORT']
-    # )
-    
-    DB_HOST = os.environ.get('DB_HOST')
-    DB_NAME = os.environ.get('DB_NAME')
-    DB_USER = os.environ.get('DB_USER')
-    DB_PASS = os.environ.get('DB_PASS')
-    DB_PORT = os.environ.get('DB_PORT')
-
-    # Constructing the connection URL
-    connection = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-    
-    # print(f"Connection:{connection.info}")
-    
     # The Memory
-    table_name = "chat_history"
-    
+
     memory = PostgresChatMessageHistory(
         connection_string=connection,
         session_id=session_id,
-        table_name=table_name
+        table_name="chat_history"
     )
 
     print("Connection completed")
-    # Initialize the chat history manager
-    # memory = PostgresChatMessageHistory(
-    #     table_name,
-    #     session_id,
-    #     sync_connection=connection
-    # )
 
 
     # The Fully-Assembled Agent
@@ -149,22 +132,27 @@ def query(request):
     query = request.data.get('query')
 
     # Get the Session_id if it exists else initialize it.
-    request.session['session_id'] = request.session.get('session_id', uuid.uuid4())
-    print(f"Session ID: {request.session['session_id']}")
-    
+    session_id = request.COOKIES.get('session_id')
+    if not session_id:
+        session_id = str(uuid.uuid4()) # It maybe better to set to random number
+        
+    print(f"Session ID: {session_id}")
+
     # Initialize the agent for that user.
-    agent = initialize_agent(request.session['session_id'])
+    agent = initialize_agent(session_id)
     
     # Clean the items list to prepare a new message.
     shopping_cart.clear()
     
     # Ask the model and structure the response
-    result = ask_model(agent, query, request.session['session_id'])
+    result = ask_model(agent, query, session_id)
+ 
+    result = markdown.markdown(result)
     
-    res = {
-        'items': shopping_cart,
-        'response': markdown.markdown(result)
-    }
-    
-    response = StreamingHttpResponse(json.dumps(res), content_type='text/plain')
+    if result.startswith('<p>'):
+        result = result[3:-4] # Removing <p> and </p>
+
+    response = JsonResponse({'items' : shopping_cart, 'response' : result})
+    response.set_cookie('session_id', session_id, max_age=600)
+
     return response
