@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Message } from '../models/message.model';
 import { Product, Image, Review, Url } from '../models/product.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +70,7 @@ export class ChatbotService {
   }
 
   getResponse(message: string): Observable<any> {
-    let url = 'http://localhost:8000/api/llm/query/';
+    let url = `${environment.backendUrl}/llm/query/`;
     let body = { query: message };
     return this.http.post(url, body);
   }
