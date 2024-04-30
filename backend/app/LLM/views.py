@@ -15,7 +15,9 @@ from pydantic import BaseModel, Field
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain.memory import ChatMessageHistory
-from langchain_postgres.chat_message_histories import PostgresChatMessageHistory
+from langchain_community.chat_message_histories import (
+    PostgresChatMessageHistory,
+)
 import os
 import time
 import requests
@@ -23,11 +25,12 @@ import markdown
 import json
 import uuid
 from .llm_tools import tools, shopping_cart
-from django.db import connection
+# from django.db import connection
+from django.conf import settings
 
 
-def ask_model(agent, query):
-    for chunk in agent.stream({"input": query}):
+def ask_model(agent, query, session_id):
+    for chunk in agent.stream({"input": query}, config={"configurable": {"session_id": session_id}}):
         # Agent Action
         if "actions" in chunk:
             for action in chunk["actions"]:
@@ -76,16 +79,46 @@ def initialize_agent(session_id):
     agent = create_openai_tools_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
+    # Retrieve PostgreSQL connection settings from Django settings
+    # DATABASES = settings.DATABASES
+    # db_settings = DATABASES['default']
+
+    # # Connect to the PostgreSQL database
+    # connection = psycopg2.connect(
+    #     dbname=db_settings['NAME'],
+    #     user=db_settings['USER'],
+    #     password=db_settings['PASSWORD'],
+    #     host=db_settings['HOST'],
+    #     port=db_settings['PORT']
+    # )
+    
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_NAME = os.environ.get('DB_NAME')
+    DB_USER = os.environ.get('DB_USER')
+    DB_PASS = os.environ.get('DB_PASS')
+    DB_PORT = os.environ.get('DB_PORT')
+
+    # Constructing the connection URL
+    connection = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    
+    # print(f"Connection:{connection.info}")
+    
     # The Memory
     table_name = "chat_history"
-    PostgresChatMessageHistory.create_tables(connection, table_name)
-
-    # Initialize the chat history manager
+    
     memory = PostgresChatMessageHistory(
-        table_name,
-        session_id,
-        sync_connection=connection
+        connection_string=connection,
+        session_id=session_id,
+        table_name=table_name
     )
+
+    print("Connection completed")
+    # Initialize the chat history manager
+    # memory = PostgresChatMessageHistory(
+    #     table_name,
+    #     session_id,
+    #     sync_connection=connection
+    # )
 
 
     # The Fully-Assembled Agent
@@ -116,7 +149,7 @@ def query(request):
     query = request.data.get('query')
 
     # Get the Session_id if it exists else initialize it.
-    request.session['session_id'] = request.session.get('session_id', str(uuid.uuid4()))
+    request.session['session_id'] = request.session.get('session_id', uuid.uuid4())
     print(f"Session ID: {request.session['session_id']}")
     
     # Initialize the agent for that user.
@@ -126,7 +159,7 @@ def query(request):
     shopping_cart.clear()
     
     # Ask the model and structure the response
-    result = ask_model(agent, query)
+    result = ask_model(agent, query, request.session['session_id'])
     
     res = {
         'items': shopping_cart,
