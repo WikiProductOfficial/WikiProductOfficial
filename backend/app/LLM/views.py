@@ -136,7 +136,7 @@ def query(request):
     # Get the Session_id if it exists else initialize it.
     session_id = request.COOKIES.get('session_id')
     if not session_id:
-        session_id = str(uuid.uuid4()) # It maybe better to set to random number
+        session_id = str(uuid.uuid4()) # TODO: It maybe better to set to random number
         
     print(f"Session ID: {session_id}")
 
