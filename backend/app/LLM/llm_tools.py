@@ -60,8 +60,18 @@ def search_items(search_query: str, n_items=5) -> list:
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
     # TODO: Send the shopping cart alone to save time
     # TODO: FIRAS's FEATURED ITEMS TO BE ONLY > 3 Stars
+    # TODO: TRY STREAMING RESPONSES
+    # TODO: SHORTEN RESPONSE TO 1 SENTENCE MAX
+    # TODO: Delete session_id cookie on reload
     
-    return res.json()['result']
+    
+    items = res.json()['result']
+    print(items)
+    informative_data = lambda x: {'id': x['item_id'], 'summary': x['summary']}
+    
+    items = [informative_data(item) for item in items]
+    
+    return items
 
 # Add your tool to the collection
 tools = [test_connection, get_item_by_id, get_similar_by_id, search_items]
