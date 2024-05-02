@@ -134,3 +134,4 @@ dmypy.json
 /database/
 /static/
 .DS_Store
+.env
