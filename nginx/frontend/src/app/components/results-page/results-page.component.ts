@@ -1,7 +1,9 @@
 import {
   Component,
   OnInit,
+  Signal,
   WritableSignal,
+  computed,
   effect,
   signal,
 } from '@angular/core';
@@ -36,6 +38,8 @@ export class ResultsPageComponent implements OnInit {
   results: any;
   maxPages!: number;
   category: WritableSignal<string> = signal('');
+  categoryName: WritableSignal<string> = signal('');
+
   // filler component inputs and outputs
   isFiltersVisible: boolean = false;
 
@@ -44,11 +48,28 @@ export class ResultsPageComponent implements OnInit {
     private router: Router,
     private searchService: SearchService,
     protected categoriesService: CategoriesService
-  ) {}
+  ) {
+    effect(() => {
+      // If category id changed, then chagne get the new name.
+      this.categoriesService
+        .getCategory(this.category())
+        .subscribe((category) => {
+          this.categoryName.set(category.category);
+        });
+    });
+  }
+  // Convert Page to number (Used in paginator).
+  getPageNumber() {
+    return parseInt(this.page());
+  }
+  // Visibility of filters Modal.
   onVisibilityChange(isVisible: boolean) {
     this.isFiltersVisible = isVisible;
   }
-
+  onShowFiltersClicked(event: any) {
+    this.isFiltersVisible = true;
+  }
+  // Function to update filters.
   onProductFilterChange(filteredProducts: any) {
     //Remove old filters
     this.filters.set({});
@@ -77,7 +98,7 @@ export class ResultsPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-
+  // Function to update Page.
   onPageChange(event: any) {
     this.page.set(event.page + 1);
     window.scrollTo({
@@ -90,9 +111,7 @@ export class ResultsPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-  onShowFiltersClicked(event: any) {
-    this.isFiltersVisible = true;
-  }
+  // Function to handle sort selection.
   onSortOptionSelected(sortOption: string) {
     this.sort.set(sortOption);
     this.router.navigate([], {
@@ -107,7 +126,11 @@ export class ResultsPageComponent implements OnInit {
       this.page.set(params.get('page') || '1');
       this.sort.set(params.get('sort') || undefined);
       this.category.set(params.get('category') || '');
-      // TODO: Parse the filters from the query params.
+      this.filters.set({
+        minPrice: parseFloat(params.get('minPrice') || '0'),
+        maxPrice: parseFloat(params.get('maxPrice') || '0'),
+        stores: params.get('stores') ?? '',
+      });
 
       this.searchService
         .getProducts(

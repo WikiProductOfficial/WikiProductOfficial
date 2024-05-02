@@ -4,8 +4,11 @@
     <span class="text-blue-600">Products</span>
   </div>
   <div class="md:col-10 col-12">
+    <app-loader *ngIf="productService.loading"></app-loader>
+
     <p-carousel
-      [value]="productList"
+      *ngIf="!productService.loading"
+      [value]="featuredProducts"
       [numVisible]="3"
       [numScroll]="3"
       [circular]="true"
@@ -13,37 +16,41 @@
       [autoplayInterval]="4000"
     >
       <ng-template let-product pTemplate="item">
-        <div class="">
+        <div (click)="onProductClicked(product.item_id)">
           <div
-            class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl md:m-4 py-5 px-3"
+            class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl m-1 md:m-2"
           >
             <div
-              class="image-container h-15rem w-full bg-white flex justify-content-center align-items-center p-3 border-round-lg mb-3"
+              class="h-15rem w-full bg-white flex justify-content-center align-items-center p-2 border-round-top-xl mb-3"
             >
               <img
-                [src]="product.imageSource"
+                [src]="product.images[0].image_url"
                 [alt]="product.title"
                 class="product-img"
               />
             </div>
 
             <div
-              class="h-8rem align-content-start w-full flex flex-column px-2"
+              class="h-8rem align-content-start w-full flex flex-column px-4"
             >
               <div class="flex align-content-end flex-wrap">
-                <h3 class="text-limit md:text-lg lg:text-xl m-0">
-                  {{ product.title }}
+                <h3
+                  class="text-limit md:text-lg lg:text-xl m-0"
+                  [ngClass]="{ 'mb-4': product.rating === null }"
+                >
+                  {{ product.name }}
                 </h3>
               </div>
-
+              @if(product.rating !== null){
               <p-rating
                 class="mt-2"
                 [(ngModel)]="product.rating"
                 [readonly]="true"
                 [cancel]="false"
               ></p-rating>
+              }
               <p class="currency-limit md:text-md lg:text-xl mt-1">
-                ${{ product.price }}
+                {{ product.price | currencyConversion }}
               </p>
             </div>
           </div>

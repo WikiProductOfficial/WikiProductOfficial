@@ -2,13 +2,14 @@
   <div class="lg:col-2 lg:block">
     <app-filters
       [visible]="isFiltersVisible"
+      [filters]="filters()"
       (visibilityChange)="onVisibilityChange($event)"
       (filteredProductsChange)="onProductFilterChange($event)"
     ></app-filters>
   </div>
   <div class="flex flex-column col-12 lg:col-10">
     <app-products-data-view
-      [title]="query()"
+      [title]="query() || categoryName()"
       [products]="results"
       [selectedSortOption]="sort()"
       (sortOptionSelected)="onSortOptionSelected($event)"
@@ -20,6 +21,7 @@
       [totalRecords]="maxPages * 12"
       [alwaysShow]="true"
       [pageLinkSize]="3"
+      [first]="(getPageNumber() - 1) * 12"
       (onPageChange)="onPageChange($event)"
     ></p-paginator>
   </div>

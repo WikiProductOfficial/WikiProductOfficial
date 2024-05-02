@@ -4,8 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class CurrencyService {
-  // Assume default currency is USD
+  // Assume default currency is SAR
   private _userCurrency: string = 'SAR';
+  conversionRates: { [key: string]: number } = {
+    USD: 1,
+    SAR: 3.75,
+    EGP: 47.85,
+  };
 
   get userCurrency(): string {
     return this._userCurrency;
@@ -21,14 +26,14 @@ export class CurrencyService {
     this._userCurrency = currency;
   }
 
-  convertToUserCurrency(amount: number): number {
-    // Conversion rates - example rates for demonstration purposes
-    const conversionRates: { [key: string]: number } = {
-      USD: 1, // 1 USD = 1 USD
-      SAR: 3.75, // 1 USD = 3.75 SAR (example conversion rate)
-    };
+  convertToDollar(amount: number): number {
+    // Convert amount to dollar
+    console.log(amount / this.conversionRates[this.userCurrency]);
+    return amount / this.conversionRates[this.userCurrency];
+  }
 
+  convertToUserCurrency(amount: number): number {
     // Convert amount to user's currency
-    return amount * conversionRates[this.userCurrency];
+    return amount * this.conversionRates[this.userCurrency];
   }
 }

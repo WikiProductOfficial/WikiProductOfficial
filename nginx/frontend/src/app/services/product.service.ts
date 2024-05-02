@@ -26,4 +26,19 @@ export class ProductService {
       })
     );
   }
+  getPopularProducts(): Observable<Product[]> {
+    this.loading = true;
+    let url = `${environment.backendUrl}/populer_items/`;
+    return this.http.get<any>(url).pipe(
+      catchError((error) => {
+        this.loading = false;
+        return throwError(
+          () => new Error('Failed to load JSON data; see console for details.')
+        );
+      }),
+      finalize(() => {
+        this.loading = false;
+      })
+    );
+  }
 }
