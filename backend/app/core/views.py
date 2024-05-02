@@ -146,8 +146,8 @@ def search_items(request):
             
             # Filtering by stores
             items= search.store_filtering(items=items, stores=stores)
-        print(f"Ids_list: {ids_list}")
-        print(list(items.values_list("item_id", flat=True)))
+        # print(f"Ids_list: {ids_list}")
+        # print(list(items.values_list("item_id", flat=True)))
         # Result
         return search.search_result(
             items=items,
