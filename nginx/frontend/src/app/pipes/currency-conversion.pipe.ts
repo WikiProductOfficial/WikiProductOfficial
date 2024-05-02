@@ -11,7 +11,10 @@ export class CurrencyConversionPipe implements PipeTransform {
 
   transform(value: number): string {
     const convertedValue = this.currencyService.convertToUserCurrency(value);
-    const formattedValue = convertedValue.toFixed(2);
+    // format the number with comma and taking only two decimals example (10,000.00)
+    const formattedValue = convertedValue
+      .toFixed(2)
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return formattedValue + ' ' + this.currencyService.userCurrency;
   }
 }

@@ -6,9 +6,19 @@
 >
   <div class="logo-container flex flex-row align-items-center gap-2">
     <i (click)="sidebarVisible = true" class="pi pi-bars"></i>
-    <div class="cursor-pointer" [routerLink]="['/']">
-      <span class="wiki text-2xl lg:text-4xl">Wiki</span
-      ><span class="product text-2xl lg:text-4xl">Product</span>
+    <div
+      class="cursor-pointer flex align-content-center justify-content-center flex-wrap"
+      [routerLink]="['/']"
+    >
+      <img
+        src="../../../assets/icons/logo.png"
+        class="wikiproduct-logo mx-1"
+        alt=""
+      />
+      <div class="hidden md:flex flex-row text-2xl lg:text-3xl my-auto">
+        <div class="wiki">Wiki</div>
+        <div class="product">Product</div>
+      </div>
     </div>
   </div>
   <div class="flex flex-row gap-2">
@@ -74,10 +84,7 @@
     }
     <h3>Currency</h3>
 
-    <p-dropdown
-      [options]="countries"
-      [(ngModel)]="currencyService.userCurrency"
-    >
+    <p-dropdown [options]="currency" [(ngModel)]="currencyService.userCurrency">
       <ng-template let-option pTemplate="selectedItem">
         @if (option){
         <div class="flex align-items-center gap-2">

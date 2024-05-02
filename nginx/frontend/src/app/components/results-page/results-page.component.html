@@ -9,7 +9,7 @@
   </div>
   <div class="flex flex-column col-12 lg:col-10">
     <app-products-data-view
-      [title]="query()"
+      [title]="query() || categoryName()"
       [products]="results"
       [selectedSortOption]="sort()"
       (sortOptionSelected)="onSortOptionSelected($event)"
@@ -21,6 +21,7 @@
       [totalRecords]="maxPages * 12"
       [alwaysShow]="true"
       [pageLinkSize]="3"
+      [first]="(getPageNumber() - 1) * 12"
       (onPageChange)="onPageChange($event)"
     ></p-paginator>
   </div>

@@ -1,26 +1,29 @@
 @if (screenService.isLargeScreen){
 <!--Whole filter section-->
 <div class="container">
+  <h3>Filter</h3>
+
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </div>
 } @else if (!screenService.isLargeScreen) {
 <p-dialog
-  header="Header"
+  header="Filters"
   [(visible)]="visible"
   [draggable]="false"
-  [style]="{ width: '50vw' }"
+  [style]="{ width: '80vw' }"
   (visibleChange)="this.visibilityChange.emit(this.visible)"
   [modal]="true"
   class="justify-content-center"
 >
-  <ng-container *ngTemplateOutlet="content"></ng-container>
+  <div class="p-5">
+    <ng-container *ngTemplateOutlet="content"></ng-container>
+  </div>
 </p-dialog>
 
 }
 <ng-template #content>
   <!--Price range slider filter-->
   <div class="price-range">
-    <h3>Filter</h3>
     <div class="card flex flex-wrap gap-3 p-fluid">
       <div class="flex-auto">
         <label class="mb-2 block font-bold" for="stacked">Min Price</label>

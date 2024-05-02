@@ -9,6 +9,7 @@ export class CurrencyService {
   conversionRates: { [key: string]: number } = {
     USD: 1,
     SAR: 3.75,
+    EGP: 47.85,
   };
 
   get userCurrency(): string {

@@ -19,4 +19,15 @@ export class CategoriesService {
       })
     );
   }
+  getCategory(category_id: string): Observable<any> {
+    const apiUrl = `${environment.backendUrl}/category/?category=${category_id}`;
+    return this.http.get<any>(apiUrl).pipe(
+      catchError((error) => {
+        console.error('An error occurred:', error.message);
+        return throwError(
+          () => new Error('Failed to load categories; see console for details.')
+        );
+      })
+    );
+  }
 }

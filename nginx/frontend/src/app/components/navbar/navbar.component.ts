@@ -48,8 +48,8 @@ export class NavbarComponent implements OnInit {
     query: new FormControl('', [Validators.required, Validators.min(1)]),
   });
 
-  countries = ['SAR', 'USD'];
-  selectedCountry = this.countries[0];
+  currency = ['SAR', 'USD', 'EGP'];
+  selectedCountry = this.currency[0];
   treeNodes: TreeNode[] = [];
 
   constructor(
