@@ -144,7 +144,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (!this.isEmpty) {
+    if (!this.isEmpty && !this.isLoading) {
       this.chat.converse(this.formValue);
       this.formValue = '';
       this.isEmpty = true;

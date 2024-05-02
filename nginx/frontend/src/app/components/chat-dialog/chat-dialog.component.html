@@ -40,14 +40,14 @@
           <div class="grid" *ngIf="message.isProductMessage">
             <div
               *ngFor="let productMessage of message.ProductList"
-              class="product-message-container col"
+              class="product-message-container col-12 lg:col-6"
               (click)="onProductClicked(productMessage.item_id)"
             >
               <div
                 class="cursor-pointer hover:surface-hover border-1 flex flex-column surface-border border-round-xl mt-2 mb-2"
               >
                 <div
-                  class="image-container w-full bg-white flex justify-content-center align-items-center p-1 border-round-lg mb-1"
+                  class="image-container h-8rem w-full bg-white flex justify-content-center align-items-center p-1 border-round-lg mb-1"
                 >
                   <img
                     [src]="productMessage.images[0].image_url"
@@ -57,7 +57,7 @@
 
                 <div class="align-content-start w-full flex flex-column px-2">
                   <div class="flex align-content-end flex-wrap">
-                    <h3 class="text-limit text-xs lg:text-sm m-0">
+                    <h3 class="text-limit text-xs m-0">
                       {{ productMessage.name }}
                     </h3>
                   </div>
@@ -74,7 +74,6 @@
               </div>
             </div>
           </div>
-          <div>{{ message.summary }}</div>
         </div>
       </ng-container>
       <div *ngIf="isLoading" class="message from font-bold shadow-2">
@@ -90,7 +89,6 @@
           pInputText
           placeholder="Type a message..."
           [(ngModel)]="formValue"
-          [disabled]="isLoading"
           (ngModelChange)="updateIsEmpty()"
           (keyup.enter)="sendMessage()"
         />
@@ -98,8 +96,8 @@
           type="button"
           (click)="sendMessage()"
           pButton
-          class="p-button send-btn"
-          [disabled]="isEmpty"
+          class="p-button send-btn border-round-sm border-noround-left"
+          [disabled]="isLoading"
         >
           <span
             class="pi text-center text-sm md:text-lg"
