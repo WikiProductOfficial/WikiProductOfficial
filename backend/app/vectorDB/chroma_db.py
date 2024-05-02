@@ -60,15 +60,14 @@ class ChromaDB():
     
     
     # Getting the embedding function
-    ## Option 1: means using Sentence Transformers. (Free option)
-    ## Option 2: means using another's service e.g. OpenAI. (Paid option)
-    ## Option 3: means using default embedding function. (all-MiniLM-L6-v2)
+    ## Option 1: means using another's service e.g. OpenAI. (Paid option)
+    ## Option 2: means using default embedding function. (all-MiniLM-L6-v2)
     def __get_embedding_function(self):
         model= os.environ.get("EMBEDDING_MODEL_NAME")
         option= int(os.environ.get("EMBEDDING_OPTION"))
         
         if not model:
-            option= 3
+            option= 2
         
         
         # Choosing which approach to go through

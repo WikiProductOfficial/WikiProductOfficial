@@ -86,7 +86,6 @@ class Review(models.Model):
     rating = models.PositiveSmallIntegerField()
     content = models.CharField(max_length=5000)
     date = models.DateField()
-    # review_url = models.URLField(max_length=255)
 
     class Meta:
         db_table = 'review'
