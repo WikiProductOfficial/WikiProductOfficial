@@ -18,7 +18,7 @@ chromadb = ChromaDB()
 # Methods to be used in the search function
 
 # Sort Filtering Method
-def sorting_filter(items, sort, default=None):
+def sorting_filter(items, sort, preserve=None):
     ORDER_BY_CONST= {"pa": "price",
                     "pd": "-price", 
                     "na": "name",
@@ -26,19 +26,20 @@ def sorting_filter(items, sort, default=None):
                     "ra": "rating",
                     "rd": "-rating"}
     if sort:
-        # Sort by
+        # Sort based on the constants
         if sort in ORDER_BY_CONST.keys():
             items= items.order_by(ORDER_BY_CONST[sort])
             return items
         else:
             raise Exception("Invalid value for sort parameter.")
-    elif default:
+    elif preserve:
         # Preserving the initial chromadb order
-        preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(default)])
+        preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve)])
         items = items.order_by(preserved)
         return items
     
-    return items
+    # if neither, default is by descending item ids 
+    return items.order_by("-item_id")
 
 # Store Filtering Method
 def store_filtering(items, stores):
@@ -53,6 +54,7 @@ def max_price_corrector(items,min_price,max_price):
     if not max_price or max_price<= min_price:
         max_price = float(items.aggregate(Max("price"))["price__max"])
         return max_price
+    
     return max_price
 
 # Price range  Filtering Method
@@ -76,20 +78,29 @@ def search_result(items, page, per_page, start, end, min_price, max_price) -> Re
             "max_price": max_price,
             })
     elif items.count() <= 0:
-        return Response({'message': "There is no such items"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({
+            "results": [],
+            'message': "There is no such items"
+            }, status=status.HTTP_404_NOT_FOUND)
     else:
-        return Response({'message': "The page number exceeds the max"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "results": [],
+            'message': "The page number exceeds the max"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 # Search Method using chromadb for semantic search 
 def search(query, per_page, n=None) -> list:
     # Max per request
     n = per_page * 20
     
-    # get items collection
+    # Get items collection
     items_collection = chromadb.get_items_collection()
+    
+    # Searching chromadb
     result= items_collection.query(
-            query_texts= query,
-            n_results= n,
-            include=[], # to return just the item IDs
-        )
+        query_texts= query,
+        n_results= n,
+        include=[], # to return just the item IDs
+    )
+    
     return [int(x) for x in result["ids"][0]]

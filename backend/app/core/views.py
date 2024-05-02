@@ -1,6 +1,5 @@
 # Django imports
 from django.shortcuts import render, redirect
-# from django.http import JsonResponse
 
 # Django REST Framework imports
 from rest_framework.decorators import api_view
@@ -25,7 +24,7 @@ import random
 
 # TODO: Postgres history 
 # TODO: Embedding images
- 
+
 
 
 # GET Search
@@ -97,7 +96,6 @@ import random
 )
 @api_view(['GET'])
 def search_items(request):
-    # [x]TODO: vector search
     try:
         PER_PAGE = 12 # Number of results per page "CONSTANT"
         
@@ -106,7 +104,10 @@ def search_items(request):
         category_id = request.query_params.get('category', None) # Get the  Category id from URL Parameter (None if not provided)
         
         if page  < 1:
-            return Response({"error":"Invalid page number. Page number must be 1 or greater"})
+            return Response({
+                "results": [],
+                "message": "Invalid page number. Page number must be 1 or greater"
+                }, status=status.HTTP_400_BAD_REQUEST)
         
         # Get all of the parameters
         start = (page - 1) * PER_PAGE # The  item at which we should start our query
@@ -115,8 +116,10 @@ def search_items(request):
         max_price = float(request.query_params.get("max_price", 0))  # Max price for filtering
         sort = request.query_params.get('sort', "")  # Sorting method
         stores = request.query_params.get('stores', "")  # Stores to filter on
-
+        
+        # initializing local variables
         items = None
+        ids_list = None
         
         if category_id:
             # Searching the a category with its children
@@ -124,11 +127,10 @@ def search_items(request):
             items = models.Item.objects.filter(itembelongsto__category__in=category.get_descendants(include_self=True))
             
         if query:
-            
-            # New way of searching
+            # Getting the ids of the items that match the query from chromadb
             ids_list= search.search(query=query, per_page=PER_PAGE)
             
-            
+            # Filtering based on the ids list depending if the items exist
             if items:
                 items = items.filter(item_id__in=ids_list)
             else:
@@ -141,13 +143,13 @@ def search_items(request):
         
             # Filtering by price range
             items= search.price_range_filtering(items=items, min_price=min_price, max_price=max_price)
-            # Sort by
-            items= search.sorting_filter(items=items, sort=sort, default=ids_list)
+            
+            # Sorting
+            items= search.sorting_filter(items=items, sort=sort, preserve=ids_list)
             
             # Filtering by stores
             items= search.store_filtering(items=items, stores=stores)
-        # print(f"Ids_list: {ids_list}")
-        # print(list(items.values_list("item_id", flat=True)))
+        
         # Result
         return search.search_result(
             items=items,
@@ -158,11 +160,17 @@ def search_items(request):
             min_price=min_price,
             max_price=max_price,
             )
-            
+    
     except models.Category.DoesNotExist:
-        return Response({'message': 'Invalid category ID'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "results": [],
+            'message': 'Invalid category ID'
+            }, status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response({'message': ""}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            "results": [],
+            'message': "Something went wrong"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 # API endpoint to get all items
 @api_view(['GET'])
@@ -177,7 +185,7 @@ def get_item(request, item_id):
     try:
         item = models.Item.objects.get(pk=item_id)
     except models.Item.DoesNotExist:
-        return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'message': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
 
     serialized_item = serializers.ItemSerializer(item)
     return Response(serialized_item.data)
@@ -217,7 +225,7 @@ def get_wishlist(request):
             serialized_wishlist_items = serializers.ItemSerializer(wishlist_items, many=True)
             return Response(serialized_wishlist_items.data)
         except:
-            return Response({"Error": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Wrong format of the wishlist parameter"}, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'message': 'No wishlist array is provided'}, status=status.HTTP_400_BAD_REQUEST)
 
