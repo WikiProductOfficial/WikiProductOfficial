@@ -15,12 +15,17 @@ from . import models, serializers, search
 
 # Imports for querying
 from django.db.models import Q
+from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank
 from functools import reduce
 import operator
 
 #Library imports
 from datetime import datetime
 import random
+
+# TODO: Postgres history 
+# TODO: Embedding images
+ 
 
 
 # GET Search
@@ -63,12 +68,12 @@ import random
             name='sort',
             in_=openapi.IN_QUERY,
             description="""Sort By:
-                         "pa": "price",     # ascending by price
-                         "pd": "-price",    # descending by price
-                         "na": "name",      # ascending by name
-                         "nd": "-name",     # descending by name
-                         "ra": "rating",    # ascending by rating
-                         "rd": "-rating"    # descending by rating
+                         "pa": ascending by price
+                         "pd": descending by price
+                         "na": ascending by name
+                         "nd": descending by name
+                         "ra": ascending by rating
+                         "rd": descending by rating
                          """,
             type=openapi.TYPE_STRING,
             required=False,
@@ -92,6 +97,7 @@ import random
 )
 @api_view(['GET'])
 def search_items(request):
+    # [x]TODO: vector search
     try:
         PER_PAGE = 12 # Number of results per page "CONSTANT"
         
@@ -111,46 +117,42 @@ def search_items(request):
         stores = request.query_params.get('stores', "")  # Stores to filter on
 
         items = None
+        
         if category_id:
             # Searching the a category with its children
             category = models.Category.objects.get(pk=category_id)
             items = models.Item.objects.filter(itembelongsto__category__in=category.get_descendants(include_self=True))
             
-            # # For Debugging the category and its children
-            # for item in items:
-            #     # Get the category for the current item
-            #     category_data = item.itembelongsto_set.first().category
-            #     print(f'category data: {category_data}')
-            #     # Create a category serializer with the category data
-            #     category_serializer = serializers.CategorySerializer(category_data)
-            #     # Set the category field in the item serializer
-            #     print(f"Serialized category:{category_serializer.data}")
         if query:
-            query = query.strip().split(" ")
             
             # New way of searching
-            condition = reduce(operator.and_, [Q(name__icontains=s) for s in query])
+            ids_list= search.search(query=query, per_page=PER_PAGE)
+            
+            
             if items:
-                items = items.filter(condition)
+                items = items.filter(item_id__in=ids_list)
             else:
-                items = models.Item.objects.filter(condition)
+                items = models.Item.objects.filter(item_id__in=ids_list)
         
-        # Correcting the max price if needed
-        max_price= search.max_price_corrector(items=items, min_price=min_price, max_price=max_price)
+        # if empty move to results
+        if items:
+            # Correcting the max price if needed
+            max_price= search.max_price_corrector(items=items, min_price=min_price, max_price=max_price)
         
-        # Filtering by price range
-        items= search.price_range_filtering(items=items, min_price=min_price, max_price=max_price)
-        # Sort by
-        items= search.sorting_filter(items=items, sort=sort)
-        
-        # Filtering by stores
-        items= search.store_filtering(items=items, stores=stores)
-        
+            # Filtering by price range
+            items= search.price_range_filtering(items=items, min_price=min_price, max_price=max_price)
+            # Sort by
+            items= search.sorting_filter(items=items, sort=sort, default=ids_list)
+            
+            # Filtering by stores
+            items= search.store_filtering(items=items, stores=stores)
+        print(f"Ids_list: {ids_list}")
+        print(list(items.values_list("item_id", flat=True)))
         # Result
         return search.search_result(
             items=items,
             page=page,
-            PER_PAGE= PER_PAGE,
+            per_page= PER_PAGE,
             start=start,
             end=end,
             min_price=min_price,
@@ -161,9 +163,6 @@ def search_items(request):
         return Response({'message': 'Invalid category ID'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response({'message': ""}, status=status.HTTP_400_BAD_REQUEST)
-    # For Debugging or Development
-    # except Exception as e:
-    #     return Response({'error_message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # API endpoint to get all items
 @api_view(['GET'])
@@ -186,7 +185,7 @@ def get_item(request, item_id):
 # API endpoint to get popular
 @api_view(['GET'])
 def get_popular_items(request):
-    items = models.Item.objects.order_by("-review_count")[:100]
+    items = models.Item.objects.order_by("-review_count").filter(rating__gte=3)[:100]
     seed = int(format(datetime.today(), '%j'))
     
     random.seed(seed)
