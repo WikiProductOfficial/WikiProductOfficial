@@ -125,6 +125,7 @@
   text-overflow: ellipsis;
   white-space: normal;
   word-wrap: break-word;
+  max-width: 15ch;
 }
 .currency-limit {
   overflow: hidden;
