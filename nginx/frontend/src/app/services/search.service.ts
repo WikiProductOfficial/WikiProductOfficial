@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Filters } from '../models/filters';
+import { Filters } from '../models/filters.model';
+import { ProductsCollection } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class SearchService {
     sort: string | undefined,
     fillers: Filters,
     categoryId?: string
-  ): Observable<any> {
+  ): Observable<ProductsCollection> {
     this.loading = true;
     let url = `${environment.backendUrl}/search/?`;
 
@@ -50,12 +51,7 @@ export class SearchService {
     }
 
     return this.http.get<any>(url).pipe(
-      catchError((error) => {
-        console.error('An error occurred:', error.error);
-        return throwError(
-          () => new Error('Failed to load JSON data; see console for details.')
-        );
-      }),
+      catchError(async () => new ProductsCollection([])), // Catch error and return empty collection
       finalize(() => {
         this.loading = false; // loading is finished, remove spinner
       })

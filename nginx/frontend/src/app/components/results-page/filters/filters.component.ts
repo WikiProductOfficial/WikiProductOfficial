@@ -9,7 +9,7 @@ import { StoreService } from '../../../services/store.service';
 import { Store } from '../../../models/store.model';
 import { ScreenService } from '../../../services/screen.service';
 import { CurrencyService } from '../../../services/currency.service';
-import { Filters } from '../../../models/filters';
+import { Filters } from '../../../models/filters.model';
 
 interface FilteredProducts {
   minPrice?: number;
@@ -64,7 +64,6 @@ export class FiltersComponent implements OnInit {
         this.selectedStores = stores.filter(function (obj) {
           return idsArray.includes(obj.store_id);
         });
-        console.log(this.selectedStores);
       }
     });
     //match current filter(prices), if there is any.
