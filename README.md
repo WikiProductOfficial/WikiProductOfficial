@@ -75,17 +75,14 @@ To build your containers for production, run:
 ## Technologies
 
 <p align="center"> 
-    <a href="https://primeng.org/" target="_blank" rel="noreferrer"> <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/686aa3a8-8e5b-4094-9e59-b670b871465d" alt="PrimeNG" width="40" height="40"/> </a>
-    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="angular" width="40" height="40"/> </a>
-    <a href="https://www.nginx.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nginx/nginx-original.svg" alt="Nginx" width="40" height="40"/> </a>
-    <a href="https://swagger.io/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" alt="swagger" width="40" height="40"/> </a>
-    <a href="https://www.python.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" width="40" height="40"/> </a>
-    <a href="https://www.djangoproject.com/" target="_blank" rel="noreferrer"> <img src=https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/ed700ca2-9f6c-456d-8551-aad5c8c8f268" alt="Django" width="40" height="40"/> </a>
-    <a href="https://docs.trychroma.com/" target="_blank" rel="noreferrer"> <img src="https://docs.trychroma.com/img/chroma.svg" alt="Chromadb" width="40" height="40"/> </a>
-    <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="Postgres" width="40" height="40"/> </a>
-    <a href="https://www.docker.com" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker" width="40" height="40"/> </a>
+    <a href="https://primeng.org/" target="_blank" rel="noreferrer"> <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/686aa3a8-8e5b-4094-9e59-b670b871465d" alt="PrimeNG" width="60" height="60"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="angular" width="60" height="60"/> </a>
+    <a href="https://www.nginx.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nginx/nginx-original.svg" alt="Nginx" width="60" height="60"/> </a>
+    <a href="https://swagger.io/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" alt="swagger" width="60" height="60"/> </a>
+    <a href="https://www.python.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" width="60" height="60"/> </a>
+    <a href="https://www.djangoproject.com/" target="_blank" rel="noreferrer"> <img src=https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/ed700ca2-9f6c-456d-8551-aad5c8c8f268" alt="Django" width="60" height="60"/> </a>
+    <a href="https://docs.trychroma.com/" target="_blank" rel="noreferrer"> <img src="https://docs.trychroma.com/img/chroma.svg" alt="Chromadb" width="60" height="60"/> </a>
+    <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="Postgres" width="60" height="60"/> </a>
+    <a href="https://www.docker.com" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker" width="60" height="60"/> </a>
     <a href="https://www.docker.com" target="_blank" rel="noreferrer"> <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/ae531b4f-fad7-440d-a223-750f32cf9862" alt="LangChain" width="80" height="40"/> </a>
 </p>
-
-
-
