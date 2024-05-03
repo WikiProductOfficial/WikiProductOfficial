@@ -1,12 +1,15 @@
 
-<p align="center" style="width:1169px; height:500px;">
-  <a href="https://wikiproduct.up.railway.app/"><img style="width:1169px; height:500px;" src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo"></a>
+<p align="center">
+  <a href="https://wikiproduct.up.railway.app/"><img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo"></a>
 </p>
 <p align="center">
     <b>WikiProduct</b> <br />
     An <b>AI-powered</b> digital <b>warehouse</b> system and web archive showcasing <br> diverse internet products with personalized shopping recommendations.
 </p>
 
+* Comprehensive archive
+* **AI-powered** smart search
+* Integrated **AI** assistant
 
 ## Application Setup and Launch Guide
 
@@ -49,6 +52,9 @@ To build your containers for production, run:
 ### Loading  Sample Data
 > [!NOTE]
 > Note: The data can be loaded in ranges as it will be shown below.
+> 
+> Note: The sample data is 500 rows
+
 * Modifying the following line depending weather it is in development or deployment
   
     ``python manage.py runscript load --script-args "start" "end"``
@@ -56,9 +62,6 @@ To build your containers for production, run:
 * Moreover, to load the whole data, write the following line instead or remove the arguments:
 
     ``python manage.py runscript load``
-### Download Dataset
-* Go to teams and download the dataset
-* Add the dataset into the **"backend/app/scripts"** folder
 
 ### Development Environment
 * The changes will be done in the **"docker-compose.yaml"** file in the root directory
@@ -68,3 +71,18 @@ To build your containers for production, run:
 
 > [!NOTE]
 > Note: If the website does not work despite any fixes, try hard reloading the website by holding the refresh button --> Hard Reload (i.e. clear cache)
+
+## Technologies
+
+<p align="center"> 
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="PrimeNG" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="angular" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nginx/nginx-original.svg" alt="Nginx" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" alt="swagger" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/d90c8e4b-1a07-48eb-938c-c953656aa29b" alt="Django" width="40" height="40"/> </a>
+    <a href="https://docs.trychroma.com/" target="_blank" rel="noreferrer"> <img src="https://docs.trychroma.com/img/chroma.svg" alt="Chromadb" width="40" height="40"/> </a>
+    <a href="https://angular.io" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="Postgres" width="40" height="40"/> </a>
+    <a href="https://www.docker.com" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker" width="40" height="40"/> </a>
+    <a href="https://www.docker.com" target="_blank" rel="noreferrer"> <img src="" alt="LangChain" width="40" height="40"/> </a>
+</p>
