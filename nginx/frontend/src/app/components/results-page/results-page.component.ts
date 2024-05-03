@@ -13,7 +13,7 @@ import { FiltersComponent } from './filters/filters.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { SearchService } from '../../services/search.service';
 import { ButtonModule } from 'primeng/button';
-import { Filters } from '../../models/filters';
+import { Filters } from '../../models/filters.model';
 import { CategoriesService } from '../../services/categories.service';
 
 @Component({
@@ -51,11 +51,13 @@ export class ResultsPageComponent implements OnInit {
   ) {
     effect(() => {
       // If category id changed, then chagne get the new name.
-      this.categoriesService
-        .getCategory(this.category())
-        .subscribe((category) => {
-          this.categoryName.set(category.category);
-        });
+      if (this.category()) {
+        this.categoriesService
+          .getCategory(this.category())
+          .subscribe((category) => {
+            this.categoryName.set(category.category);
+          });
+      }
     });
   }
   // Convert Page to number (Used in paginator).

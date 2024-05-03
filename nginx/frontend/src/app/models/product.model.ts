@@ -44,3 +44,13 @@ export class Product {
     this.summary = data.summarized_reviews;
   }
 }
+
+export class ProductsCollection {
+  results!: Product[];
+  max_pages!: number;
+
+  constructor(results: Product[], max_pages?: number) {
+    this.results = results || [];
+    this.max_pages = max_pages || 1;
+  }
+}
