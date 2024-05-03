@@ -1,12 +1,13 @@
 
 <p align="center">
-  <a href="https://wikiproduct.up.railway.app/"><img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo"></a>
+  <a href="https://wikiproduct.up.railway.app/"><img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo" width="584.5" height="250"/></a>
 </p>
 <p align="center">
     <b>WikiProduct</b> <br />
     An <b>AI-powered</b> digital <b>warehouse</b> system and web archive showcasing <br> diverse internet products with personalized shopping recommendations.
 </p>
 
+## Features
 * Comprehensive archive
 * **AI-powered** smart search
 * Integrated **AI** assistant
