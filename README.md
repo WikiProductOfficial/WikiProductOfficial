@@ -1,12 +1,22 @@
-# Application Setup and Launch Guide
+
+<p align="center" style="width:1169px; height:500px;">
+  <a href="https://wikiproduct.up.railway.app/"><img style="width:1169px; height:500px;" src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo"></a>
+</p>
+<p align="center">
+    <b>WikiProduct</b> <br />
+    An <b>AI-powered</b> digital <b>warehouse</b> system and web archive showcasing <br> diverse internet products with personalized shopping recommendations.
+</p>
+
+
+## Application Setup and Launch Guide
 
 Welcome to the setup guide for our application. Follow these instructions to get your environment ready and launch the application using Docker.
 
-## Prerequisites
+### Prerequisites
 
 * **Docker Desktop**: Ensure Docker Desktop is installed on your machine. Visit the [official Docker website]([url](https://www.docker.com/products/docker-desktop/)) for download and installation instructions.
 
-## Running the Application
+### Running the Application
 
 ### Development Environment
 
@@ -36,7 +46,7 @@ To build your containers for production, run:
     - Server: [http://localhost]([url](http://localhost))
 
 
-## Loading  Sample Data
+### Loading  Sample Data
 > [!NOTE]
 > Note: The data can be loaded in ranges as it will be shown below.
 * Modifying the following line depending weather it is in development or deployment
