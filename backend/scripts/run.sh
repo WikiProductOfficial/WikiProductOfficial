@@ -13,7 +13,7 @@ python manage.py collectstatic --noinput
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsu
-if [ ! -f "../app/scripts/clean_warehouse.pkl" ]; then
+if [ ! -f "../app/scripts/clean_warehouse.pkl"] || ["$PKL_UPDATED" == 1]; then
     wget "$DOWNLOAD_URL" -O "../app/scripts/clean_warehouse.pkl"
 fi
 # python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END"

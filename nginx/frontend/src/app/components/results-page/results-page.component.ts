@@ -116,9 +116,10 @@ export class ResultsPageComponent implements OnInit {
   // Function to handle sort selection.
   onSortOptionSelected(sortOption: string) {
     this.sort.set(sortOption);
+    this.page.set('1');
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: { sort: this.sort() },
+      queryParams: { sort: this.sort(), page: this.page() },
       queryParamsHandling: 'merge',
     });
   }
