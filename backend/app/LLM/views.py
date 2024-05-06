@@ -5,115 +5,73 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.http import HttpResponse, StreamingHttpResponse, JsonResponse
-from langchain import hub
-from langchain.agents import AgentExecutor, create_openai_tools_agent
-from langchain.prompts import ChatPromptTemplate
-from langchain.memory import ConversationSummaryBufferMemory
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from pydantic import BaseModel, Field
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain.memory import ChatMessageHistory
-from langchain_community.chat_message_histories import (
-    PostgresChatMessageHistory,
-)
 from django.views.decorators.csrf import csrf_exempt
+
+from langchain.tools import tool
+
 import os
 import time
 import requests
 import markdown
 import json
 import uuid
-from .llm_tools import tools, shopping_cart
+
+from .agent import Agent
 
 
+base_url = "http://localhost:8000" if os.environ.get('DEBUG') == "1" else os.environ.get('DEPLOY_URL')
+global shopping_cart
+shopping_cart = []
 
-# Setup database connection data
-DB_HOST = os.environ.get('DB_HOST')
-DB_NAME = os.environ.get('DB_NAME')
-DB_USER = os.environ.get('DB_USER')
-DB_PASS = os.environ.get('DB_PASS')
-DB_PORT = os.environ.get('DB_PORT')
+@tool
+def test_connection() -> str:
+    """Use this tool to test the connectivity. Mention the status code"""
+    res = requests.get("https://google.com/")
+    print("DEBUGGING IS:" + str(os.environ.get('DEBUG')))
+    return f"Status code: {res.status_code}, the base url is: {base_url}"
 
-# Constructing the connection URL
-connection = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-
-def ask_model(agent, query, session_id):
+@tool
+def get_item_by_id(item_id: int) -> str:
+    """Use this tool to look up items using the id."""
     
-    return agent.invoke({"input": query}, config={"configurable": {"session_id": session_id}})['output']
+    # Reset the shopping cart
+    global shopping_cart
     
-    for chunk in agent.stream({"input": query}, config={"configurable": {"session_id": session_id}}):
-        # # Agent Action
-        # if "actions" in chunk:
-        #     for action in chunk["actions"]:
-        #         print (f"Calling Tool: `{action.tool}` with input `{action.tool_input}`")
-                    
-        # # Observation
-        # elif "steps" in chunk:
-        #     for step in chunk["steps"]:
-        #         print (f"Tool Result: `{step.observation}`")
-        # Average response time using: help me choose a red car is 8.5 seconds
-        
-        # Using Invoke instead of Stream: 
-        # Final result
-        if "output" in chunk:
-            return chunk["output"]
-
-
-def initialize_agent(session_id):
+    res = requests.get(f"{base_url}/api/items/{item_id}/")
     
-    # The Brain
-    llm = ChatOpenAI(
-        temperature=0,
-        streaming=True,
-        api_key=os.getenv("OPENAI_API_KEY"),
-        callbacks=[StreamingStdOutCallbackHandler()]
-    )
+    shopping_cart.append(res.json()['item_id'])
+    return res.json()
 
-    # The Intent
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", """
-            You are a ProductWiki Specialized Warehouse bot. You work in ProductWiki Warehouse system. you try to \
-            serve and assist the warehouse customers by referring them to items they need and utilize tools prepared \
-            for you to provide the maximum assistance. Here are general RULES YOU HAVE TO FOLLOW:
-            - REPLY IN Mark Down format whenver possible.
-            - When you get details of an item, only respond in what the user actually needs in 2 paragraphs at maximum. \
-                if there is more than 1 item, talk generally about items and what the user needs.
+@tool
+def get_similar_by_id(item_id: int) -> list:
+    """Use this tool to get the top 10 similar items to the item_id you input. You should have an analogy so \
+        when a user wants similar products to a certain product, you grab its id and use this to get some similar."""
 
-
-            Your answers should be brief, helpful, and short."""),
-            MessagesPlaceholder("chat_history", optional=True),
-            ("human", "{input}"),
-            MessagesPlaceholder("agent_scratchpad"),
-        ]
-    )
-
-    # The Actions
-    agent = create_openai_tools_agent(llm, tools, prompt)
-    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-    # The Memory
-    memory = PostgresChatMessageHistory(
-        connection_string=connection,
-        session_id=session_id,
-        table_name="chat_history"
-    )
-
-    print("Connection completed")
-
-
-    # The Fully-Assembled Agent
-    completed_agent = RunnableWithMessageHistory(
-        agent_executor,
-        lambda session_id: memory,
-        input_messages_key="input",
-        history_messages_key="chat_history",
-    )
+    res = requests.get(f"{base_url}/api/vector/similar_by_id/?id={item_id}")
     
-    return completed_agent
+    global shopping_cart
+    shopping_cart = [item['item_id'] for item in res.json()['result']]
+
+    return res.json()['result']
+
+# Removing search items from LLM tools because the model doesn't know how to use it.
+@tool
+def search_items(search_query: str, n_items=3) -> list:
+    """
+    This Tool searches for items given a search query which is anything that may lead to an item, \
+        whether it is description, relevant items, or a name. Then, returns the top n_items matches.
+    This should be your most used tool as it serves most cases.
+    """
+    
+    global shopping_cart
+    res = requests.get(f"{base_url}/api/vector/similar_by_text/?query={search_query}&n={n_items}")
+    shopping_cart = [item['item_id'] for item in res.json()['result']]
+
+    return res.json()['result']
+
+
+# Add the tool to the collection
+tools = [test_connection, get_item_by_id, get_similar_by_id, search_items]
 
 # Views
 @csrf_exempt
@@ -134,29 +92,35 @@ def query(request):
     query = request.data.get('query')
 
     # Get the Session_id if it exists else initialize it.
-    session_id = "2" # request.COOKIES.get('session_id')
-    if not session_id:
-        session_id = str(uuid.uuid4())
+    session_id = request.COOKIES.get('session_id') or str(uuid.uuid4())
+
+    
+    try:
+        # Initialize the agent
+        agent = Agent(tools, session_id)
         
-    print(f"Session ID: {session_id}")
+        # Ask the model and structure the response
+        result = agent.ask(query)
+        result = markdown.markdown(result)
+        
+        # Remove surrounding <p> tags if present
+        if result.startswith('<p>'):
+            result = result[3:-4]
 
-    # Initialize the agent for that user.
-    agent = initialize_agent(session_id)
-    
-    # Clean the items list to prepare a new message.
-    shopping_cart.clear()
-    
-    # Ask the model and structure the response
-    result = ask_model(agent, query, session_id)
- 
-    result = markdown.markdown(result)
-    
-    if result.startswith('<p>'):
-        result = result[3:-4] # Removing <p> and </p>
-
-    response = JsonResponse({'items' : shopping_cart, 'response' : result})
-    response.set_cookie('session_id', session_id, max_age=3600)
-
+        # Construct the response
+        response_data = {
+            'items': shopping_cart,
+            'response': result
+        }
+        # Set the session ID cookie
+        response = JsonResponse(response_data)
+        response.set_cookie('session_id', session_id, max_age=50)
+        
+    except Exception as e:
+        # Handle exceptions gracefully
+        response_data = {'error': str(e)}
+        response = JsonResponse(response_data, status=500)
+        
     return response
 
 
@@ -177,4 +141,4 @@ def query(request):
 def stream(request):
     query = request.data.get('query')
     
-    return HttpResponse('Working on it')
+    return HttpResponse('Unimplemented')
