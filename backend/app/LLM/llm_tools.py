@@ -27,7 +27,7 @@ shopping_cart = [] # Add items to shopping cart instead of giving to model to pr
 @tool
 def test_connection() -> str:
     """Use this tool to test the connectivity. Mention the status code"""
-    res = requests.get(f"https://google.com/")
+    res = requests.get("https://google.com/")
     print("DEBUGGING IS:" + str(os.environ.get('DEBUG')))
     return f"Status code: {res.status_code}, the base url is: {base_url}"
 
@@ -49,7 +49,7 @@ def get_similar_by_id(item_id: int) -> list:
     return res.json()['result']
 
 @tool
-def search_items(search_query: str, n_items=5) -> list:
+def search_items(search_query: str, n_items=3) -> list:
     """
     This Tool searches for items given a search query which is anything that may lead to an item, \
         whether it is description, relevant items, or a name. Then, returns the top n_items matches.
@@ -59,18 +59,9 @@ def search_items(search_query: str, n_items=5) -> list:
     
     shopping_cart.extend([item['item_id'] for item in res.json()['result']])
     # TODO: Send the shopping cart alone to save time
-    # TODO: FIRAS's FEATURED ITEMS TO BE ONLY > 3 Stars
-    # TODO: TRY STREAMING RESPONSES
-    # TODO: SHORTEN RESPONSE TO 1 SENTENCE MAX
-    # TODO: Delete session_id cookie on reload
-    
+    # Stream api
     
     items = res.json()['result']
-    print(items)
-    informative_data = lambda x: {'id': x['item_id'], 'summary': x['summary']}
-    
-    items = [informative_data(item) for item in items]
-    
     return items
 
 # Add your tool to the collection

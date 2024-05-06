@@ -14,7 +14,7 @@ services:
             if [ ! -f '../app/scripts/clean_warehouse.pkl' ]; then
                 wget '$DOWNLOAD_URL' -O '../app/scripts/clean_warehouse.pkl'
             fi &&
-            # python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END" &&
+            python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END" &&
             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app

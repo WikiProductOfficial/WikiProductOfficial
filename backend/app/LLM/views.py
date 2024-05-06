@@ -66,7 +66,7 @@ def initialize_agent(session_id):
     
     # The Brain
     llm = ChatOpenAI(
-        temperature=0.2,
+        temperature=0,
         streaming=True,
         api_key=os.getenv("OPENAI_API_KEY"),
         callbacks=[StreamingStdOutCallbackHandler()]
@@ -96,7 +96,6 @@ def initialize_agent(session_id):
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
     # The Memory
-
     memory = PostgresChatMessageHistory(
         connection_string=connection,
         session_id=session_id,
@@ -135,7 +134,7 @@ def query(request):
     query = request.data.get('query')
 
     # Get the Session_id if it exists else initialize it.
-    session_id = request.COOKIES.get('session_id')
+    session_id = "2" # request.COOKIES.get('session_id')
     if not session_id:
         session_id = str(uuid.uuid4())
         
@@ -159,3 +158,23 @@ def query(request):
     response.set_cookie('session_id', session_id, max_age=3600)
 
     return response
+
+
+@csrf_exempt
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'query': openapi.Schema(
+                type=openapi.TYPE_STRING,
+            )
+        },
+        required=['query']
+    )
+)
+@api_view(['POST'])
+def stream(request):
+    query = request.data.get('query')
+    
+    return HttpResponse('Working on it')
