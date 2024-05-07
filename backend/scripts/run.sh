@@ -18,6 +18,6 @@ if [ ! -f "../app/scripts/clean_warehouse.pkl" ]; then
 elif [ "$PKL_UPDATED" = "true" ]; then
     wget "$DOWNLOAD_URL" -O "../app/scripts/clean_warehouse.pkl"
 fi
-# python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END"
+python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END"
 
 uwsgi --socket :8000 --workers 4 --master --enable-threads -b 32768 --module app.wsgi
