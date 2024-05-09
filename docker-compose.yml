@@ -16,7 +16,10 @@ services:
             elif [ '$PKL_UPDATED' = 'true' ]; then
                 wget '$DOWNLOAD_URL' -O '../app/scripts/clean_warehouse.pkl'
             fi &&
-            python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END" &&
+            if ['$LOAD' = 'true']; then
+                python manage.py runscript load --script-args '$LOAD_START' '$LOAD_END'
+            fi
+            python manage.py runscript load --script-args '$LOAD_START' '$LOAD_END' &&
             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
@@ -45,6 +48,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DOWNLOAD_URL=${DOWNLOAD_URL}
       - PKL_UPDATED=${PKL_UPDATED}
+      - LOAD=${LOAD}
       - LOAD_START=${LOAD_START}
       - LOAD_END=${LOAD_END}
     ports:
