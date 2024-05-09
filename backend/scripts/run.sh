@@ -19,7 +19,7 @@ elif [ "$PKL_UPDATED" = "true" ]; then
     wget "$DOWNLOAD_URL" -O "../app/scripts/clean_warehouse.pkl"
 fi
 
-if ["$LOAD" = "true"]; then
+if [ "$LOAD" = "true" ]; then
     python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END"
 fi
 

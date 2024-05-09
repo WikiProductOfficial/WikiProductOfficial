@@ -52,6 +52,8 @@ services:
       - HUGGING_FACE_API_KEY=${HUGGING_FACE_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - DOWNLOAD_URL=${DOWNLOAD_URL}
+      - PKL_UPDATED=${PKL_UPDATED}
+      - LOAD=${LOAD}
       - LOAD_START=${LOAD_START}
       - LOAD_END=${LOAD_END}
     depends_on:
