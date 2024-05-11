@@ -86,6 +86,8 @@ export class ResultsPageComponent implements OnInit {
       const storesString = filteredProducts.stores.join(',');
       this.filters().stores = storesString;
     }
+    // Go to the first page
+    this.page.set('1');
     // Navigate to the same route with query parameters
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
