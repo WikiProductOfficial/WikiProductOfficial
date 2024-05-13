@@ -1,14 +1,12 @@
 import time
-import pandas as pd
-import numpy as np
 from core import models
 from dateutil.parser import parse
 
-# import chromadb singelton class
-from vectorDB.chroma_db import ChromaDB
+# import the data singleton class
+from .data import Data
 
-# instantiating ChromaDB
-chromadb = ChromaDB()
+# instantiating Data
+data = Data()
 
 def handle_category(category_path):
     """Handle category creation or update based on the category path."""
@@ -36,18 +34,8 @@ def insert_reviews(reviews_list, item):
 def run(*args):
     start = time.time()
     
-    df = pd.read_pickle("./scripts/clean_warehouse.pkl")
-    
-    # Filling NaN values
-    df['reviews'] = df['reviews'].fillna('') # Replace NaN with empty string because when in the use it becomes a float type
-    df['star_count'] = df['star_count'].fillna(0) #Replace  NaN with zero
-    df['description'] = df['description'].fillna(np.nan).replace([np.nan], [None]) # Replace NaN with Null
-    df['stars'] = df['stars'].fillna(np.nan).replace([np.nan], [None]) # Replace NaN with Null
-    df['summary'] = df['summary'].fillna(np.nan).replace([np.nan], [None]) # Replace NaN with Null
-    df['details'] = df['details'].fillna(np.nan).replace([np.nan], [{}]) # Replace NaN with empty dictionary
-    
-    # Getting the chromadb items collection
-    items_collection = chromadb.get_items_collection()
+    # getting the data
+    df = data.get_df()
     
     # Filter rows based on provided arguments
     if len(args) == 2:
@@ -56,8 +44,11 @@ def run(*args):
         end_index = min(int(args[1]) * 100, len(df))
         df = df.iloc[start_index:end_index]
     
-    for _, row in df.iterrows():
-        # print(row) # For Debugging
+    for i, row in df.iterrows():
+        ## For Debugging
+        # if(i < 50):
+        #     print(row)
+        #     print(i + 1, type(i))
         
         # Handle the category and its hierarchy
         category = handle_category(row['category'])
@@ -71,6 +62,7 @@ def run(*args):
         
         # Handle item creation or update
         item = models.Item.objects.update_or_create(
+            item_id = i + 1,
             name=row["name"], 
             urls=[{
                 # "id":  store[0].store_id,
@@ -108,15 +100,7 @@ def run(*args):
         # Insert reviews, if any
         insert_reviews(row["reviews"], item)
         
-        # Insert item to chromadb
-        items_collection.upsert(
-            ids= str(item[0].item_id),
-            embeddings= row["embedding"],
-            documents= row['summary'],
-            # metadatas= row["details"], # TODO: For now, we wil add this for the comparison of items
-        )
-    
-    print("Loading finished")
+    print("Postgres Loading finished")
 
     end = time.time()
-    print(f"Time taken: {end-start} seconds")
+    print(f"Time taken for Postgres: {end-start} seconds")
