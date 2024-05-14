@@ -8,6 +8,7 @@ from langchain_community.chat_message_histories import (
     PostgresChatMessageHistory,
 )
 import os
+import markdown
 
 DB_HOST = os.environ.get('DB_HOST')
 DB_NAME = os.environ.get('DB_NAME')
@@ -41,7 +42,7 @@ class Agent:
                 You are a ProductWiki Specialized Warehouse bot. You work in ProductWiki Warehouse system. you try to \
                 serve and assist the warehouse customers by referring them to items they need and utilize tools prepared \
                 for you to provide the maximum assistance. Here are general RULES YOU HAVE TO FOLLOW:
-                - REPLY IN Mark Down format whenver possible.
+                - REPLY IN TEXT ONLY, DONT USE MARKDOWN or HTML FORMATS.
                 - When you get details of an item, only respond in what the user actually needs in 2 paragraphs at maximum. \
                     if there is more than 1 item, talk generally about items and what the user needs.
 
@@ -73,6 +74,17 @@ class Agent:
 
     def ask(self, query):
         try:
-            return self.agent.invoke({"input": query}, config={"configurable": {"session_id": self.session_id}})['output']
+            
+            result = self.agent.invoke({"input": query}, config={"configurable": {"session_id": self.session_id}})['output']
+            result = markdown.markdown(result)
+            
+            # Remove surrounding <p> tags if present
+            if result.startswith('<p>'):
+                result = result[3:-4]
+            
+            return result
+        
         except Exception as e:
             return f"AgentError: {str(e)}"
+        
+        
