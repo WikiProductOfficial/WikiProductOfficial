@@ -20,28 +20,28 @@
 
     * Where the "EMBEDDING_SERVICE" **must be** ***"integer"*** **0** or **1** that represent a weather to use **HuggingFace** or **OpenAI** embedding model.
     * For example, **"sentence-transformers/all-MiniLM-L6-v2"** & **"0"** as **"EMBEDDING_MODEL_NAME"** & **"EMBEDDING_SERVICE"**, signifies that the model name will be used that is provided by **HuggingFace**.
-  > [!NOTE]
-  > Note: this is the default model for chroma at the time
 
+> [!NOTE]
+> Note: this is the default model for chroma at the time
 
-    ### The examples above are shown below
-    ```
-    # Embedding options
-    #   1: means using another's service e.g. OpenAI. (Paid option)
-    #   2: means using default embedding function. (all-MiniLM-L6-v2)
-    EMBEDDING_OPTION=1
-    ```
-    ```
-    # Embedding options
-    #   1: means using another's service e.g. OpenAI. (Paid option)
-    #   2: means using default embedding function. (all-MiniLM-L6-v2)
-    EMBEDDING_OPTION=1
-    # Embedding model name
-    #   For option 1, it depends on which service to use. (the available OpenAI, HuggingFace)
-    #   For more details check Chromadb's official website.
-    EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
-    # Embidding service for option 1
-    #   0: HuggingFace
-    #   1: OpenAI
-    EMBEDDING_SERVICE=0
-    ```
+  ### The examples above are shown below
+  ```
+  # Embedding options
+  #   1: means using another's service e.g. OpenAI. (Paid option)
+  #   2: means using default embedding function. (all-MiniLM-L6-v2)
+  EMBEDDING_OPTION=1
+  ```
+  ```
+  # Embedding options
+  #   1: means using another's service e.g. OpenAI. (Paid option)
+  #   2: means using default embedding function. (all-MiniLM-L6-v2)
+  EMBEDDING_OPTION=1
+  # Embedding model name
+  #   For option 1, it depends on which service to use. (the available OpenAI, HuggingFace)
+  #   For more details check Chromadb's official website.
+  EMBEDDING_MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+  # Embidding service for option 1
+  #   0: HuggingFace
+  #   1: OpenAI
+  EMBEDDING_SERVICE=0
+  ```
