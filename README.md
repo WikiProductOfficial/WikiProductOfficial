@@ -20,6 +20,16 @@ Welcome to the setup guide for our application. Follow these instructions to get
 
 * **Docker Desktop**: Ensure Docker Desktop is installed on your machine. Visit the [official Docker website]([url](https://www.docker.com/products/docker-desktop/)) for download and installation instructions.
 
+### Setting up the Application
+This section is all about editing the environment variables
+1. Change the ```.env-sample``` file name to .env
+2. Edit the parts relating ```CHROMA_SERVER_AUTHN_CREDENTIALS```,```OPENAI_API_KEY``` , &  ```HUGGING_FACE_API_KEY```. For more details [here]().
+3. Setting the embedding options is [here]().
+4. Setting up the data loading is [here](Instructions/Loading%20data/Loading.md).
+
+Here is a tutorial of how to set up and run the application locally.
+
+
 ### Running the Application
 
 ### Development Environment
@@ -48,21 +58,6 @@ To build your containers for production, run:
 2. **Accessing the Application**
    
     - Server: [http://localhost]([url](http://localhost))
-
-
-### Loading  Sample Data
-> [!NOTE]
-> Note: The data can be loaded in ranges as it will be shown below.
-> 
-> Note: The sample data is 500 rows
-
-* Modifying the following line depending weather it is in development or deployment
-  
-    ``python manage.py runscript load --script-args "start" "end"``
-   * Where the "start" & "end" are integers that represent a range of entries to add which are multiple of hundereds. For example, **"0"** & **"10"** signifies the range from **0** to **1000** ***"exclusive"***
-* Moreover, to load the whole data, write the following line instead or remove the arguments:
-
-    ``python manage.py runscript load``
 
 ### Development Environment
 * The changes will be done in the **"docker-compose.yaml"** file in the root directory
