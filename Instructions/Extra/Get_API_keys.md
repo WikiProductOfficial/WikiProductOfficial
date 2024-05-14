@@ -13,7 +13,10 @@
 4. Go to access token section
 
 5. Create a new token and give it a name to your liking
-    * Pictures
+   - <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/1b52d404-6d63-486b-8018-02750a5cc845" alt="Logo" height="250"/>
+   - <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/2875a1e7-e179-408c-a926-eb4ccf8a8a88" alt="Logo" height="250"/>
+   - <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/505c0e74-d1d0-408a-8648-ad9eef43a3e9" alt="Logo" height="250"/>
+
 6. Paste the key in the **.env** file
     ```
    # HuggingFace
@@ -25,9 +28,12 @@
 
 2. Sign up or Login with an account
 
-3. Go to API keys section and create a with key and copy it immediately because it can't be viewed again
-    * Pictures
-4. Paste the key in the **.env** file
+3. Go to API keys section and create a key and give it a name
+   - <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/1a55cf83-790d-4562-bb62-bfeafb26b96a" alt="Logo" height="250"/>
+4. copy it immediately because it can't be viewed again
+   - <img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/28cd167a-d9d3-472d-948f-d71c9e35e6db" alt="Logo" height="250"/>
+
+5. Paste the key in the **.env** file
     ```
    # OpenAI
     OPENAI_API_KEY=<OPENAI_API_KEY>
