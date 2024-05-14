@@ -32,14 +32,15 @@ def test_connection() -> str:
 
 @tool
 def get_item_by_id(item_id: int) -> str:
-    """Use this tool to look up items using the id."""
-    
-    # Reset the shopping cart
-    global shopping_cart
+    """Use this tool to get information about an item using the item_id.\
+        ALWAYS use this when a customer asks about a certain product"""
     
     res = requests.get(f"{base_url}/api/items/{item_id}/")
     
+
+    global shopping_cart
     shopping_cart.append(res.json()['item_id'])
+    
     return res.json()
 
 @tool
@@ -56,7 +57,7 @@ def get_similar_by_id(item_id: int) -> list:
 
 # Removing search items from LLM tools because the model doesn't know how to use it.
 @tool
-def search_items(search_query: str, n_items=3) -> list:
+def search_items(search_query: str, n_items=5) -> list:
     """
     This Tool searches for items given a search query which is anything that may lead to an item, \
         whether it is description, relevant items, or a name. Then, returns the top n_items matches.
@@ -69,6 +70,10 @@ def search_items(search_query: str, n_items=3) -> list:
 
     return res.json()['result']
 
+
+def clear_cart():
+    global shopping_cart
+    shopping_cart.clear()
 
 # Add the tool to the collection
 tools = [test_connection, get_item_by_id, get_similar_by_id, search_items]
@@ -101,26 +106,22 @@ def query(request):
         
         # Ask the model and structure the response
         result = agent.ask(query)
-        result = markdown.markdown(result)
         
-        # Remove surrounding <p> tags if present
-        if result.startswith('<p>'):
-            result = result[3:-4]
-
         # Construct the response
         response_data = {
-            'items': shopping_cart,
+            'items': shopping_cart.copy(),
             'response': result
         }
+        
         # Set the session ID cookie
         response = JsonResponse(response_data)
-        response.set_cookie('session_id', session_id, max_age=50)
+        response.set_cookie('session_id', session_id, max_age=180)
         
     except Exception as e:
-        # Handle exceptions gracefully
         response_data = {'error': str(e)}
         response = JsonResponse(response_data, status=500)
-        
+ 
+    clear_cart()
     return response
 
 
