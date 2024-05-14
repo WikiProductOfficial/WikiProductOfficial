@@ -21,7 +21,7 @@ class SingletonMeta(type):
         return cls._instances[cls]
 
 # A singleton class for ChromaDB to make sure there is one instance of the class
-class ChromaDB():
+class ChromaDB(metaclass=SingletonMeta):
     # Private variables
     __collections= {}
     

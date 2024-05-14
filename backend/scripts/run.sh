@@ -19,8 +19,12 @@ elif [ "$PKL_UPDATED" = "true" ]; then
     wget "$DOWNLOAD_URL" -O "../app/scripts/clean_warehouse.pkl"
 fi
 
-if [ "$LOAD" = "true" ]; then
-    python manage.py runscript load --script-args "$LOAD_START" "$LOAD_END"
+if [ "$LOAD_PG" = "true" ]; then
+    python manage.py runscript load_pg --script-args "$LOAD_START" "$LOAD_END"
+fi
+
+if [ "$LOAD_CHROMA" = "true" ]; then
+    python manage.py runscript load_chroma --script-args "$LOAD_START" "$LOAD_END"
 fi
 
 uwsgi --socket :8000 --workers 4 --master --enable-threads -b 32768 --module app.wsgi
