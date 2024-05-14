@@ -22,10 +22,7 @@ import operator
 from datetime import datetime
 import random
 
-# TODO: Postgres history 
 # TODO: Embedding images
-
-
 
 # GET Search
 @swagger_auto_schema(
