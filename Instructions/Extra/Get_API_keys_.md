@@ -2,7 +2,7 @@
   <a href="https://wikiproduct.up.railway.app/"><img src="https://github.com/WikiProductOfficial/WikiProductOfficial/assets/130275283/84e08fc1-b327-4442-b67e-9269dfeb60f3" alt="Logo" width="584.5" height="250"/></a>
 </p>
 
-## Setting up API keys
+## Setting up API keys and Credentials
 ### HuggingFace
 1. visit HuggingFace website [https://huggingface.co/](https://huggingface.co/)
 
@@ -37,4 +37,15 @@
     ```
    # OpenAI
     OPENAI_API_KEY=<OPENAI_API_KEY>
+    ```
+
+### Chromadb **"X_CHROMA_TOKEN"** Credential
+
+* This could be any string, name, secret key
+* For example, "Testing", "This is secure", etc...
+* Paste the credentials in the **.env** file
+
+    ```
+   # Chromadb authentication
+   CHROMA_SERVER_AUTHN_CREDENTIALS=<YOUR_SECRET_KEY>
     ```

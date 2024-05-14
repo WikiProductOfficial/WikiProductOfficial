@@ -23,9 +23,10 @@ Welcome to the setup guide for our application. Follow these instructions to get
 ### Setting up the Application
 This section is all about editing the environment variables
 1. Change the ```.env-sample``` file name to .env
-2. Edit the parts relating ```CHROMA_SERVER_AUTHN_CREDENTIALS```,```OPENAI_API_KEY``` , &  ```HUGGING_FACE_API_KEY```. For more details [here]().
-3. Setting the embedding options is [here]().
+2. Edit the parts relating ```CHROMA_SERVER_AUTHN_CREDENTIALS```,```OPENAI_API_KEY``` , &  ```HUGGING_FACE_API_KEY```. For more details [here](Instructions/Extra/Get_API_keys_.md).
+3. Setting the embedding options is [here](Instructions/Embedding%20options/Embedding_options.md).
 4. Setting up the data loading is [here](Instructions/Loading%20data/Loading.md).
+5. For any further details, go [here](Instructions/Extra/Extra_details.md)
 
 Here is a tutorial of how to set up and run the application locally.
 
