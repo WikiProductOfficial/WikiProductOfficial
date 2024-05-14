@@ -10,11 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 from langchain.tools import tool
 
 import os
-import time
 import requests
-import markdown
-import json
 import uuid
+import random
 
 from .agent import Agent
 
@@ -57,7 +55,7 @@ def get_similar_by_id(item_id: int) -> list:
 
 # Removing search items from LLM tools because the model doesn't know how to use it.
 @tool
-def search_items(search_query: str, n_items=5) -> list:
+def search_items(search_query: str, n_items=random.randint(3, 7)) -> list:
     """
     This Tool searches for items given a search query which is anything that may lead to an item, \
         whether it is description, relevant items, or a name. Then, returns the top n_items matches.

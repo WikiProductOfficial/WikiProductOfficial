@@ -28,10 +28,11 @@ class Agent:
         
         # The Brain
         llm = ChatOpenAI(
-            temperature=0,
+            temperature=0.2,
             streaming=True,
             api_key=os.getenv("OPENAI_API_KEY"),
-            callbacks=[StreamingStdOutCallbackHandler()]
+            callbacks=[StreamingStdOutCallbackHandler()],
+            model="gpt-3.5-turbo" # try gpt-4o
         )
 
     
