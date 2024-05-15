@@ -41,4 +41,20 @@ export class ProductService {
       })
     );
   }
+
+  getRelatedProducts(id:string): Observable<Product[]> {
+    this.loading = true;
+    let url = `${environment.backendUrl}/vector/similar_by_id/?id=${id}`;
+    return this.http.get<any>(url).pipe(
+      catchError((error) => {
+        this.loading = false;
+        return throwError(
+          () => new Error('Failed to load JSON data; see console for details.')
+        );
+      }),
+      finalize(() => {
+        this.loading = false;
+      })
+    );
+  }
 }
