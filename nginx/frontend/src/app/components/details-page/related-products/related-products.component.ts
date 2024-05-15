@@ -44,13 +44,13 @@ export class RelatedProductsComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
+  public productId: string | null = '1';
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      const productId = params.get('id');
-      if (productId) {
-        this.loadRelatedProducts(productId);
-      }
+      this.productId = params.get('id');
     });
+
+    this.loadRelatedProducts(this.productId!);
   }
 
   loadRelatedProducts(productId: string) {
