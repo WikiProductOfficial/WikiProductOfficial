@@ -22,7 +22,6 @@ services:
             if [ '$LOAD_CHROMA' = 'true' ]; then
                 python manage.py runscript load_chroma --script-args "$LOAD_START" "$LOAD_END"
             fi &&
-            # python manage.py runscript load --script-args '$LOAD_START' '$LOAD_END' &&
             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend/app:/backend/app
