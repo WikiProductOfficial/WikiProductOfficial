@@ -37,6 +37,7 @@ export class RelatedProductsComponent implements OnInit, OnDestroy {
   ];
   featuredProducts!: Product[];
   private routeSubscription: Subscription | undefined;
+  private productId: string | null = null;
 
   constructor(
     protected productService: ProductService,
@@ -44,13 +45,14 @@ export class RelatedProductsComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  public productId: string | null = '1';
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      this.productId = params.get('id');
+      const newProductId = params.get('id');
+      if (newProductId && newProductId !== this.productId) {
+        this.productId = newProductId;
+        this.loadRelatedProducts(this.productId);
+      }
     });
-
-    this.loadRelatedProducts(this.productId!);
   }
 
   loadRelatedProducts(productId: string) {
