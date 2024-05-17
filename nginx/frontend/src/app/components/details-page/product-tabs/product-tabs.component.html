@@ -1,5 +1,5 @@
 <p-tabView>
-  <p-tabPanel header="Description">
+  <p-tabPanel *ngIf="product.description != 'None'" header="Description">
     <div class="description">
       <p>{{ product.description }}</p>
     </div>
@@ -19,7 +19,7 @@
     </div>
   </p-tabPanel>
 
-  <p-tabPanel header="Reviews">
+  <p-tabPanel *ngIf="product.review_count != 0" header="Reviews">
     <div class="reviews-container">
       <div *ngFor="let review of product.reviews" class="review-card">
         <div class="review-header">
