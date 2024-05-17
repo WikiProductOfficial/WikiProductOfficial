@@ -6,7 +6,7 @@
   <!--Product Name-->
   <h2>{{ product.name }}</h2>
   <!--Reviews using stars-->
-  <div style="display: flex; align-items: center">
+  <div *ngIf="rateValue != null" style="display: flex; align-items: center">
     <h3>Rating:</h3>
     <div style="display: flex; align-items: center">
       <p-rating
@@ -31,6 +31,6 @@
       />
       &nbsp;Summary:
     </h3>
-    <p> {{product.summary}}</p>
+    <p>{{ product.summary }}</p>
   </div>
 </div>
