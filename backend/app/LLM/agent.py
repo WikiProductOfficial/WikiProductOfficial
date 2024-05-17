@@ -46,6 +46,7 @@ class Agent:
                 - REPLY IN TEXT ONLY, DONT USE MARKDOWN or HTML FORMATS.
                 - When you get details of an item, only respond in what the user actually needs in 2 paragraphs at maximum. \
                     if there is more than 1 item, talk generally about items and what the user needs.
+                - When getting a general query, try to persuade the user into giving more details.
 
 
                 Your answers should be brief, helpful, and short."""),
