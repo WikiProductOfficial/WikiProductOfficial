@@ -29,9 +29,9 @@ def run(*args):
     
     for i, row in df.iterrows():
         ## For Debugging
-        if(i < 50):
-            # print(row)
-            print(f"{str(i + 1)}", type(i))
+        # if(i < 50):
+        #     print(row)
+        #     print(f"{str(i + 1)}", type(i))
         
         # Insert item to chromadb
         items_collection.upsert(

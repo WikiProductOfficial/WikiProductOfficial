@@ -190,14 +190,21 @@ def get_item(request, item_id):
 # API endpoint to get popular
 @api_view(['GET'])
 def get_popular_items(request):
-    items = models.Item.objects.order_by("-review_count").filter(rating__gte=3)[:100]
-    seed = int(format(datetime.today(), '%j'))
-    
-    random.seed(seed)
-    popular_items = random.sample(list(items), 12)
-    
-    serialized = serializers.ItemSerializer(popular_items, many=True)
-    return Response(serialized.data)
+    try:
+        items = models.Item.objects.order_by("-review_count").filter(rating__gte=3)[:100]
+        seed = int(format(datetime.today(), '%j'))
+        
+        random.seed(seed)
+        
+        popular_items = random.sample(list(items), 12)
+        
+        serialized = serializers.ItemSerializer(popular_items, many=True)
+        return Response(serialized.data)
+    except:
+        return Response({
+            "result": [],
+            'message': 'Something went wrong; there are no items with rating >= 3'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 # API endpoint to get wishlist items
 @swagger_auto_schema(

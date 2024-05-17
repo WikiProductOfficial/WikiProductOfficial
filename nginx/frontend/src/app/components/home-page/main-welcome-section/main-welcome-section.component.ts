@@ -21,6 +21,7 @@ import { trigger, transition, animate, style } from '@angular/animations';
 import { RatingModule } from 'primeng/rating';
 import { CurrencyConversionPipe } from '../../../pipes/currency-conversion.pipe';
 import { Router } from '@angular/router';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @Component({
   selector: 'app-main-welcome-section',
@@ -41,6 +42,7 @@ import { Router } from '@angular/router';
     CardModule,
     ButtonModule,
     InputGroupModule,
+    InputTextareaModule,
     InputGroupAddonModule,
     InputTextModule,
     DividerModule,
@@ -51,6 +53,7 @@ import { Router } from '@angular/router';
   ],
 })
 export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
+  //View the message container to determine its height and scroll
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   messages: Observable<Message[]> = new Observable<Message[]>();
   formValue: string = '';
@@ -68,6 +71,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.chat.clearConversation();
     this.animateBlobs();
+    //Accumlate all the messages in the conversation array and load them
     this.messages = this.chat.conversation
       .asObservable()
       .pipe(scan((acc, value) => acc.concat(value)));
@@ -75,7 +79,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
     this.subscribeToNewMessages();
     this.updateDotsCount();
   }
-
+  //Remove the conversation when navigating out of the mainpage
   ngOnDestroy() {
     this.chat.clearConversation();
   }
@@ -92,22 +96,18 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       requestAnimationFrame(update);
     }
     requestAnimationFrame(update);
-    // Apply new position
-    // circle.style.left = `${this.posX}px`;
-    // circle.style.top = `${this.posY}px`;
-
-    // Check if the circle reached the bottom right
-    // Assuming a viewport of 800x600 for simplicity
   }
 
+  //Chatbot operaitons seciton
+
+  //Show the message is loading
   updateDotsCount() {
     setInterval(() => {
       this.dotsCount = (this.dotsCount % 3) + 1;
     }, 1000);
   }
 
-  //Chatbot operaitons
-
+  //Observe if there is new messages in the conversation [true/ scroll to the recent message]
   subscribeToNewMessages() {
     this.messages.subscribe((messages) => {
       const initialMessageCount = this.chat.conversation.value.length;
@@ -119,7 +119,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  //Scroll to the bottom of the messages container
   private scrollMessageContainerToBottom() {
     this.messageContainer.nativeElement.scrollTo({
       top: this.messageContainer.nativeElement.scrollHeight,
@@ -130,7 +130,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
   updateIsEmpty() {
     this.isEmpty = this.formValue === '';
   }
-
+  //Check if the response of the bot hasn't been recieved yet to indicate state of loading
   checkResponse() {
     this.messages
       .pipe(
@@ -142,7 +142,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
+  //Add message to the conversation array
   sendMessage() {
     if (!this.isEmpty && !this.isLoading) {
       this.chat.converse(this.formValue);
@@ -152,7 +152,7 @@ export class MainWelcomeSectionComponent implements OnInit, OnDestroy {
       this.checkResponse();
     }
   }
-
+  //Navigate to the clicked product
   onProductClicked(productId: number) {
     this.router.navigate(['/details', productId]);
   }

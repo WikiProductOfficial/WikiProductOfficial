@@ -23,6 +23,7 @@ import { Product } from '../../models/product.model';
 })
 export class DetailsPageComponent {
   detailedProduct!: Product;
+  relatedProducts!: any;
 
   constructor(
     protected productService: ProductService,
@@ -36,6 +37,17 @@ export class DetailsPageComponent {
         this.productService.getDetailedProduct(+productId).subscribe({
           next: (data) => {
             this.detailedProduct = data;
+            this.productService
+              .getRelatedProducts(data.item_id.toString())
+              .subscribe(
+                (data) => {
+                  this.relatedProducts = data;
+                  console.log(this.relatedProducts);
+                },
+                (error) => {
+                  console.error(error);
+                }
+              );
           },
           error: (error) => {
             console.error('Error fetching detailed product:', error);
