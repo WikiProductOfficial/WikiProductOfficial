@@ -16,13 +16,13 @@ export class ProductService {
     let url = `${environment.backendUrl}/items/${productId}/`;
     return this.http.get<any>(url).pipe(
       catchError((error) => {
-        this.loading = false;
+        this.loading = true;
         return throwError(
           () => new Error('Failed to load JSON data; see console for details.')
         );
       }),
       finalize(() => {
-        this.loading = false; // loading is finished, remove spinner
+        this.loading = false;
       })
     );
   }
@@ -42,15 +42,13 @@ export class ProductService {
     );
   }
 
-  getRelatedProducts(id:string): Observable<Product[]> {
+  getRelatedProducts(id: string): Observable<any> {
     this.loading = true;
-    let url = `${environment.backendUrl}/vector/similar_by_id/?id=${id}`;
+    const url = `${environment.backendUrl}/vector/similar_by_id/?id=${id}`;
     return this.http.get<any>(url).pipe(
       catchError((error) => {
-        this.loading = false;
-        return throwError(
-          () => new Error('Failed to load JSON data; see console for details.')
-        );
+        console.error('Failed to load JSON data', error);
+        return throwError(() => new Error('Failed to load JSON data'));
       }),
       finalize(() => {
         this.loading = false;

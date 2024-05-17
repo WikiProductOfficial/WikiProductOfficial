@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CarouselModule } from 'primeng/carousel';
 import { RatingModule } from 'primeng/rating';
@@ -35,37 +35,15 @@ export class RelatedProductsComponent implements OnInit, OnDestroy {
       numScroll: 1,
     },
   ];
-  featuredProducts!: Product[];
+  @Input() relatedProducts!: Product[];
   private routeSubscription: Subscription | undefined;
-  private productId: string | null = null;
 
   constructor(
     protected productService: ProductService,
-    private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.routeSubscription = this.route.paramMap.subscribe((params) => {
-      const newProductId = params.get('id');
-      if (newProductId && newProductId !== this.productId) {
-        this.productId = newProductId;
-        this.loadRelatedProducts(this.productId);
-      }
-    });
-  }
-
-  loadRelatedProducts(productId: string) {
-    this.productService.getRelatedProducts(productId).subscribe(
-      (data) => {
-        this.featuredProducts = data;
-        console.log(this.featuredProducts);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  ngOnInit(): void {}
 
   onProductClicked(productId: number) {
     this.router.navigate(['/details', productId]);
