@@ -54,8 +54,9 @@ def run(*args):
         category = handle_category(row['category'])
         
         # Handle store creation or update
+        store_name = row["store"] + "." + row["store_url"].split(".")[-1].rstrip("/") # making each store name unique
         store= models.Store.objects.update_or_create(
-            name=row["store"], 
+            name=store_name, 
             store_url=row['store_url']
         )
         
