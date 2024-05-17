@@ -169,12 +169,15 @@
 }
 
 .send-btn {
+  background-color: transparent;
+  color: var(--secondary-color);
   width: 4%;
   height: 75%;
   top: 6px;
   right: 10px;
   z-index: 100;
   border-radius: 12px;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;

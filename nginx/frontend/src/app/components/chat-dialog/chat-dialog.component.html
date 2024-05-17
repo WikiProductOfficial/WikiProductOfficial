@@ -1,3 +1,4 @@
+<!-- Pop up button to show dialog -->
 <button
   pButton
   class="dialog-btn"
@@ -5,7 +6,8 @@
   (click)="showDialog()"
   *ngIf="!displayChatbotDialog"
 ></button>
-
+<!-- Dialog component shown when button is clicked -->
+<!-- Header -->
 <p-dialog
   header="Chatbot"
   [breakpoints]="{
@@ -17,8 +19,9 @@
   [(visible)]="displayChatbotDialog"
   [position]="'bottomright'"
 >
+  <!-- Chat component -->
   <div class="chat-container flex flex-column justify-content-between">
-    <!-- Messages Contetnt -->
+    <!-- Message container / to load and exchange messages between user and bot -->
     <div class="message-container flex flex-column" #messageContainer>
       <ng-container *ngFor="let message of messages | async">
         <div
@@ -28,6 +31,7 @@
             to: message.sentBy === 'user'
           }"
         >
+          <!-- Message text -->
           <div
             class="text-xs md:text-sm"
             *ngIf="message.sentBy == 'bot'"
@@ -36,7 +40,7 @@
           <div class="text-xs md:text-sm" *ngIf="!(message.sentBy == 'bot')">
             {{ message.content }}
           </div>
-          <!-- show product card if the message contains a product -->
+          <!-- Message Product cards / show product card if the message contains a product -->
           <div class="grid" *ngIf="message.isProductMessage">
             <div
               *ngFor="let productMessage of message.ProductList"
@@ -76,6 +80,7 @@
           </div>
         </div>
       </ng-container>
+      <!-- Loading -->
       <div *ngIf="isLoading" class="message from font-bold shadow-2">
         {{ " · ".repeat(dotsCount) }}
       </div>

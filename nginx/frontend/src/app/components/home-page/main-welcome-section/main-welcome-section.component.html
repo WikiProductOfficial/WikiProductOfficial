@@ -30,6 +30,7 @@
           class="chat-container mt-4"
           [ngClass]="{ 'transparent-field': isFirstMessage }"
         >
+          <!-- Message container / to load and exchange messages between user and bot-->
           <div
             class="message-container flex flex-column mt-2 p-4"
             #messageContainer
@@ -43,6 +44,7 @@
                   to: message.sentBy === 'user'
                 }"
               >
+                <!-- Message text -->
                 <div
                   class="text-xs md:text-sm lg:text-lg"
                   *ngIf="message.sentBy == 'bot'"
@@ -54,7 +56,7 @@
                 >
                   {{ message.content }}
                 </div>
-                <!-- show product card if the message contains a product -->
+                <!-- Message Product cards / show product card if the message contains a product -->
                 <div class="grid" *ngIf="message.isProductMessage">
                   <div
                     *ngFor="let productMessage of message.ProductList"
@@ -98,6 +100,7 @@
                 </div>
               </div>
             </ng-container>
+            <!-- Loading -->
             <div
               *ngIf="isLoading"
               class="message from text-2xl font-bold shadow-2"
@@ -120,11 +123,22 @@
               (ngModelChange)="updateIsEmpty()"
               (keyup.enter)="sendMessage()"
             />
+            <!-- <textarea
+              class="input-field"
+              rows="2"
+              cols="30"
+              pInputTextarea
+              placeholder="Type a message..."
+              [autoResize]="true"
+              [(ngModel)]="formValue"
+              (ngModelChange)="updateIsEmpty()"
+              (keyup.enter)="sendMessage()"
+            ></textarea> -->
             <button
               type="button"
               (click)="sendMessage()"
               pButton
-              class="p-button send-btn"
+              class="send-btn"
               [disabled]="isLoading"
             >
               <span
