@@ -12,6 +12,10 @@
 * **AI-powered** smart search
 * Integrated **AI** assistant
 
+## User Manual
+
+To know how to use the website, visit this **[link](Instructions/Extra/User-Manual.md)**.
+
 ## Application Setup and Launch Guide
 
 Welcome to the setup guide for our application. Follow these instructions to get your environment ready and launch the application using Docker.
