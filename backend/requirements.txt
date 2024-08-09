@@ -16,3 +16,4 @@ openai
 tiktoken
 langchain-openai
 markdown
+langchain_community
