@@ -64,7 +64,7 @@ class ChromaDB(metaclass=SingletonMeta):
     ## Option 2: means using default embedding function. (all-MiniLM-L6-v2)
     def __get_embedding_function(self):
         model= os.environ.get("EMBEDDING_MODEL_NAME")
-        option= int(os.environ.get("EMBEDDING_OPTION"))
+        option= int(os.environ.get("EMBEDDING_OPTION", 2))
         
         if not model:
             option= 2
