@@ -4,6 +4,11 @@ from threading import Lock
 # os for env variables
 import os
 
+# for logging
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 # chromadb imports
 from app.settings import CHROMA_CLIENT
 from chromadb.utils import embedding_functions
@@ -51,11 +56,20 @@ class ChromaDB(metaclass=SingletonMeta):
     # Creating the items collection
     def __create_items_collection(self):
         embedding_function= self.__get_embedding_function()
+        
+        logging.debug(f"Embedding function: {embedding_function}")
+        
         collection = self.__CHROMA_CLIENT.get_or_create_collection(
             name="items",
             metadata={"hnsw:space": "cosine"},
             embedding_function= embedding_function,
         )
+        
+        if collection is None:
+            logging.error("Failed to create items collection")
+        
+        logging.debug(f"Created/Retrieved Collection: {collection}")
+        
         self.__collections["items"] = collection
     
     
